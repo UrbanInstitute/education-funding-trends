@@ -65,6 +65,8 @@ body{
   margin-left: 10px;
 }
 #vis {
+  float: left;
+  clear: both;
   display: inline-block;
   position: relative;
   margin-top: 50px;
