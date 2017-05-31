@@ -1,0 +1,280 @@
+*:focus{
+  outline: none;
+}
+body{
+  font-family: Lato;
+  background: none !important;
+}
+.container {
+  width: 890px;
+}
+
+#graphic {
+  position: absolute;
+  left: 14px;
+  padding-top: 60px;
+}
+
+
+#sections {
+  position: relative;
+  display: inline-block;
+  width: 400px;
+  top: 0px;
+  z-index: 90;
+  padding-bottom: 20px;
+  pointer-events: auto;
+}
+
+.step {
+  margin-bottom: 200px;
+  font-family: "Lato";
+  font-size: 16px;
+  line-height: 23px;
+  color: #000;
+}
+
+#sections .title {
+  font-size:18px;
+   margin-top:40px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+#extra-space {
+  height: 300px;
+}
+#visTitle{
+  position: fixed;
+  top: calc(50% - 300px);
+  left: 497px;
+  font-size: 28px
+}
+#sampleArrow{
+  position: fixed;
+  top: calc(50% - 266px);
+  left: 648px;
+  font-size: 28px;
+  z-index: 999;
+}
+#sampleArrow img{
+  width: 223px;
+}
+#visTitle span{
+  color: #ca5800;
+  margin-left: 10px;
+}
+#vis {
+  display: inline-block;
+  position: relative;
+  margin-top: 50px;
+  /*top: calc(50% - 300px);*/
+  left: 0px;
+  z-index: 1;
+  margin-left: 0;
+  /* height: 600px; */
+  /* width: 600px; */
+  /* background-color: #ddd; */
+}
+#lineChart{
+  display: inline-block;
+  position: fixed;
+  bottom: 20px;
+  z-index: 1;
+  margin-left: 0;  
+  width: 530px;
+  background: transparent;
+  height: 207px;
+  top: calc(50% - 250px);
+  border-left: 46px solid transparent;
+  left: 734px;
+  height: 239px;
+}
+#vis .title {
+  font-size:120px;
+  text-anchor: middle;
+}
+
+#vis .sub-title {
+  font-size:80px;
+  text-anchor: middle;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+.updateText{
+  opacity: 0;
+}
+
+
+
+
+.state path.line { 
+    stroke: #000;
+    stroke-width: 2;
+    fill: none;
+    /*opacity: .2*/
+}
+
+
+/*.state .axis path {
+    fill: none;
+    stroke: grey;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+}
+.state .x.axis text, .state .x.axis line{
+  display: none;
+}
+
+.state .y.axis text, .state .y.axis line{
+  display: none;
+}
+.state .y.axis.AK text, .state .y.axis.AK line{
+  display: block;
+}*/
+
+.axis{
+  display: none;
+}
+
+
+text.mapLable.standard{
+  font-size: 16px;
+  fill: #fff;
+  /*fill: red !important;*/
+}
+text.mapLable.blank{
+  font-size: 16px;
+  fill: #666666;
+}
+
+
+
+
+
+
+#map{
+  position: fixed;
+  top: 20px;
+  left: 200px;
+  opacity: 0;
+}
+
+
+
+/** Intro area chart **/
+#titleText{
+  font-family: Lato;
+  font-size: 72px;
+  width: 100%;
+  top: 40%;
+  position: fixed;
+  text-transform: uppercase;
+  z-index: 2;
+  text-align: center;
+}
+#backgroundBlocker{
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  z-index: -1;
+  pointer-events: none;
+  background-color: rgba(255,255,255,0)
+}
+
+
+@media (max-width: 1170px){
+  .container{
+    margin-left: auto;
+    width: 100%;
+  }
+  #isMobile{
+    display: block;
+  }
+  #sections{
+    display: inherit;
+    width: 400px;
+    margin: 0 auto;
+    pointer-events: none;
+  }
+  .step {
+    margin-bottom: 1000px;
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: rgb(136, 136, 136) 4px 4px 16px;
+    padding: 30px;
+    z-index: 2;
+  }
+}
+@media (max-width: 768px){
+  .step {
+    margin-bottom: 1200px;
+  }
+}
+@media (max-width: 350px){
+  #sections{
+    /*width: 300px;*/
+    left: -20px;
+    /*pointer-events: none;*/
+  }
+}
+
+@media (max-width: 500px){
+  #topText{
+    margin-top: -90px;
+    padding: 20px;
+  }
+  #sections{
+    width: 300px;
+    /*left: -20px;*/
+    pointer-events: none;
+  }
+}
+
+
+#buttons{
+  width: 100%;
+  clear: both;
+  padding-top: 40px;
+}
+
+.button{
+  background: #d2d2d2;
+  float: left;
+  padding: 10px;
+  margin: 10px;
+  cursor: pointer;
+  color: #333;
+  border: 1px solid #333;
+}
+.button:hover{
+  background: #333;
+  color: white;
+}
+
+#instructions{
+  font-style: italic;
+  margin-bottom: 40px;
+}
+#instructions a{
+  color: #1696d2;
+}
+.tempContainer{
+  float: left;
+  margin-right: 15px;
+}
+input{
+  font-size: 16px;
+}
