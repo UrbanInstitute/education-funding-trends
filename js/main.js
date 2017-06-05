@@ -128,7 +128,8 @@ function  renderMap(trendsData, startYear, endYear) {
       }
     }
     mapX.domain([startYear,endYear]);
-    mapY.domain([0, d3.max(trendsData, function(d) { return d[firstKey]; })]); 
+    mapY.domain([d3.min(trendsData, function(d) { return d[firstKey]; }), d3.max(trendsData, function(d) { return d[firstKey]; })]); 
+    console.log(mapY.domain(), trendsData)
 
 
 
