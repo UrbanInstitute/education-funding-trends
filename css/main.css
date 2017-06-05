@@ -126,7 +126,9 @@ body{
     fill: none;
     /*opacity: .2*/
 }
-
+.ratioOneLine{
+  stroke: white;
+}
 
 /*.state .axis path {
     fill: none;
@@ -280,3 +282,5 @@ text.mapLable.blank{
 input{
   font-size: 16px;
 }
+
+

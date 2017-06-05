@@ -144,9 +144,21 @@ function  renderMap(trendsData, startYear, endYear) {
         .x(function(d) { return mapX(d.Year); })
         .y(function(d) { return mapY(d[firstKey]); });
 
+    map.append("line")
+      .attr("x1",chartMargin)
+      .attr("x2",chartWidth-chartMargin)
+      .attr("y1",mapY(1))
+      .attr("y2",mapY(1))
+      .attr("class","ratioOneLine")
+
+
+
     map.append("path")
       .attr("class", function(d){ return "standard line " + d.key })
           .attr("d", function(d){  return mapline(d.values)})
+
+
+
     map.append("path")
       .attr("class", "alt line")
           .attr("d", function(d){  return mapline(d.values)})
@@ -240,6 +252,13 @@ function  renderMap(trendsData, startYear, endYear) {
           .transition()
           .duration(1200)
           .attr("d", function(d){ return mapline(d.values)})
+
+      d3.selectAll(".ratioOneLine")
+      .transition()
+      .duration(1200)
+      .attr("y1",mapY(1))
+      .attr("y2",mapY(1))
+
 
     var mapXAxis = d3.axisBottom(mapX)
         // .outerTickSize(0);
