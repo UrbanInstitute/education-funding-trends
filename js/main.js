@@ -221,7 +221,8 @@ function  renderMap(trendsData, startYear, endYear) {
       mapY = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin])
         // .domain(d3.extent(trendsData, function(d){ return d[variable]}))
       var max = d3.max(trendsData, function(d) { return d[variable]; })
-      mapY.domain([0, max]); 
+      var min = d3.min(trendsData, function(d) { return d[variable]; })
+      mapY.domain([min, max]); 
       mapline = d3.line()
           .x(function(d) { return mapX(d.Year); })
           .y(function(d) { return mapY(d[variable]); });
