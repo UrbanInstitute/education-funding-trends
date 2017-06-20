@@ -38,16 +38,15 @@
   <script src="data/stateData.js"></script>
   <script src = "js/main.js"></script>
   <script>
+  //All this code is just needed for the file uploader/preview page
     var reader = new FileReader();  
-    
     function loadFile() {      
       var file = document.querySelector('input[type=file]').files[0];      
       reader.addEventListener("load", parseFile, false);
       if (file) {
         reader.readAsText(file);
       }      
-    }
-    
+    }    
     function parseFile(){
       var doesColumnExist = false;
       var data = d3.csvParse(reader.result, function(d){
@@ -55,9 +54,6 @@
       });
       renderMap(data, parseInt(d3.select("#startYear").node().value), parseInt(d3.select("#endYear").node().value));
     }
-    // d3.csv("data/sampleData.csv", function(trendsData){
-    //   renderMap(trendsData, 1990, 2000)
-    // })
   </script>
 </body>
 
