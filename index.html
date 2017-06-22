@@ -4,56 +4,36 @@
 <link rel="stylesheet" type="text/css" href="css/main.css"/>
 </head>
 <body>
-  <div id = "instructions">
-    <p>Choose a start and end year, then upload a dataset to generate an example tile grid map. Datasets must:</p>
-    <ul>
-      <li>Be in csv format</li>
-      <li>Be in long format, with one state and one year per row</li>
-      <li>Include a column with the header "State", with 2 letter state abbreviations as values</li>
-      <li>Include a column with the header "Year", with 4 digit years as values</li>
-      <li>Include at least 1 other column, with a header of your choice</li>
-    </ul>
-    <p>
-    You may <a href = "data/sampleData.csv">download a sample data file here.</a>
-    </p>
-    <p>Uploading a file will generate an interactive prototype, with small multiple line charts for each state (or DC). To omit/grey out a state, simply do not include it in the data file.</p>
-    <p>Each column header (other than State/Year) will generate a button. Click the button to view small multiple charts for that variable.</p>
-    <p>To reset data or start/end year, refresh the page and start over.</p>
+
+  
+  
+ 
+  <div id = "button-div">
+    <div class="button" id="revratio_all">
+    Regressivity ratio
+    </div>
+    <div class="button" id="revpp_all_2014dol">
+    Levels
+    </div>
   </div>
-  <div class = "tempContainer">
-    <div id = "startLabel">Start year:</div>
-    <input id = "startYear" type="number" step="1" value="1995"/>
-  </div>
-  <div class = "tempContainer">
-    <div id = "endLabel">End year:</div>
-    <input id = "endYear" type="number" step="1" value="2014"/>
-  </div>
-  <div class = "tempContainer">
-    <div id = "fileLabel">Upload data:</div>
-    <input type="file" onchange="loadFile()" />
-  </div>
-  <div id = "buttons"></div>
+  <form>
+    <div>
+      <input type="checkbox" id="adjusted-checkbox" checked>
+      <label for="adjusted-checkbox">Adjusted</label>
+    </div>
+  </form>
+
   <div id = "vis"></div>
+  <div class="notes">
+  <!--ADD NOTE ABOUT DC AND HAWAII ONLY HAVING ONE SCHOOL DISTRICT SO NOT ON MAP-->
+  </div>
   <script src="js/vendor/d3.v4.js"></script>
   <script src="data/stateData.js"></script>
   <script src = "js/main.js"></script>
   <script>
   //All this code is just needed for the file uploader/preview page
-    var reader = new FileReader();  
-    function loadFile() {      
-      var file = document.querySelector('input[type=file]').files[0];      
-      reader.addEventListener("load", parseFile, false);
-      if (file) {
-        reader.readAsText(file);
-      }      
-    }    
-    function parseFile(){
-      var doesColumnExist = false;
-      var data = d3.csvParse(reader.result, function(d){
-        return d;   
-      });
-      renderMap(data, parseInt(d3.select("#startYear").node().value), parseInt(d3.select("#endYear").node().value));
-    }
+  
+
   </script>
 </body>
 
