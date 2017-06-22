@@ -162,10 +162,66 @@ text.mapLable.blank{
   fill: #666666;
 }
 
+/*SWITCH BUTTONS*/
 
+#switch-div {
+  width: 70%;
+  margin-left: 20px;
+  float: right;
+}
+.urban-switch.large {
+    font-size: 13px;
+    font-family: Lato, sans-serif;
+    height: 26px;
+    border: none;
+    color: #ffffff;
+    display: inline-block;
+    line-height: 12px;
+    text-align: left;
+    border-radius: 10px;
+    padding-right: 10px;
+    margin-bottom: 18px;
+    margin-top: 18px;
+}
 
+.switch.large.on {
+    background-position: -10px 0px;
+    background-color: #1696d2;
+}
 
+.switch.large.off {
+    background-position: -68px 0px;
+    background-color: #696969;
+}
 
+.switch.large {
+    background-image: url(../img/off-on.png);
+    background-color: #696969;
+    background-repeat: no-repeat;
+    /* width: 55px; */
+    /* height: 18px; */
+    /* border-radius: 10px; */
+    width: 83px;
+    height: 26px;
+    border-radius: 20px;
+    margin-left: 10px;
+    display: inline-block;
+    background-size: cover;
+    cursor: pointer;
+    margin-right: 9px;
+    position: relative;
+    -webkit-transition: background-position .1s ease-in;
+    -moz-transition: background-position .1s ease-in;
+    -o-transition: background-position .1s ease-in;
+    transition: background-position .1s ease-in;
+}
+
+/*END SWITCH BUTTONS*/
+
+form {
+  width: 10%;
+  margin-top: 18px;
+}
 
 #map{
   position: fixed;

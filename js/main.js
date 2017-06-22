@@ -221,18 +221,50 @@ d3.csv("/data/data.csv", function(error, trendsDataFull) {
     drawBackMapCurtain(0)
   }
 
-          d3.selectAll(".button")
-            .on("click", function(d){ 
-              var selectedToggle;
-                if (d3.select('input').property('checked') == true) { 
-                  selectedToggle = "adj_" + d3.select(this).attr("id");console.log(selectedToggle)
-                } else {console.log('hi'); selectedToggle = d3.select(this).attr("id")
-              }
-              console.log(selectedToggle)
-             drawMapLine(selectedToggle, startYear, endYear)
-            })
-      
+/*STEP BUTTONS*/
 
+  d3.selectAll(".button")
+    .on("click", function(d){  console.log(selectedToggles)
+      var selectedCategory;
+        if (d3.select('input').property('checked') == true) { 
+          d3.selectAll(".button").classed('selected-category', false)
+          d3.select(this).classed('selected-category', true)
+          selectedCategory = "adj_" + d3.select(this).attr("id") + selectedToggles;
+        } else {console.log('hi'); selectedCategory = d3.select(this).attr("id") + selectedToggles;
+      }
+     drawMapLine(selectedCategory, startYear, endYear)
+    })
+/*
+
+/*TOGGLE BUTTONS*/
+var selectedToggles = "all";
+
+var combinedClassesArray = []
+ d3.selectAll(".button_toggle")
+    .on('click', function() {
+    if (d3.select('input').property('checked') == true) { 
+      if(d3.select(this).classed("on")){ 
+        combinedClassesArray.length = 0;
+        d3.select(this).classed("on", false)
+        d3.select(this).classed("off", true)
+        d3.selectAll(".button_toggle.on")
+          .each(function(d, i) { //get class of each toggle that is still turned on and add it to the combinedClasses array
+            var toggleClass = d3.select(this).attr('class').split(" ").pop(-1);
+            combinedClassesArray.push(toggleClass);
+          })
+          var selectedToggles = combinedClassesArray.join('')
+          var selectedCategory = "adj_" + d3.select(".selected-category").attr("id") + selectedToggles
+          console.log(selectedCategory)
+          drawMapLine(selectedCategory, startYear, endYear)
+
+      }
+    }
+      else {
+        d3.select(this).classed("on", true)
+        d3.select(this).classed("off", false)
+      }
+
+    }) 
   function drawMapLine(variable, startYear, endYear){
   //function called when interacting with the UI. `variable` is the column header being graphed, and startYear/endYear are just for the file uploader (will be constants in final features)
 

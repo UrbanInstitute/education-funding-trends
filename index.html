@@ -9,19 +9,36 @@
   
  
   <div id = "button-div">
-    <div class="button" id="revratio_all">
+    <div class="button selected-category" id="revratio_">
     Regressivity ratio
     </div>
-    <div class="button" id="revpp_all_2014dol">
+    <div class="button" id="revpp_">
     Levels
     </div>
   </div>
-  <form>
-    <div>
-      <input type="checkbox" id="adjusted-checkbox" checked>
-      <label for="adjusted-checkbox">Adjusted</label>
+  <div id="switch-div">
+    Local
+    <div class="urban-switch blue large">
+      <div class="button_toggle switch large on lo" id="lo">
+      </div>
     </div>
-  </form>
+    State
+    <div class="urban-switch blue large">
+      <div class="button_toggle switch large on st" id="st">
+      </div>
+    </div>
+    Federal
+    <div class="urban-switch blue large">
+      <div class="button_toggle switch large on fe" id="fe">
+      </div>
+    </div>
+    <form>
+      <div>
+        <input type="checkbox" id="adjusted-checkbox" checked>
+        <label for="adjusted-checkbox">Adjusted</label>
+      </div>
+    </form>
+  </div>
 
   <div id = "vis"></div>
   <div class="notes">
