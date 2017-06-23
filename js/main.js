@@ -221,18 +221,41 @@ d3.csv("/data/data.csv", function(error, trendsDataFull) {
     drawBackMapCurtain(0)
   }
 
+/*IF ADJUSTED IS CHECKED*/
+var adjusted = "adj_"
+
+function checkAdjusted() {
+  if (d3.select('input').property('checked') == true) { console.log('adj')
+    adjusted = "adj_";
+    selectedCategory = adjusted + d3.select(".selected-category").attr("id") + selectedToggles;
+    console.log(selectedCategory)
+    drawMapLine(selectedCategory, startYear, endYear)
+
+  } else {
+      adjusted = ""
+      selectedCategory = adjusted + d3.select(".selected-category").attr("id") + selectedToggles;
+      console.log(selectedCategory)
+      drawMapLine(selectedCategory, startYear, endYear)
+    }
+}
+
+
+d3.select("input").on("change", checkAdjusted)
+
 /*STEP BUTTONS*/
+
+
+var selectedCategory;
 
   d3.selectAll(".button")
     .on("click", function(d){  console.log(selectedToggles)
-      var selectedCategory;
-        if (d3.select('input').property('checked') == true) { 
-          d3.selectAll(".button").classed('selected-category', false)
-          d3.select(this).classed('selected-category', true)
-          selectedCategory = "adj_" + d3.select(this).attr("id") + selectedToggles;
-        } else {console.log('hi'); selectedCategory = d3.select(this).attr("id") + selectedToggles;
-      }
-     drawMapLine(selectedCategory, startYear, endYear)
+      checkAdjusted();
+      console.log(adjusted)
+      d3.selectAll(".button").classed('selected-category', false)
+      d3.select(this).classed('selected-category', true)
+      selectedCategory = adjusted + d3.select(this).attr("id") + selectedToggles;
+      console.log(selectedCategory)
+      drawMapLine(selectedCategory, startYear, endYear)
     })
 /*
 
@@ -240,28 +263,40 @@ d3.csv("/data/data.csv", function(error, trendsDataFull) {
 var selectedToggles = "all";
 
 var combinedClassesArray = []
- d3.selectAll(".button_toggle")
-    .on('click', function() {
-    if (d3.select('input').property('checked') == true) { 
-      if(d3.select(this).classed("on")){ 
-        combinedClassesArray.length = 0;
-        d3.select(this).classed("on", false)
-        d3.select(this).classed("off", true)
-        d3.selectAll(".button_toggle.on")
+
+//ADD CLASS OF EACH TOGGLE THAT IS ON TO COMBINEDCLASSESARRAY ABOVE
+function getCombinedClasses() {
+  combinedClassesArray.length = 0;
+   d3.selectAll(".button_toggle.on")
           .each(function(d, i) { //get class of each toggle that is still turned on and add it to the combinedClasses array
-            var toggleClass = d3.select(this).attr('class').split(" ").pop(-1);
+            var toggleClass = d3.select(this).attr('class').split(" ")[0];
+            console.log(combinedClassesArray)
             combinedClassesArray.push(toggleClass);
           })
-          var selectedToggles = combinedClassesArray.join('')
-          var selectedCategory = "adj_" + d3.select(".selected-category").attr("id") + selectedToggles
-          console.log(selectedCategory)
-          drawMapLine(selectedCategory, startYear, endYear)
+  var initialSelectedToggles = combinedClassesArray.join('')
+  initialSelectedToggles == "lostfe" ? selectedToggles = "all" : selectedToggles = initialSelectedToggles
+  console.log(selectedToggles)
+}
 
+ d3.selectAll(".button_toggle")
+    .on('click', function() {
+    //FOR ADJUSTED VALUES
+      if(d3.select(this).classed("on")){ 
+        d3.select(this).classed("on", false)
+        d3.select(this).classed("off", true)
+        getCombinedClasses();
+        selectedCategory = adjusted + d3.select(".selected-category").attr("id") + selectedToggles
+        console.log(selectedCategory)
+        checkAdjusted();
+        //drawMapLine(selectedCategory, startYear, endYear)
       }
-    }
       else {
         d3.select(this).classed("on", true)
         d3.select(this).classed("off", false)
+        getCombinedClasses();
+        selectedCategory = adjusted + d3.select(".selected-category").attr("id") + selectedToggles
+        console.log(selectedCategory)
+        checkAdjusted();
       }
 
     }) 
