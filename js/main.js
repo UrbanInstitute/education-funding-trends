@@ -8,7 +8,7 @@ var mapSizes = {
 "small": { "width": 900, "height": 1270, "scale": 3800, "translate": [380,220], "chartWidth": 76, "chartMargin": 8}
 }
 
-var startYear = 1998;
+var startYear = 1994;
 var endYear = 2014;
 
 var mapMargin = {top: 30, right: 20, bottom: 30, left: 50},
@@ -26,6 +26,7 @@ d3.csv("/data/data.csv", function(error, trendsDataFull) {
   function  renderMap(startYear, endYear) {
 
 
+  console.log(startYear+ endYear)
 
 
   //function called on load to create the svg and draw an initial set of line charts. trendsData is passed in from a csv, and startYear/endYear are just for the file uploader (will be constants in final features)
@@ -68,8 +69,6 @@ d3.csv("/data/data.csv", function(error, trendsDataFull) {
       .key(function(d) {return d.State })
       .entries(trendsData);
 
-      console.log(trendsDataNest)
-
     //generate a list of states in the dataset. For any states not in the dataset (stored temporarily in tmpKeys) but in the `stateData` object (which is in the global scope, stored in `stateData.js`, create a new data set, just for the blank states (not in data csv), which wil be greyed out
     var tmpKeys = []
     for(var i = 0; i < trendsDataNest.length; i++){
@@ -79,7 +78,6 @@ d3.csv("/data/data.csv", function(error, trendsDataFull) {
       }
     }
 
-    console.log(tmpKeys)
     var blankStateData = stateData.features.filter(function(o) { return tmpKeys.indexOf(o.properties.abbr) == -1})
 
 
@@ -143,7 +141,6 @@ d3.csv("/data/data.csv", function(error, trendsDataFull) {
     //this is just for the file uploader, setting the key onload to whatever column is first in the data file, other than State/Year. In the real feature, firstKey will just be a constant
     var firstKey = "adj_revratio_all"
     var keys = Object.keys(trendsData[0])
-    console.log(keys)
     // for(var i = 0; i < keys.length; i++){
     //   if(keys[i] == "State" || keys[i] == "Year"){ console.log(keys[i])
     //    continue
@@ -154,6 +151,8 @@ d3.csv("/data/data.csv", function(error, trendsDataFull) {
     //   }
     // }
     mapX.domain([startYear,endYear]);
+    console.log(startYear+ endYear)
+
     mapY.domain([d3.min(trendsData, function(d) { return d[firstKey]; }), d3.max(trendsData, function(d) { return d[firstKey]; })]); 
 
 
@@ -243,8 +242,6 @@ function checkAdjusted() {
 d3.select("input").on("change", checkAdjusted)
 
 /*STEP BUTTONS*/
-
-
 var selectedCategory;
 
   d3.selectAll(".button")
@@ -257,7 +254,6 @@ var selectedCategory;
       console.log(selectedCategory)
       drawMapLine(selectedCategory, startYear, endYear)
     })
-/*
 
 /*TOGGLE BUTTONS*/
 var selectedToggles = "all";
@@ -302,7 +298,7 @@ function getCombinedClasses() {
     }) 
   function drawMapLine(variable, startYear, endYear){
   //function called when interacting with the UI. `variable` is the column header being graphed, and startYear/endYear are just for the file uploader (will be constants in final features)
-
+  console.log(variable+ startYear+ endYear)
 
     //reshape the data
     var trendsData = d3.select("#vis").datum()
@@ -382,14 +378,6 @@ function getCombinedClasses() {
         .attr("width",0)
         .attr("x", chartWidth - chartMargin)
   }
-
-
-
-
-
-
-  //a function for the file uploader, each button (which calls drawMapLine on click) is a proxy for the UI elements which will be in the eventual feature
-
 
 
 
