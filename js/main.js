@@ -130,7 +130,8 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
       .attr("height",chartWidth-2*chartMargin + 8)
       .attr("x",chartMargin - 4)
       .attr("y",chartMargin - 4)
-      .style("fill","#1696d2") 
+      .style("fill","#fdbf11") 
+      .attr("class", "nonblank-rect")
 
 
 
@@ -138,6 +139,17 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
     var mapX = d3.scaleLinear().range([chartMargin, chartWidth-chartMargin]);
     var mapY = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin]);
 
+    var rectWidth = d3.select("rect.nonblank-rect").attr("width")
+
+    map.append("rect")
+        .attr("width",chartWidth-2*chartMargin + 8)
+     //   .attr("height",(chartWidth-2*chartMargin + 8)/2)
+        .attr("height", function() { console.log(mapY(1)); return (rectWidth - mapY(1) - chartMargin - 4)
+          //return (mapY(1) - rectWidth + chartMargin/2)
+        })
+        .attr("x",chartMargin - 4)
+        .attr("y",chartMargin - 4)
+        .attr("class", "positive-area")
     //this is just for the file uploader, setting the key onload to whatever column is first in the data file, other than State/Year. In the real feature, firstKey will just be a constant
     var firstKey = "adj_revratio_all"
     var keys = Object.keys(trendsData[0])
@@ -325,12 +337,16 @@ function getCombinedClasses() {
     var max = d3.max(trendsData, function(d) { return d[variable]; })
     var min = d3.min(trendsData, function(d) { return d[variable]; })
 
+
     mapY.domain([min, max]); 
+
+        console.log(min + " " + max)
+
 
     //udpdate line function
     var mapline = d3.line()
       .x(function(d) { return mapX(d.Year); })
-      .y(function(d) { return mapY(d[variable]); });
+      .y(function(d) {  return mapY(d[variable]); });
 
     var mapYAxis = d3.axisLeft(mapY)
 
@@ -348,10 +364,39 @@ function getCombinedClasses() {
 
     //move y=1 line. Note this will need to be hidden (or whatever comparable elements exist will be hidden) for the levels graphs
     d3.selectAll(".ratioOneLine")
-    .transition()
-    .duration(1200)
-      .attr("y1",mapY(1))
-      .attr("y2",mapY(1))
+      .style("opacity", function() {
+        if (d3.select("#revpp_").classed("selected-category") == true){
+          return 0;
+        } else {
+          return 1;
+        }
+      })
+      //   .style("opacity", function() {
+      //   (d3.select("#revpp_").classed("selected-category") == true) ?  0 : 1;
+
+      // })
+      .transition()
+      .duration(1200)
+        .attr("y1",mapY(1))
+        .attr("y2",mapY(1))
+
+var rectWidth = d3.select("rect.nonblank-rect").attr("width")
+console.log(chartMargin)
+    var chartWidth = mapSizes[pageSize]["chartWidth"]
+    var chartMargin = mapSizes[pageSize]["chartMargin"]
+
+  d3.selectAll("rect.positive-area")
+   //   .attr("height",(chartWidth-2*chartMargin + 8)/2)
+        .transition()
+        .duration(1200)
+        .attr("height", function() { return (( rectWidth - (rectWidth - mapY(1))- chartMargin + 2 )); //BEN, WHY IS THIS CALCULATION DIFFERENT THAN THE INITIAL CALCULATION OF THE HEIGHT ON LOAD?
+        //return (mapY(1) - rectWidth + chartMargin/2)
+      })
+
+
+
+
+
 
     //pretty sure this line can be remove, since x axis/scales aren't changing (as can all other references to x scale in this function), but keeping here in case it turns out the scales will change with different variabels (in which case you'll need to add some more code to animate the x axes etc)
     var mapXAxis = d3.axisBottom(mapX)

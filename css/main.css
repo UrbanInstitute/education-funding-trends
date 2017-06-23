@@ -118,7 +118,9 @@ body{
 }
 
 
-
+.positive-area {
+  fill: #1696d2;
+}
 
 .state path.line { 
     stroke: #000;
