@@ -17,7 +17,7 @@ mapHeight = mapSizes[pageSize]["height"] - mapMargin.top - mapMargin.bottom;
 
 
 
-d3.csv("/data/data.csv", function(error, trendsDataFull) {
+d3.csv("data/data.csv", function(error, trendsDataFull) {
         trendsDataFull.forEach(function(d) {
 
         })
