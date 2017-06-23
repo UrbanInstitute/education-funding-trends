@@ -310,6 +310,11 @@ form {
   padding-top: 40px;
 }
 
+.button.selected-category {
+  background: #000;
+  color: #fff;
+}
+
 .button{
   background: #d2d2d2;
   float: left;
