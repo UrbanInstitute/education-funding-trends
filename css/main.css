@@ -9,6 +9,60 @@ body{
   width: 890px;
 }
 
+/*TABS*/
+.tabs {
+  position: relative;   
+  clear: both;
+  margin: 25px 0;
+}
+.tab {
+  float: left;
+
+}
+.tab:nth-child(1) { 
+  margin-left: 39%;
+  margin-right: 2%;
+
+ }
+
+.tab .top-tab {
+  background: #eee; 
+  padding: 20px 50px 0px 50px; 
+  border: 1px solid #ccc; 
+  margin-left: -1px; 
+  position: relative;
+  left: 1px; 
+  font-size: 24px;
+
+}
+.tab [type=radio] {
+  display: none;   
+}
+
+
+
+.content {
+  position: absolute;
+  top: 28px;
+  left: 0;
+  background: white;
+  right: 0;
+  bottom: 0;
+  padding: 20px;
+  border-top: 1px solid #ccc; 
+
+}
+[type=radio]:checked ~ label {
+  background: white;
+  border-bottom: 1px solid white;
+  z-index: 2;
+}
+[type=radio]:checked ~ label ~ .content {
+  z-index: 1;
+}
+
+
+
 #graphic {
   position: absolute;
   left: 14px;
@@ -166,10 +220,15 @@ text.mapLable.blank{
 
 /*SWITCH BUTTONS*/
 
+.switch-div-individual {
+  float: left;
+}
+
 #switch-div {
-  width: 70%;
+  width: 100%;
   margin-left: 20px;
-  float: right;
+  float: left;
+  margin-top: 100px;
 }
 .urban-switch.large {
     font-size: 13px;
@@ -218,10 +277,11 @@ text.mapLable.blank{
     transition: background-position .1s ease-in;
 }
 
+
+
 /*END SWITCH BUTTONS*/
 
 form {
-  width: 10%;
   margin-top: 18px;
 }
 

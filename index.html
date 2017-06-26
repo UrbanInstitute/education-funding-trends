@@ -2,55 +2,72 @@
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href="css/main.css"/>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
 </head>
 <body>
 
-  
-  
- 
-  <div id = "button-div">
-    <div class="button selected-category" id="revratio_">
-    Regressivity ratio
-    </div>
-    <div class="button" id="revpp_">
-    Levels
-    </div>
+<div class="tabs">
+    
+  <div class="tab">
+    <input type="radio" id="tab-1" name="tab-group-1" checked>
+    <label id = "revratio_" class="top-tab current" for="tab-1">Ratio</label>
+    <div class="content">
+    </div> 
+  </div>
+    
+  <div class="tab">
+    <input type="radio" id="tab-2" name="tab-group-1">
+    <label id="revpp_" class="top-tab" for="tab-2">Levels</label>       
+    <div class="content">
+    </div> 
   </div>
   <div id="switch-div">
-    Local
-    <div class="urban-switch blue large">
-      <div class="lo button_toggle switch large on" id="lo">
+    <div class="switch-div-individual">
+      Local
+      <div class="urban-switch blue large">
+        <div class="lo button_toggle switch large on" id="lo">
+        </div>
       </div>
     </div>
-    State
-    <div class="urban-switch blue large">
-      <div class="st button_toggle switch large on" id="st">
+    <div class="switch-div-individual">
+      State
+      <div class="urban-switch blue large">
+        <div class="st button_toggle switch large on" id="st">
+        </div>
       </div>
     </div>
-    Federal
-    <div class="urban-switch blue large">
-      <div class="fe button_toggle switch large on" id="fe">
+    <div class="switch-div-individual">
+      Federal
+      <div class="urban-switch blue large">
+        <div class="fe button_toggle switch large on" id="fe">
+        </div>
       </div>
     </div>
-    <form>
-      <div>
-        <input type="checkbox" id="adjusted-checkbox" checked>
-        <label for="adjusted-checkbox">Adjusted</label>
-      </div>
-    </form>
+    <div class="switch-div-individual">
+      <form>
+        <div>
+          <input type="checkbox" id="adjusted-checkbox" checked>
+          <label class="checkbox-label" for="adjusted-checkbox">Adjusted</label>
+        </div>
+      </form>
+    </div>
   </div>
-
-  <div id = "vis"></div>
+  <div id = "vis">
+  </div>
   <div class="notes">
   <!--ADD NOTE ABOUT DC AND HAWAII ONLY HAVING ONE SCHOOL DISTRICT SO NOT ON MAP-->
   </div>
- <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+</div>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
   <script src="js/vendor/d3.v4.js"></script>
   <script src="data/stateData.js"></script>
   <script src = "js/main.js"></script>
   <script>
   //All this code is just needed for the file uploader/preview page
-  
+
 
   </script>
 </body>

@@ -8,6 +8,8 @@ var mapSizes = {
 "small": { "width": 900, "height": 1270, "scale": 3800, "translate": [380,220], "chartWidth": 76, "chartMargin": 8}
 }
 
+
+var category = "revratio";
 var startYear = 1994;
 var endYear = 2014;
 
@@ -238,13 +240,13 @@ var adjusted = "adj_"
 function checkAdjusted() {
   if (d3.select('input').property('checked') == true) { console.log('adj')
     adjusted = "adj_";
-    selectedCategory = adjusted + d3.select(".selected-category").attr("id") + selectedToggles;
+    selectedCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
     console.log(selectedCategory)
     drawMapLine(selectedCategory, startYear, endYear)
 
   } else {
       adjusted = ""
-      selectedCategory = adjusted + d3.select(".selected-category").attr("id") + selectedToggles;
+      selectedCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
       console.log(selectedCategory)
       drawMapLine(selectedCategory, startYear, endYear)
     }
@@ -253,16 +255,17 @@ function checkAdjusted() {
 
 d3.select("input").on("change", checkAdjusted)
 
-/*STEP BUTTONS*/
+/*SWITCHING BETWEEN TABS*/
 var selectedCategory;
 
-  d3.selectAll(".button")
+  d3.selectAll(".top-tab")
     .on("click", function(d){  console.log(selectedToggles)
       checkAdjusted();
       console.log(adjusted)
-      d3.selectAll(".button").classed('selected-category', false)
-      d3.select(this).classed('selected-category', true)
-      selectedCategory = adjusted + d3.select(this).attr("id") + selectedToggles;
+      d3.selectAll(".tab-content").classed('current', false)
+      d3.select(this).classed('current', true)
+      console.log(d3.select(this).attr('class').split(" ")[0])
+      selectedCategory = adjusted + d3.select(this).attr('id') + selectedToggles;
       console.log(selectedCategory)
       drawMapLine(selectedCategory, startYear, endYear)
     })
@@ -293,7 +296,7 @@ function getCombinedClasses() {
         d3.select(this).classed("on", false)
         d3.select(this).classed("off", true)
         getCombinedClasses();
-        selectedCategory = adjusted + d3.select(".selected-category").attr("id") + selectedToggles
+        selectedCategory = adjusted + d3.select(".current").attr("id") + selectedToggles
         console.log(selectedCategory)
         checkAdjusted();
         //drawMapLine(selectedCategory, startYear, endYear)
@@ -302,7 +305,7 @@ function getCombinedClasses() {
         d3.select(this).classed("on", true)
         d3.select(this).classed("off", false)
         getCombinedClasses();
-        selectedCategory = adjusted + d3.select(".selected-category").attr("id") + selectedToggles
+        selectedCategory = adjusted + d3.select(".current").attr("id") + selectedToggles
         console.log(selectedCategory)
         checkAdjusted();
       }
@@ -365,7 +368,7 @@ function getCombinedClasses() {
     //move y=1 line. Note this will need to be hidden (or whatever comparable elements exist will be hidden) for the levels graphs
     d3.selectAll(".ratioOneLine")
       .style("opacity", function() {
-        if (d3.select("#revpp_").classed("selected-category") == true){
+        if (d3.select("#revpp_").classed("current") == true){
           return 0;
         } else {
           return 1;
