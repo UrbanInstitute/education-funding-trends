@@ -1,8 +1,8 @@
 
 //Prob easiest to have a few set sizes for the map, which change at broswer size breakpoints. So `pageSize` will be determined by some function which tests browser size (e.g. IS_MOBILE() functions in past projects). I don't think it's as straightforward to have a continuously resizing graphic. Note that these values are just placeholders, they'll need to be tested/updated, and potentially more or fewer sizes are needed
-var pageSize = "huge"
+var pageSize = "full"
 var mapSizes = {
-"huge": { "width": 1200, "height": 1570, "scale": 4300, "translate": [410,240], "chartWidth": 96, "chartMargin": 11},
+"full": { "width": 1200, "height": 555, "scale": 3150, "translate": [720,180], "chartWidth": 74, "chartMargin": 13},
 "large": { "width": 750, "height": 600, "scale": 3100, "translate": [300,200], "chartWidth": 62, "chartMargin": 5},
 "medium": { "width": 900, "height": 1270, "scale": 3800, "translate": [380,220], "chartWidth": 76, "chartMargin": 8},
 "small": { "width": 900, "height": 1270, "scale": 3800, "translate": [380,220], "chartWidth": 76, "chartMargin": 8}
@@ -239,7 +239,7 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
 var adjusted = "adj_"
 
 function checkAdjusted() {
-  if (d3.select('input').property('checked') == true) { console.log('adj')
+  if (d3.select('#adjusted-checkbox').property('checked') == true) { console.log('adj')
     adjusted = "adj_";
     selectedCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
     console.log(selectedCategory)
@@ -254,7 +254,7 @@ function checkAdjusted() {
 }
 
 
-d3.select("input").on("change", checkAdjusted)
+d3.select("#adjusted-checkbox").on("change", checkAdjusted)
 
 /*SWITCHING BETWEEN TABS*/
 var selectedCategory;

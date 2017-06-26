@@ -9,6 +9,12 @@ body{
   width: 890px;
 }
 
+.tab-content {
+  margin-left: 50px;
+  margin-right: 50px;
+  width: 100%;
+}
+
 /*TABS*/
 .tabs {
   position: relative;   
@@ -125,7 +131,6 @@ body{
   position: relative;
   margin-top: 50px;
   /*top: calc(50% - 300px);*/
-  left: 0px;
   z-index: 1;
   margin-left: 0;
   /* height: 600px; */
@@ -137,15 +142,34 @@ body{
   position: fixed;
   bottom: 20px;
   z-index: 1;
-  margin-left: 0;  
-  width: 530px;
+  margin-left: 100px;  
+  width: 300px;
   background: transparent;
-  height: 207px;
-  top: calc(50% - 250px);
-  border-left: 46px solid transparent;
-  left: 734px;
-  height: 239px;
+  height: 340px;
+  top: 320px;
+  left: 0px;
 }
+
+#lineChart-details {
+  display: inline-block;
+  position: fixed;
+  bottom: 20px;
+  z-index: 1;
+  margin-left: 100px;  
+  width: 300px;
+  background: transparent;
+  height: 177px;
+  top: 650px;
+  left: 0px;
+}
+
+
+.state-title {
+  text-transform: uppercase;
+  color: #1896d2;
+  margin-bottom: 10px;
+}
+
 #vis .title {
   font-size:120px;
   text-anchor: middle;
@@ -209,12 +233,12 @@ body{
 
 
 text.mapLable.standard{
-  font-size: 16px;
+  font-size: 12.24px;
   fill: #fff;
   /*fill: red !important;*/
 }
 text.mapLable.blank{
-  font-size: 16px;
+  font-size: 12.24px;
   fill: #666666;
 }
 
@@ -316,7 +340,9 @@ form {
   background-color: rgba(255,255,255,0)
 }
 
+@media (max-width: 1200px) {
 
+}
 @media (max-width: 1170px){
   .container{
     margin-left: auto;
