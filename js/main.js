@@ -95,6 +95,7 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
     //for each non blank state, create a group which will hold the line chart
     var chartWidth = mapSizes[pageSize]["chartWidth"]
     var chartMargin = mapSizes[pageSize]["chartMargin"]
+
     var map = mapSvg
       .selectAll(".state")
       .data(trendsDataNest)
@@ -262,7 +263,7 @@ var selectedCategory;
     .on("click", function(d){  console.log(selectedToggles)
       checkAdjusted();
       console.log(adjusted)
-      d3.selectAll(".tab-content").classed('current', false)
+      d3.selectAll(".top-tab").classed('current', false)
       d3.select(this).classed('current', true)
       console.log(d3.select(this).attr('class').split(" ")[0])
       selectedCategory = adjusted + d3.select(this).attr('id') + selectedToggles;
@@ -384,16 +385,18 @@ function getCombinedClasses() {
         .attr("y2",mapY(1))
 
 var rectWidth = d3.select("rect.nonblank-rect").attr("width")
-console.log(chartMargin)
     var chartWidth = mapSizes[pageSize]["chartWidth"]
     var chartMargin = mapSizes[pageSize]["chartMargin"]
 
   d3.selectAll("rect.positive-area")
-   //   .attr("height",(chartWidth-2*chartMargin + 8)/2)
         .transition()
         .duration(1200)
-        .attr("height", function() { return (( rectWidth - (rectWidth - mapY(1))- chartMargin + 2 )); //BEN, WHY IS THIS CALCULATION DIFFERENT THAN THE INITIAL CALCULATION OF THE HEIGHT ON LOAD?
-        //return (mapY(1) - rectWidth + chartMargin/2)
+        .attr("height", function() { 
+        if (d3.select(".current").attr("id") == "revratio_") { console.log(selectedCategory);
+        return (( rectWidth - (rectWidth - mapY(1))- chartMargin + 2 )) //BEN, WHY IS THIS CALCULATION DIFFERENT THAN THE INITIAL CALCULATION OF THE HEIGHT ON LOAD?
+        } else { 
+          return rectWidth;
+        } 
       })
 
 
