@@ -240,6 +240,9 @@ body{
   display: none;
 }
 
+.hidden {
+  opacity: 0 !important;
+}
 
 text.mapLable.standard{
   font-size: 12.24px;

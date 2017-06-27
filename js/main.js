@@ -64,6 +64,18 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
       return d.State == "USA"
     })
 
+    graphData.forEach(function(d) {
+      keys = Object.keys(d);
+      for(var i = 0; i<keys.length; i++){
+        var key = keys[i]
+        if(key == "State" || key == "Year"){
+          continue;
+        }else{
+          d[key] = +d[key]
+        }
+      }
+    });
+
     console.log(graphData)
 
     graphX.domain(d3.extent(graphData, function(d) { return d.Year; }));
@@ -302,14 +314,15 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
       adjusted = "adj_";
       selectedCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
       console.log(selectedCategory)
-      drawGraphLine(selectedCategory)
-      drawMapLine(selectedCategory, startYear, endYear)
+      selectedToggles == "" ? removeGraphLine() :  drawGraphLine(selectedCategory)
+      selectedToggles == "" ? removeMapAttributes() : drawMapLine(selectedCategory, startYear, endYear) 
+      
 
-    } else {
+    } else { console.log("not adjusted")
         adjusted = ""
         selectedCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
         console.log(selectedCategory)
-      //  drawGraphLine(selectedCategory)
+        drawGraphLine(selectedCategory)
         drawMapLine(selectedCategory, startYear, endYear)
       }
   }
@@ -373,8 +386,12 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
         }
 
       }) 
-  function drawGraphLine(variable) {
-
+  function drawGraphLine(variable) { console.log('hi')
+    //IF ALL TOGGLES WERE TURNED OFF BEFORE, THIS ENSURES THAT OPACITY IS RESET TO 1
+    d3.selectAll(".line-usa")
+          // .transition()
+          // .duration(1200)
+          .attr("opacity", 1)
     var graphData = trendsDataFull.filter(function(d) { 
       return d.State == "USA"
     })
@@ -391,14 +408,14 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
     var graphY = d3.scaleLinear().range([graphHeight, 0]);
     var max = d3.max(graphData, function(d) { return d[variable]; })
     var min = d3.min(graphData, function(d) { return d[variable]; })
-console.log("max: " + max + " min: " + min)
 
+    console.log("max: " + max)
     graphX.domain(d3.extent(graphData, function(d) { return d.Year; }));
     graphY.domain([d3.min(graphData, function(d) {return d[variable]; }), d3.max(graphData, function(d) {return d[variable]; })]);
-console.log(graphHeight)
+
     var graphLine = d3.line()
-      .x(function(d) { console.log (d.Year); return graphX(d.Year); })
-      .y(function(d) { console.log(graphY(d[variable])); return graphY(d[variable]); });
+      .x(function(d) { return graphX(d.Year); })
+      .y(function(d) { console.log((d[variable])); return graphY(d[variable]); });
 
     d3.selectAll("#lineChart .y.graphAxis")
         .transition()
@@ -411,7 +428,16 @@ console.log(graphHeight)
 
   }
   function drawMapLine(variable, startYear, endYear){
-  //function called when interacting with the UI. `variable` is the column header being graphed, and startYear/endYear are just for the file uploader (will be constants in final features)
+    //IF ALL TOGGLES WERE TURNED OFF BEFORE, THIS ENSURES THAT OPACITY IS RESET TO 1
+    d3.selectAll(".positive-area")
+          // .transition()
+          // .duration(1200)
+          .attr("opacity", 1)
+    d3.selectAll(".standard.line")
+          // .transition()
+          // .duration(1200)
+          .attr("opacity", 1)
+
 
     //reshape the data
     var trendsData = d3.select("#vis").datum()
@@ -462,15 +488,8 @@ console.log(graphHeight)
 
     //move y=1 line. Note this will need to be hidden (or whatever comparable elements exist will be hidden) for the levels graphs
     d3.selectAll(".ratioOneLine")
-      // .style("opacity", function() {
-      //   if (d3.select("#revpp_").classed("current") == true){
-      //     return 0;
-      //   } else {
-      //     return 1;
-      //   }
-      // })
         .style("opacity", function() {
-        return (d3.select("#revpp_").classed("selected-category") == true) ?  0 : 1;
+        return (d3.select("#revpp_").classed("current") == true) ?  0 : 1;
 
       })
       .transition()
@@ -521,6 +540,43 @@ console.log(graphHeight)
         .attr("x", chartWidth - chartMargin)
   }
 
+
+  function removeMapAttributes() { console.log('remove')
+  //To create the illusion of the lines in the chart animating across the chart area (left to right, small to large X values), I created a "curtain" which is a rect covering the line chart. Then, by animating it's width to 0, the animation effect is simulated. I would imagine that when the user switches between different units, on the graphs, e.g. when they switch from dollars to ratios, the curtain should draw back. On the other hand, if a user switches between combinations of state/local/federal, or toggles the adjustment on/off, the curtain should not draw back. Does that sound right to you?
+
+    d3.selectAll(".standard.line")
+     .transition()
+     .duration(0)
+     .attr("opacity", 1)
+      .transition()
+      .delay( 200)
+      .duration(1200)
+      .attr("opacity", 0)
+    d3.selectAll(".positive-area")
+      .transition()
+      .duration(0)
+      .attr("opacity", 1)
+      .transition()
+      .delay( 200)
+      .duration(1200)
+        .attr("opacity",0)
+
+  }
+
+
+  function removeGraphLine() { console.log('remove')
+
+    d3.select(".line-usa")
+     .transition()
+     .duration(0)
+     .attr("opacity", 1)
+      .transition()
+      .delay( 200)
+      .duration(1200)
+      .attr("opacity", 0)
+    
+
+  }
 
 
       renderGraph();
