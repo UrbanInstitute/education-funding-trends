@@ -21,15 +21,22 @@ mapHeight = mapSizes[pageSize]["height"] - mapMargin.top - mapMargin.bottom;
 
 /*LINE GRAPH VARIABLES*/
 
+var graphSizes = {
+"full": { "width": 400, "height": 300, "translate": [720,180]},
+"large": { "width": 750, "height": 600, "translate": [300,200]},
+"medium": { "width": 900, "height": 1270, "translate": [380,220]},
+"small": { "width": 900, "height": 1270, "translate": [380,220]}
+}
+
 var initialGraphVariable = "adj_revratio_all";
 var graphMargin = {top: 30, right: 20, bottom: 30, left: 50},
-  graphWidth = 400 - graphMargin.left - graphMargin.right,
-  graphHeight = 300 - graphMargin.top - graphMargin.bottom;
+  graphWidth =  graphSizes[pageSize]["width"]- graphMargin.left - graphMargin.right,
+  graphHeight = graphSizes[pageSize]["height"] - graphMargin.top - graphMargin.bottom;
 
 var graphX = d3.scaleTime().range([0, graphWidth]);
 var graphY = d3.scaleLinear().range([graphHeight, 0]);
 
-var line = d3.line()
+var graphLine = d3.line()
   .x(function(d) { return graphX(d.Year); })
   .y(function(d) { return graphY(d[initialGraphVariable]); });
 
@@ -50,6 +57,8 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
 
         })
 
+
+  //CREATE INITIAL LINE GRAPH ON LOAD
   function renderGraph() {
     var graphData = trendsDataFull.filter(function(d) { 
       return d.State == "USA"
@@ -63,10 +72,11 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
     graphSvg.append("path")
       .data([graphData])
       .attr("class", "line-usa")
-      .attr("d", line);
+      .attr("d", graphLine);
   
     graphSvg.append("g")
         .attr("transform", "translate(0," + graphHeight + ")")
+        .attr("class", "x graphAxis")
         .call(d3.axisBottom(graphX)
           .ticks(5)
           .tickFormat(d3.format('')))
@@ -74,13 +84,14 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
 
     // Add the Y Axis
     graphSvg.append("g")
+        .attr("class", "y graphAxis")
         .call(d3.axisLeft(graphY)
           .ticks(5)
           .tickFormat(d3.format('.2f')));
 
   }
 
-
+  //CREATE INITIAL MAP ON LOAD
   function  renderMap(startYear, endYear) {
 
 
@@ -212,15 +223,7 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
     //this is just for the file uploader, setting the key onload to whatever column is first in the data file, other than State/Year. In the real feature, firstKey will just be a constant
     var firstKey = "adj_revratio_all"
     var keys = Object.keys(trendsData[0])
-    // for(var i = 0; i < keys.length; i++){
-    //   if(keys[i] == "State" || keys[i] == "Year"){ console.log(keys[i])
-    //    continue
-    //   }else{ 
-    //   firstKey = keys[i];
-    //   console.log(firstKey);
-    //     break;
-    //   }
-    // }
+
     mapX.domain([startYear,endYear]);
     console.log(startYear+ endYear)
 
@@ -291,86 +294,124 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
     drawBackMapCurtain(0)
   }
 
-/*IF ADJUSTED IS CHECKED*/
-var adjusted = "adj_"
+  /*IF ADJUSTED IS CHECKED*/
+  var adjusted = "adj_"
 
-function checkAdjusted() {
-  if (d3.select('#adjusted-checkbox').property('checked') == true) { console.log('adj')
-    adjusted = "adj_";
-    selectedCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
-    console.log(selectedCategory)
-    drawMapLine(selectedCategory, startYear, endYear)
-
-  } else {
-      adjusted = ""
+  function checkAdjusted() {
+    if (d3.select('#adjusted-checkbox').property('checked') == true) { console.log('adj')
+      adjusted = "adj_";
       selectedCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
       console.log(selectedCategory)
+      drawGraphLine(selectedCategory)
       drawMapLine(selectedCategory, startYear, endYear)
-    }
-}
+
+    } else {
+        adjusted = ""
+        selectedCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
+        console.log(selectedCategory)
+      //  drawGraphLine(selectedCategory)
+        drawMapLine(selectedCategory, startYear, endYear)
+      }
+  }
 
 
-d3.select("#adjusted-checkbox").on("change", checkAdjusted)
+  d3.select("#adjusted-checkbox").on("change", checkAdjusted)
 
-/*SWITCHING BETWEEN TABS*/
-var selectedCategory;
+  /*SWITCHING BETWEEN TABS*/
+  var selectedCategory;
 
-  d3.selectAll(".top-tab")
-    .on("click", function(d){  console.log(selectedToggles)
-      checkAdjusted();
-      console.log(adjusted)
-      d3.selectAll(".top-tab").classed('current', false)
-      d3.select(this).classed('current', true)
-      console.log(d3.select(this).attr('class').split(" ")[0])
-      selectedCategory = adjusted + d3.select(this).attr('id') + selectedToggles;
-      console.log(selectedCategory)
-      drawMapLine(selectedCategory, startYear, endYear)
-    })
+    d3.selectAll(".top-tab")
+      .on("click", function(d){  console.log(selectedToggles)
+        checkAdjusted();
+        console.log(adjusted)
+        d3.selectAll(".top-tab").classed('current', false)
+        d3.select(this).classed('current', true)
+        console.log(d3.select(this).attr('class').split(" ")[0])
+        selectedCategory = adjusted + d3.select(this).attr('id') + selectedToggles;
+        console.log(selectedCategory)
+        drawGraphLine(selectedCategory)
+        drawMapLine(selectedCategory, startYear, endYear)
+      })
 
-/*TOGGLE BUTTONS*/
-var selectedToggles = "all";
+  /*TOGGLE BUTTONS*/
+  var selectedToggles = "all";
 
-var combinedClassesArray = []
+  var combinedClassesArray = []
 
 //ADD CLASS OF EACH TOGGLE THAT IS ON TO COMBINEDCLASSESARRAY ABOVE
-function getCombinedClasses() {
-  combinedClassesArray.length = 0;
-   d3.selectAll(".button_toggle.on")
-          .each(function(d, i) { //get class of each toggle that is still turned on and add it to the combinedClasses array
-            var toggleClass = d3.select(this).attr('class').split(" ")[0];
-            console.log(combinedClassesArray)
-            combinedClassesArray.push(toggleClass);
-          })
-  var initialSelectedToggles = combinedClassesArray.join('')
-  initialSelectedToggles == "lostfe" ? selectedToggles = "all" : selectedToggles = initialSelectedToggles
-  console.log(selectedToggles)
-}
+  function getCombinedClasses() {
+    combinedClassesArray.length = 0;
+     d3.selectAll(".button_toggle.on")
+            .each(function(d, i) { //get class of each toggle that is still turned on and add it to the combinedClasses array
+              var toggleClass = d3.select(this).attr('class').split(" ")[0];
+              console.log(combinedClassesArray)
+              combinedClassesArray.push(toggleClass);
+            })
+    var initialSelectedToggles = combinedClassesArray.join('')
+    initialSelectedToggles == "lostfe" ? selectedToggles = "all" : selectedToggles = initialSelectedToggles
+    console.log(selectedToggles)
+  }
 
- d3.selectAll(".button_toggle")
-    .on('click', function() {
-    //FOR ADJUSTED VALUES
-      if(d3.select(this).classed("on")){ 
-        d3.select(this).classed("on", false)
-        d3.select(this).classed("off", true)
-        getCombinedClasses();
-        selectedCategory = adjusted + d3.select(".current").attr("id") + selectedToggles
-        console.log(selectedCategory)
-        checkAdjusted();
-        //drawMapLine(selectedCategory, startYear, endYear)
-      }
-      else {
-        d3.select(this).classed("on", true)
-        d3.select(this).classed("off", false)
-        getCombinedClasses();
-        selectedCategory = adjusted + d3.select(".current").attr("id") + selectedToggles
-        console.log(selectedCategory)
-        checkAdjusted();
-      }
+   d3.selectAll(".button_toggle")
+      .on('click', function() {
+      //FOR ADJUSTED VALUES
+        if(d3.select(this).classed("on")){ 
+          d3.select(this).classed("on", false)
+          d3.select(this).classed("off", true)
+          getCombinedClasses();
+          selectedCategory = adjusted + d3.select(".current").attr("id") + selectedToggles
+          console.log(selectedCategory)
+          checkAdjusted();
+        }
+        else {
+          d3.select(this).classed("on", true)
+          d3.select(this).classed("off", false)
+          getCombinedClasses();
+          selectedCategory = adjusted + d3.select(".current").attr("id") + selectedToggles
+          console.log(selectedCategory)
+          checkAdjusted();
+        }
 
-    }) 
+      }) 
+  function drawGraphLine(variable) {
+
+    var graphData = trendsDataFull.filter(function(d) { 
+      return d.State == "USA"
+    })
+
+
+    var graphWidth = graphSizes[pageSize]["width"],
+        graphHeight = graphSizes[pageSize]["height"] - graphMargin.top - graphMargin.bottom;
+
+    d3.select("#lineChart svg")
+      .select("g")
+      .data(graphData)
+
+    var graphX = d3.scaleTime().range([0, graphWidth]);
+    var graphY = d3.scaleLinear().range([graphHeight, 0]);
+    var max = d3.max(graphData, function(d) { return d[variable]; })
+    var min = d3.min(graphData, function(d) { return d[variable]; })
+console.log("max: " + max + " min: " + min)
+
+    graphX.domain(d3.extent(graphData, function(d) { return d.Year; }));
+    graphY.domain([d3.min(graphData, function(d) {return d[variable]; }), d3.max(graphData, function(d) {return d[variable]; })]);
+console.log(graphHeight)
+    var graphLine = d3.line()
+      .x(function(d) { console.log (d.Year); return graphX(d.Year); })
+      .y(function(d) { console.log(graphY(d[variable])); return graphY(d[variable]); });
+
+    d3.selectAll("#lineChart .y.graphAxis")
+        .transition()
+        .call(d3.axisLeft(graphY))
+
+    d3.selectAll("#lineChart svg .line-usa")
+      .transition()
+      .duration(1200)
+        .attr("d", graphLine)
+
+  }
   function drawMapLine(variable, startYear, endYear){
   //function called when interacting with the UI. `variable` is the column header being graphed, and startYear/endYear are just for the file uploader (will be constants in final features)
-  console.log(variable+ startYear+ endYear)
 
     //reshape the data
     var trendsData = d3.select("#vis").datum()
@@ -399,9 +440,6 @@ function getCombinedClasses() {
 
 
     mapY.domain([min, max]); 
-
-        console.log(min + " " + max)
-
 
     //udpdate line function
     var mapline = d3.line()
@@ -440,11 +478,11 @@ function getCombinedClasses() {
         .attr("y1",mapY(1))
         .attr("y2",mapY(1))
 
-var rectWidth = d3.select("rect.nonblank-rect").attr("width")
+    var rectWidth = d3.select("rect.nonblank-rect").attr("width")
     var chartWidth = mapSizes[pageSize]["chartWidth"]
     var chartMargin = mapSizes[pageSize]["chartMargin"]
 
-  d3.selectAll("rect.positive-area")
+    d3.selectAll("rect.positive-area")
         .transition()
         .duration(1200)
         .attr("height", function() { 
@@ -454,9 +492,6 @@ var rectWidth = d3.select("rect.nonblank-rect").attr("width")
           return rectWidth;
         } 
       })
-
-
-
 
 
 
@@ -485,6 +520,7 @@ var rectWidth = d3.select("rect.nonblank-rect").attr("width")
         .attr("width",0)
         .attr("x", chartWidth - chartMargin)
   }
+
 
 
       renderGraph();
