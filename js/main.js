@@ -1,8 +1,10 @@
 
 //Prob easiest to have a few set sizes for the map, which change at broswer size breakpoints. So `pageSize` will be determined by some function which tests browser size (e.g. IS_MOBILE() functions in past projects). I don't think it's as straightforward to have a continuously resizing graphic. Note that these values are just placeholders, they'll need to be tested/updated, and potentially more or fewer sizes are needed
+
+/*MAP VARIABLES*/
 var pageSize = "full"
 var mapSizes = {
-"full": { "width": 1200, "height": 555, "scale": 3150, "translate": [720,180], "chartWidth": 74, "chartMargin": 13},
+"full": { "width": 800, "height": 555, "scale": 3150, "translate": [720,180], "chartWidth": 74, "chartMargin": 13},
 "large": { "width": 750, "height": 600, "scale": 3100, "translate": [300,200], "chartWidth": 62, "chartMargin": 5},
 "medium": { "width": 900, "height": 1270, "scale": 3800, "translate": [380,220], "chartWidth": 76, "chartMargin": 8},
 "small": { "width": 900, "height": 1270, "scale": 3800, "translate": [380,220], "chartWidth": 76, "chartMargin": 8}
@@ -17,12 +19,66 @@ var mapMargin = {top: 30, right: 20, bottom: 30, left: 50},
 mapWidth = mapSizes[pageSize]["width"] - mapMargin.left - mapMargin.right,
 mapHeight = mapSizes[pageSize]["height"] - mapMargin.top - mapMargin.bottom;
 
+/*LINE GRAPH VARIABLES*/
+
+var initialGraphVariable = "adj_revratio_all";
+var graphMargin = {top: 30, right: 20, bottom: 30, left: 50},
+  graphWidth = 400 - graphMargin.left - graphMargin.right,
+  graphHeight = 300 - graphMargin.top - graphMargin.bottom;
+
+var graphX = d3.scaleTime().range([0, graphWidth]);
+var graphY = d3.scaleLinear().range([graphHeight, 0]);
+
+var line = d3.line()
+  .x(function(d) { return graphX(d.Year); })
+  .y(function(d) { return graphY(d[initialGraphVariable]); });
+
+var graphSvg = d3.select("#lineChart")
+  .append("svg")
+    .attr("width", graphWidth + graphMargin.left + graphMargin.right)
+    .attr("height", graphHeight + graphMargin.top + graphMargin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + graphMargin.left + "," + graphMargin.top + ")");
+
+
+
 
 
 d3.csv("data/data.csv", function(error, trendsDataFull) {
         trendsDataFull.forEach(function(d) {
+        //  d.Year = parseTime(d.Year)
 
         })
+
+  function renderGraph() {
+    var graphData = trendsDataFull.filter(function(d) { 
+      return d.State == "USA"
+    })
+
+    console.log(graphData)
+
+    graphX.domain(d3.extent(graphData, function(d) { return d.Year; }));
+    graphY.domain([d3.min(graphData, function(d) {return d[initialGraphVariable]; }), d3.max(graphData, function(d) {return d[initialGraphVariable]; })]);
+
+    graphSvg.append("path")
+      .data([graphData])
+      .attr("class", "line-usa")
+      .attr("d", line);
+  
+    graphSvg.append("g")
+        .attr("transform", "translate(0," + graphHeight + ")")
+        .call(d3.axisBottom(graphX)
+          .ticks(5)
+          .tickFormat(d3.format('')))
+        
+
+    // Add the Y Axis
+    graphSvg.append("g")
+        .call(d3.axisLeft(graphY)
+          .ticks(5)
+          .tickFormat(d3.format('.2f')));
+
+  }
 
 
   function  renderMap(startYear, endYear) {
@@ -35,7 +91,7 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
 
     // generateButtons(trendsData, startYear, endYear) //just for the file uploader
 
-    //generate an svg, position it
+    //FILTERING DATA FOR MAP SO IT DOESN'T INCLUDE USA
     var trendsData = trendsDataFull.filter(function(d) { 
       return d.State !== "USA"
     })
@@ -46,7 +102,7 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
         .attr("width", mapWidth + mapMargin.left + mapMargin.right)
         .attr("height", mapHeight + mapMargin.top + mapMargin.bottom)
         .append("g")
-          .attr("transform", "translate(" + mapMargin.left + "," + mapMargin.top + ")");
+          .attr("transform", "translate(" + -330 + "," + mapMargin.top + ")");
 
     //Filter data by year. Note that `startYear` and `endYear` will be fixed for the actual feature, they're just variables here for purposes of the tester/file uploader
     trendsData = trendsData.filter(function(o){ 
@@ -147,7 +203,7 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
     map.append("rect")
         .attr("width",chartWidth-2*chartMargin + 8)
      //   .attr("height",(chartWidth-2*chartMargin + 8)/2)
-        .attr("height", function() { console.log(mapY(1)); return (rectWidth - mapY(1) - chartMargin - 4)
+        .attr("height", function() { console.log(mapY(1)); return (rectWidth - mapY(1) - chartMargin/2)
           //return (mapY(1) - rectWidth + chartMargin/2)
         })
         .attr("x",chartMargin - 4)
@@ -368,17 +424,17 @@ function getCombinedClasses() {
 
     //move y=1 line. Note this will need to be hidden (or whatever comparable elements exist will be hidden) for the levels graphs
     d3.selectAll(".ratioOneLine")
-      .style("opacity", function() {
-        if (d3.select("#revpp_").classed("current") == true){
-          return 0;
-        } else {
-          return 1;
-        }
-      })
-      //   .style("opacity", function() {
-      //   (d3.select("#revpp_").classed("selected-category") == true) ?  0 : 1;
-
+      // .style("opacity", function() {
+      //   if (d3.select("#revpp_").classed("current") == true){
+      //     return 0;
+      //   } else {
+      //     return 1;
+      //   }
       // })
+        .style("opacity", function() {
+        return (d3.select("#revpp_").classed("selected-category") == true) ?  0 : 1;
+
+      })
       .transition()
       .duration(1200)
         .attr("y1",mapY(1))
@@ -431,7 +487,7 @@ var rectWidth = d3.select("rect.nonblank-rect").attr("width")
   }
 
 
-
+      renderGraph();
       renderMap(1995, 2014);
 
 })

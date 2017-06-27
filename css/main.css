@@ -125,7 +125,7 @@ body{
   margin-left: 10px;
 }
 #vis {
-  float: left;
+  float: right;
   clear: both;
   display: inline-block;
   position: relative;
@@ -137,6 +137,15 @@ body{
   /* width: 600px; */
   /* background-color: #ddd; */
 }
+
+/*LINE CHART*/
+
+.line-usa {
+  fill: none;
+  stroke: #1696d2;
+  stroke-width: 1.5;
+}
+
 #lineChart{
   display: inline-block;
   position: fixed;
