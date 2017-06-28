@@ -180,7 +180,7 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
       .data(trendsDataNest)
       .enter()
       .append("g")
-        .attr("class","state")
+      .attr("class", function(d){ return "state " + d.key })
         .attr("transform", function(d,i){
           //grab the element in statesData corresponding to the correct trendsData state, and position accordingly
           var tmp = stateData.features.filter(function(o) { return o.properties.abbr == d.key} )
@@ -330,6 +330,15 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
 
   d3.select("#adjusted-checkbox").on("change", checkAdjusted)
 
+
+// FOR EACH STATE TILE, ON HOVER:
+  console.log('hi')
+    d3.selectAll("rect.state")
+      .on("mouseover", function() { console.log('hover')
+        var hoveredState = d3.select(this).attr("class").split(" ")[1]
+        console.log(hoveredState)
+      })
+
   /*SWITCHING BETWEEN TABS*/
   var selectedCategory;
 
@@ -365,27 +374,29 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
     console.log(selectedToggles)
   }
 
-   d3.selectAll(".button_toggle")
-      .on('click', function() {
-      //FOR ADJUSTED VALUES
-        if(d3.select(this).classed("on")){ 
-          d3.select(this).classed("on", false)
-          d3.select(this).classed("off", true)
-          getCombinedClasses();
-          selectedCategory = adjusted + d3.select(".current").attr("id") + selectedToggles
-          console.log(selectedCategory)
-          checkAdjusted();
-        }
-        else {
-          d3.select(this).classed("on", true)
-          d3.select(this).classed("off", false)
-          getCombinedClasses();
-          selectedCategory = adjusted + d3.select(".current").attr("id") + selectedToggles
-          console.log(selectedCategory)
-          checkAdjusted();
-        }
+// FOR EACH TOGGLE:
+  d3.selectAll(".button_toggle")
+    .on('click', function() {
+    //FOR ADJUSTED VALUES
+      if(d3.select(this).classed("on")){ 
+        d3.select(this).classed("on", false)
+        d3.select(this).classed("off", true)
+        getCombinedClasses();
+        selectedCategory = adjusted + d3.select(".current").attr("id") + selectedToggles
+        console.log(selectedCategory)
+        checkAdjusted();
+      }
+      else {
+        d3.select(this).classed("on", true)
+        d3.select(this).classed("off", false)
+        getCombinedClasses();
+        selectedCategory = adjusted + d3.select(".current").attr("id") + selectedToggles
+        console.log(selectedCategory)
+        checkAdjusted();
+      }
 
-      }) 
+    }) 
+
   function drawGraphLine(variable) { console.log('hi')
     //IF ALL TOGGLES WERE TURNED OFF BEFORE, THIS ENSURES THAT OPACITY IS RESET TO 1
     d3.selectAll(".line-usa")
@@ -409,13 +420,12 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
     var max = d3.max(graphData, function(d) { return d[variable]; })
     var min = d3.min(graphData, function(d) { return d[variable]; })
 
-    console.log(graphWidth)
     graphX.domain(d3.extent(graphData, function(d) { return d.Year; }));
     graphY.domain([d3.min(graphData, function(d) {return d[variable]; }), d3.max(graphData, function(d) {return d[variable]; })]);
 
     var graphLine = d3.line()
       .x(function(d) { return graphX(d.Year); })
-      .y(function(d) { console.log((d[variable])); return graphY(d[variable]); });
+      .y(function(d) { return graphY(d[variable]); });
 
     d3.selectAll("#lineChart .y.graphAxis")
         .transition().duration(1200).ease(d3.easeSinInOut)
@@ -575,6 +585,16 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
       .duration(1200)
       .attr("opacity", 0)
     
+
+  }
+
+  function addLine(state) {
+    var graphDataState = trendsDataFull.filter(function(d) { 
+      return d.State == state
+    })
+
+    console.log(graphDataState)
+
 
   }
 

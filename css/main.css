@@ -131,7 +131,6 @@ body{
   position: relative;
   margin-top: 50px;
   /*top: calc(50% - 300px);*/
-  z-index: 1;
   margin-left: 0;
   /* height: 600px; */
   /* width: 600px; */
@@ -172,6 +171,11 @@ body{
   left: 0px;
 }
 
+.state {
+  z-index: 1;
+  pointer-events: all;
+
+}
 
 .state-title {
   text-transform: uppercase;
@@ -188,10 +192,6 @@ body{
   font-size:80px;
   text-anchor: middle;
 }
-
-
-
-
 
 
 
