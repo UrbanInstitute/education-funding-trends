@@ -397,7 +397,7 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
     })
 
 
-    var graphWidth = graphSizes[pageSize]["width"],
+    var graphWidth =  graphSizes[pageSize]["width"]- graphMargin.left - graphMargin.right,
         graphHeight = graphSizes[pageSize]["height"] - graphMargin.top - graphMargin.bottom;
 
     d3.select("#lineChart svg")
@@ -409,7 +409,7 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
     var max = d3.max(graphData, function(d) { return d[variable]; })
     var min = d3.min(graphData, function(d) { return d[variable]; })
 
-    console.log("max: " + max)
+    console.log(graphWidth)
     graphX.domain(d3.extent(graphData, function(d) { return d.Year; }));
     graphY.domain([d3.min(graphData, function(d) {return d[variable]; }), d3.max(graphData, function(d) {return d[variable]; })]);
 
@@ -418,7 +418,7 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
       .y(function(d) { console.log((d[variable])); return graphY(d[variable]); });
 
     d3.selectAll("#lineChart .y.graphAxis")
-        .transition()
+        .transition().duration(1200).ease(d3.easeSinInOut)
         .call(d3.axisLeft(graphY))
 
     d3.selectAll("#lineChart svg .line-usa")
