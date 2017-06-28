@@ -1,5 +1,6 @@
 
 //Prob easiest to have a few set sizes for the map, which change at broswer size breakpoints. So `pageSize` will be determined by some function which tests browser size (e.g. IS_MOBILE() functions in past projects). I don't think it's as straightforward to have a continuously resizing graphic. Note that these values are just placeholders, they'll need to be tested/updated, and potentially more or fewer sizes are needed
+var stateLinesArray = [];
 
 /*MAP VARIABLES*/
 var pageSize = "full"
@@ -28,7 +29,7 @@ var graphSizes = {
 "small": { "width": 900, "height": 1270, "translate": [380,220]}
 }
 
-var initialGraphVariable = "adj_revratio_all";
+var selectedCategory = "adj_revratio_all";
 var graphMargin = {top: 30, right: 20, bottom: 30, left: 50},
   graphWidth =  graphSizes[pageSize]["width"]- graphMargin.left - graphMargin.right,
   graphHeight = graphSizes[pageSize]["height"] - graphMargin.top - graphMargin.bottom;
@@ -38,7 +39,7 @@ var graphY = d3.scaleLinear().range([graphHeight, 0]);
 
 var graphLine = d3.line()
   .x(function(d) { return graphX(d.Year); })
-  .y(function(d) { return graphY(d[initialGraphVariable]); });
+  .y(function(d) { return graphY(d[selectedCategory]); });
 
 var graphSvg = d3.select("#lineChart")
   .append("svg")
@@ -75,7 +76,7 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
     console.log(graphData)
 
     graphX.domain(d3.extent(graphData, function(d) { return d.Year; }));
-    graphY.domain([d3.min(graphData, function(d) {return d[initialGraphVariable]; }), d3.max(graphData, function(d) {return d[initialGraphVariable]; })]);
+    graphY.domain([d3.min(graphData, function(d) {return d[selectedCategory]; }), d3.max(graphData, function(d) {return d[selectedCategory]; })]);
 
     graphSvg.append("path")
       .data([graphData])
@@ -177,10 +178,11 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
         var tmp = stateData.features.filter(function(o) { return o.properties.abbr == d.key} )
         return "translate(" + geoPath.centroid(tmp[0]) + ")"
       })
-      .on("mouseover", function() { console.log('hover')
-        var hoveredState = d3.select(this).attr("class").split(" ")[1]
-        console.log(hoveredState)
-        addLine(hoveredState, initialGraphVariable)
+      .on("click", function() { console.log('hover')
+        var clickedState = d3.select(this).attr("class").split(" ")[1]
+        addState(clickedState)
+        updateLineGraph(selectedCategory)
+          console.log(selectedCategory)
       })
 
     //draw greyed out blank states
@@ -310,7 +312,7 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
       adjusted = "adj_";
       selectedCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
       console.log(selectedCategory)
-      selectedToggles == "" ? removeGraphLine() :  drawGraphLine(selectedCategory)
+      selectedToggles == "" ? removeGraphLine() :  updateLineGraph(selectedCategory)
       selectedToggles == "" ? removeMapAttributes() : drawMapLine(selectedCategory, startYear, endYear) 
       
 
@@ -318,7 +320,7 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
         adjusted = ""
         selectedCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
         console.log(selectedCategory)
-        drawGraphLine(selectedCategory)
+        updateLineGraph(selectedCategory)
         drawMapLine(selectedCategory, startYear, endYear)
       }
   }
@@ -329,24 +331,17 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
 
 
   /*SWITCHING BETWEEN TABS*/
-  var selectedCategory;
 
-    // map
-    //   .on("mouseover", function() { console.log('hover')
-    //     var hoveredState = d3.select(this).attr("class").split(" ")[1]
-    //     console.log(hoveredState)
-    //     addLine(hoveredState)
-    //   })
+ 
     d3.selectAll(".top-tab")
       .on("click", function(d){  console.log(selectedToggles)
         checkAdjusted();
         console.log(adjusted)
         d3.selectAll(".top-tab").classed('current', false)
         d3.select(this).classed('current', true)
-        console.log(d3.select(this).attr('class').split(" ")[0])
         selectedCategory = adjusted + d3.select(this).attr('id') + selectedToggles;
         console.log(selectedCategory)
-        drawGraphLine(selectedCategory)
+        updateLineGraph(selectedCategory)
         drawMapLine(selectedCategory, startYear, endYear)
       })
 
@@ -369,7 +364,7 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
     console.log(selectedToggles)
   }
 
-// FOR EACH TOGGLE:
+// WHEN CLICKING ON EACH TOGGLE:
   d3.selectAll(".button_toggle")
     .on('click', function() {
     //FOR ADJUSTED VALUES
@@ -392,31 +387,36 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
 
     }) 
 
-  function drawGraphLine(variable) { console.log('hi')
+  //ADJUSTS LINE GRAPH TO ACCOMMODATE CHANGING Y-AXIS DUE TO ADDITION OR REMOVAL OF STATE LINES
+  function updateLineGraph(variable) { console.log('hi')
     //IF ALL TOGGLES WERE TURNED OFF BEFORE, THIS ENSURES THAT OPACITY IS RESET TO 1
-    d3.selectAll(".line-usa")
+    d3.selectAll(".line-usa, .line-state")
           // .transition()
           // .duration(1200)
           .attr("opacity", 1)
-    var graphData = trendsDataFull.filter(function(d) { 
-      return d.State == "USA"
+
+    var graphDataAll = trendsDataFull.filter(function(d) { 
+      if ((stateLinesArray.includes(d.State)) || (d.State == "USA")) {
+        return d;
+      }
     })
 
+    console.log(variable)
 
     var graphWidth =  graphSizes[pageSize]["width"]- graphMargin.left - graphMargin.right,
         graphHeight = graphSizes[pageSize]["height"] - graphMargin.top - graphMargin.bottom;
 
     d3.select("#lineChart svg")
       .select("g")
-      .data(graphData)
+      .data(graphDataAll)
 
     var graphX = d3.scaleTime().range([0, graphWidth]);
     var graphY = d3.scaleLinear().range([graphHeight, 0]);
-    var max = d3.max(graphData, function(d) { return d[variable]; })
-    var min = d3.min(graphData, function(d) { return d[variable]; })
+    var max = d3.max(graphDataAll, function(d) { return d[variable]; })
+    var min = d3.min(graphDataAll, function(d) { return d[variable]; })
 
-    graphX.domain(d3.extent(graphData, function(d) { return d.Year; }));
-    graphY.domain([d3.min(graphData, function(d) {return d[variable]; }), d3.max(graphData, function(d) {return d[variable]; })]);
+    graphX.domain(d3.extent(graphDataAll, function(d) { return d.Year; }));
+    graphY.domain([d3.min(graphDataAll, function(d) {return d[variable]; }), d3.max(graphDataAll, function(d) {return d[variable]; })]);
 
     var graphLine = d3.line()
       .x(function(d) { return graphX(d.Year); })
@@ -426,7 +426,7 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
         .transition().duration(1200).ease(d3.easeSinInOut)
         .call(d3.axisLeft(graphY))
 
-    d3.selectAll("#lineChart svg .line-usa")
+    d3.selectAll(".line-usa, .line-state")
       .transition()
       .duration(1200)
         .attr("d", graphLine)
@@ -583,50 +583,22 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
 
   }
 
-  function addLine(state) {
+//ADDS NEW STATE LINE AND UPDATES STATE ARRAY
+  function addState(state) {
 
     var graphDataState = trendsDataFull.filter(function(d) { 
       return d.State == state
     })
-    //COMBINED DATA OF USA PLUS STATE LINE(S)
-    var graphDataAll = trendsDataFull.filter(function(d) { 
-      if ((d.State == state) || (d.State == "USA")) {
-        return d;
-      }
-    })
-    //ADDING COMBINED DATA INTO GRAPH TO GET MAX AND MIN FOR Y-AXIS
-    d3.select("#lineChart svg")
-      .select("g")
-      .data(graphDataAll)
 
-    var max = d3.max(graphDataAll, function(d) { return d["adj_revratio_all"]; })
-    var min = d3.min(graphDataAll, function(d) { return d["adj_revratio_all"]; })
-
-    console.log("max: " + max + " min: " + min)
-    graphX.domain(d3.extent(graphDataAll, function(d) { return d.Year; }));
-    graphY.domain([d3.min(graphDataAll, function(d) {return d["adj_revratio_all"]; }), d3.max(graphDataAll, function(d) {return d["adj_revratio_all"]; })]);
-
-
-    var graphLine = d3.line()
-      .x(function(d) {console.log("x-pos: " + (d.Year)); return graphX(d.Year); })
-      .y(function(d) {console.log("y-pos: " + (d["adj_revratio_all"])); return graphY(d["adj_revratio_all"]); });
+    stateLinesArray.push(state);
+        console.log(stateLinesArray)
 
     graphSvg.append("path")
       .data([graphDataState])
       .attr("class", "line-state line-" + state)
       .attr("d", graphLine);
 
-
-    d3.selectAll("#lineChart .y.graphAxis")
-        .transition().duration(1200).ease(d3.easeSinInOut)
-        .call(d3.axisLeft(graphY))
-
-    d3.selectAll("#lineChart svg .line-usa")
-      .transition()
-      .duration(1200)
-        .attr("d", graphLine)
   }
-
 
       renderGraph();
       renderMap(1995, 2014);

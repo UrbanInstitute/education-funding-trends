@@ -141,13 +141,13 @@ body{
 
 .line-usa {
   fill: none;
-  stroke: #1696d2;
+  stroke: #fdbf11;#1696d2;
   stroke-width: 1.5;
 }
 
 .line-state {
   fill: none;
-  stroke: #fdbf11;
+  stroke: #1696d2;
   stroke-width: 1.5;
 }
 
