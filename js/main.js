@@ -52,19 +52,7 @@ var graphSvg = d3.select("#lineChart")
 
 
 d3.csv("data/data.csv", function(error, trendsDataFull) {
-        trendsDataFull.forEach(function(d) {
-        //  d.Year = parseTime(d.Year)
-
-        })
-
-
-  //CREATE INITIAL LINE GRAPH ON LOAD
-  function renderGraph() {
-    var graphData = trendsDataFull.filter(function(d) { 
-      return d.State == "USA"
-    })
-
-    graphData.forEach(function(d) {
+    trendsDataFull.forEach(function(d) {
       keys = Object.keys(d);
       for(var i = 0; i<keys.length; i++){
         var key = keys[i]
@@ -76,6 +64,14 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
       }
     });
 
+
+  //CREATE INITIAL LINE GRAPH ON LOAD
+  function renderGraph() {
+    var graphData = trendsDataFull.filter(function(d) { 
+      return d.State == "USA"
+    })
+
+
     console.log(graphData)
 
     graphX.domain(d3.extent(graphData, function(d) { return d.Year; }));
@@ -85,7 +81,14 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
       .data([graphData])
       .attr("class", "line-usa")
       .attr("d", graphLine);
-  
+    // graphSvg.append("text")
+    //   .data(graphData, function(d) { console.log(d.Year.length - 1)
+        // var j = d.Year.length - 1;
+        // while (d.values[j].position == 0 && j > 0)
+        // return {name: d.name, value: d.values[j]};
+      // })
+
+
     graphSvg.append("g")
         .attr("transform", "translate(0," + graphHeight + ")")
         .attr("class", "x graphAxis")
@@ -132,18 +135,6 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
       return +o.Year >= startYear
     })
 
-    //cast everything except the `State` and `Year` columns to float
-    trendsData.forEach(function(d) {
-      keys = Object.keys(d);
-      for(var i = 0; i<keys.length; i++){
-        var key = keys[i]
-        if(key == "State" || key == "Year"){
-          continue;
-        }else{
-          d[key] = +d[key]
-        }
-      }
-    });
 
     //reshape data, nesting by State
     var trendsDataNest = d3.nest()
@@ -181,11 +172,16 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
       .enter()
       .append("g")
       .attr("class", function(d){ return "state " + d.key })
-        .attr("transform", function(d,i){
-          //grab the element in statesData corresponding to the correct trendsData state, and position accordingly
-          var tmp = stateData.features.filter(function(o) { return o.properties.abbr == d.key} )
-          return "translate(" + geoPath.centroid(tmp[0]) + ")"
-        })
+      .attr("transform", function(d,i){
+        //grab the element in statesData corresponding to the correct trendsData state, and position accordingly
+        var tmp = stateData.features.filter(function(o) { return o.properties.abbr == d.key} )
+        return "translate(" + geoPath.centroid(tmp[0]) + ")"
+      })
+      .on("mouseover", function() { console.log('hover')
+        var hoveredState = d3.select(this).attr("class").split(" ")[1]
+        console.log(hoveredState)
+        addLine(hoveredState, initialGraphVariable)
+      })
 
     //draw greyed out blank states
     var blank = mapSvg
@@ -331,17 +327,16 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
   d3.select("#adjusted-checkbox").on("change", checkAdjusted)
 
 
-// FOR EACH STATE TILE, ON HOVER:
-  console.log('hi')
-    d3.selectAll("rect.state")
-      .on("mouseover", function() { console.log('hover')
-        var hoveredState = d3.select(this).attr("class").split(" ")[1]
-        console.log(hoveredState)
-      })
 
   /*SWITCHING BETWEEN TABS*/
   var selectedCategory;
 
+    // map
+    //   .on("mouseover", function() { console.log('hover')
+    //     var hoveredState = d3.select(this).attr("class").split(" ")[1]
+    //     console.log(hoveredState)
+    //     addLine(hoveredState)
+    //   })
     d3.selectAll(".top-tab")
       .on("click", function(d){  console.log(selectedToggles)
         checkAdjusted();
@@ -589,13 +584,47 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
   }
 
   function addLine(state) {
+
     var graphDataState = trendsDataFull.filter(function(d) { 
       return d.State == state
     })
+    //COMBINED DATA OF USA PLUS STATE LINE(S)
+    var graphDataAll = trendsDataFull.filter(function(d) { 
+      if ((d.State == state) || (d.State == "USA")) {
+        return d;
+      }
+    })
+    //ADDING COMBINED DATA INTO GRAPH TO GET MAX AND MIN FOR Y-AXIS
+    d3.select("#lineChart svg")
+      .select("g")
+      .data(graphDataAll)
 
-    console.log(graphDataState)
+    var max = d3.max(graphDataAll, function(d) { return d["adj_revratio_all"]; })
+    var min = d3.min(graphDataAll, function(d) { return d["adj_revratio_all"]; })
+
+    console.log("max: " + max + " min: " + min)
+    graphX.domain(d3.extent(graphDataAll, function(d) { return d.Year; }));
+    graphY.domain([d3.min(graphDataAll, function(d) {return d["adj_revratio_all"]; }), d3.max(graphDataAll, function(d) {return d["adj_revratio_all"]; })]);
 
 
+    var graphLine = d3.line()
+      .x(function(d) {console.log("x-pos: " + (d.Year)); return graphX(d.Year); })
+      .y(function(d) {console.log("y-pos: " + (d["adj_revratio_all"])); return graphY(d["adj_revratio_all"]); });
+
+    graphSvg.append("path")
+      .data([graphDataState])
+      .attr("class", "line-state line-" + state)
+      .attr("d", graphLine);
+
+
+    d3.selectAll("#lineChart .y.graphAxis")
+        .transition().duration(1200).ease(d3.easeSinInOut)
+        .call(d3.axisLeft(graphY))
+
+    d3.selectAll("#lineChart svg .line-usa")
+      .transition()
+      .duration(1200)
+        .attr("d", graphLine)
   }
 
 

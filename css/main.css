@@ -145,6 +145,12 @@ body{
   stroke-width: 1.5;
 }
 
+.line-state {
+  fill: none;
+  stroke: #fdbf11;
+  stroke-width: 1.5;
+}
+
 #lineChart{
   display: inline-block;
   position: fixed;
