@@ -210,7 +210,7 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
       .attr("height",chartWidth-2*chartMargin + 8)
       .attr("x",chartMargin - 4)
       .attr("y",chartMargin - 4)
-      .style("fill","#fdbf11") 
+      .style("fill","#9d9d9d") 
       .attr("class", "nonblank-rect")
 
 
@@ -597,6 +597,8 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
       .data([graphDataState])
       .attr("class", "line-state line-" + state)
       .attr("d", graphLine);
+    d3.select(".standard.line." + state)
+      .attr("class", "selected-state")
 
   }
 

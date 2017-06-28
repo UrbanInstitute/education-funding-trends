@@ -141,7 +141,7 @@ body{
 
 .line-usa {
   fill: none;
-  stroke: #fdbf11;#1696d2;
+  stroke: #fdbf11;
   stroke-width: 1.5;
 }
 
@@ -156,7 +156,7 @@ body{
   position: fixed;
   bottom: 20px;
   z-index: 1;
-  margin-left: 100px;  
+  margin-left: 50px;  
   width: 300px;
   background: transparent;
   height: 340px;
@@ -181,6 +181,12 @@ body{
   z-index: 1;
   pointer-events: all;
 
+}
+
+.selected-state {
+  stroke: #ec008b;
+  fill: none;
+  stroke-width: 2.5;
 }
 
 .state-title {
