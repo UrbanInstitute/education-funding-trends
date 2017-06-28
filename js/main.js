@@ -180,7 +180,7 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
       })
       .on("click", function() { console.log('hover')
         var clickedState = d3.select(this).attr("class").split(" ")[1]
-        addState(clickedState)
+        updateStateLine(clickedState)
         updateLineGraph(selectedCategory)
           console.log(selectedCategory)
       })
@@ -584,22 +584,40 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
   }
 
 //ADDS NEW STATE LINE AND UPDATES STATE ARRAY
-  function addState(state) {
-
+  function updateStateLine(state) { console.log(state)
     var graphDataState = trendsDataFull.filter(function(d) { 
       return d.State == state
     })
 
-    stateLinesArray.push(state);
+
+    if ($(".line-" + state).length == 0) { console.log(state)
+      stateLinesArray.push(state); // ADD NEW STATE TO ARRAY 
         console.log(stateLinesArray)
+      graphSvg.append("path")
+            .data([graphDataState])
+            .attr("class", "line-state line-" + state)
+            .attr("d", graphLine);
+    } else { 
+        for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
+            if (stateLinesArray[i] === state) {
+                stateLinesArray.splice(i, 1);
+            }
+        }        console.log(stateLinesArray)
 
-    graphSvg.append("path")
-      .data([graphDataState])
-      .attr("class", "line-state line-" + state)
-      .attr("d", graphLine);
+      graphSvg.select(".line-" + state) 
+        .transition()
+        .attr("opacity", 0)
+        .remove()
+    }
+    
     d3.select(".standard.line." + state)
-      .attr("class", "selected-state")
-
+      .classed("selected-state", function(){
+        if (d3.select(".standard.line." + state).classed("selected-state") == true) {
+          return false
+        } else {
+          return true
+        }
+       })
   }
 
       renderGraph();
