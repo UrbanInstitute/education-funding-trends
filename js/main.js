@@ -424,7 +424,9 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
 
     d3.selectAll("#lineChart .y.graphAxis")
         .transition().duration(1200).ease(d3.easeSinInOut)
-        .call(d3.axisLeft(graphY))
+        .call(d3.axisLeft(graphY)
+          .ticks(5)
+          .tickFormat(d3.format('.2f')));
 
     d3.selectAll(".line-usa, .line-state")
       .transition()
@@ -597,16 +599,14 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
             .data([graphDataState])
             .attr("class", "line-state line-" + state)
             .attr("d", graphLine);
-    } else { 
+    } else { console.log(state)
         for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
             if (stateLinesArray[i] === state) {
                 stateLinesArray.splice(i, 1);
             }
         }        console.log(stateLinesArray)
 
-      graphSvg.select(".line-" + state) 
-        .transition()
-        .attr("opacity", 0)
+      graphSvg.select("path.line-" + state) 
         .remove()
     }
     
