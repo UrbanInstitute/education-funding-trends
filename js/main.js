@@ -48,7 +48,10 @@ var graphSvg = d3.select("#lineChart")
   .append("g")
     .attr("transform", "translate(" + graphMargin.left + "," + graphMargin.top + ")");
 
-
+var voronoi = d3.voronoi()
+    .x(function(d) { return graphX(d.Year); })
+    .y(function(d) { return graphY(d[selectedCategory]); })
+    .extent([[-graphMargin.left, -graphMargin.top], [graphWidth + graphMargin.right, graphHeight + graphMargin.bottom]]);
 
 
 
@@ -57,7 +60,7 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
       keys = Object.keys(d);
       for(var i = 0; i<keys.length; i++){
         var key = keys[i]
-        if(key == "State" || key == "Year"){
+        if(key == "State" || key == "Year" || key == "state_full"){
           continue;
         }else{
           d[key] = +d[key]
@@ -90,7 +93,11 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
     graphSvg.append("path")
       .data([graphData])
       .attr("class", "line-usa")
-      .attr("d", graphLine);
+     // .attr("d", graphLine);
+      .attr("d", function(d) { console.log(graphLine(d[selectedCategory]))
+          console.log(graphLine(d[selectedCategory]));
+          return graphLine(d[selectedCategory]);
+        });
 
     //ADD USA LABEL
     // graphSvg.append("text")
@@ -99,8 +106,6 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
         // while (d.values[j].position == 0 && j > 0)
         // return {name: d.name, value: d.values[j]};
       // })
-
-
 
     graphSvg.append("g")
         .attr("transform", "translate(0," + graphHeight + ")")
@@ -116,7 +121,23 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
         .call(d3.axisLeft(graphY)
           .ticks(5)
           .tickFormat(d3.format('.2f')));
+  
+  var voronoiGroup = graphSvg.append("g")
+      .attr("class", "voronoi");
+  
+  voronoiGroup.selectAll("path")
+    .data(voronoi.polygons(graphData))
+    .enter().append("path")
+      .attr("d", function(d) { return d ? "M" + d.join("L") + "Z" : null; })
+      .on("mouseover", mouseover)
+     // .on("mouseout", mouseout);
 
+  }
+
+ function mouseover(d) {console.log(d.State)
+    var pathUSA = (d3.select(".line-usa").attr("d"))
+    pathUSA.classed("line-hover", true);
+  
   }
 
   //CREATE INITIAL MAP ON LOAD
@@ -135,6 +156,7 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
       return d.State !== "USA"
     })
 
+
     mapSvg = d3.select("#vis")
       .data([trendsData])
       .append("svg")
@@ -152,6 +174,9 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
     //reshape data, nesting by State
     var trendsDataNest = d3.nest()
       .key(function(d) {return d.State })
+      .entries(trendsData);
+    var trendsDataNestUSA = d3.nest()
+      .key(function(d) {return d.state_full })
       .entries(trendsData);
 
     //generate a list of states in the dataset. For any states not in the dataset (stored temporarily in tmpKeys) but in the `stateData` object (which is in the global scope, stored in `stateData.js`, create a new data set, just for the blank states (not in data csv), which wil be greyed out
@@ -191,12 +216,30 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
         return "translate(" + geoPath.centroid(tmp[0]) + ")"
       })
     map
-      .on("click", function() { console.log('hover')
+      .on("click", function() { 
         var clickedState = d3.select(this).attr("class").split(" ")[1]
         updateStateLine(clickedState)
         updateLineGraph(selectedCategory)
           console.log(selectedCategory)
       })
+      .on("mouseover", function() {console.log('hover')
+        var hoveredState = d3.select(this).attr("class").split(" ")[1]
+        var hoveredStateName = trendsDataFull.filter(function(d) { 
+          return d.State == hoveredState
+        })
+        console.log(hoveredStateName)
+        d3.select(".standard.line." + hoveredState)
+          .data(hoveredStateName)
+          .classed("hovered-state", true)
+      })
+      .on("mouseout", function() {console.log('hover')
+        var hoveredState = d3.select(this).attr("class").split(" ")[1]
+        d3.select(".standard.line." + hoveredState)
+          .classed("hovered-state", false)
+        // d3.selectAll(".state-name")
+        //   .html("")
+      })
+
 
     //draw greyed out blank states
     var blank = mapSvg
@@ -482,6 +525,7 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
     var trendsData = d3.select("#vis").datum()
     var trendsDataNest = d3.nest()
       .key(function(d) {return d.State;})
+      .key(function(d) {return d.state_name})
       .entries(trendsData);
 
     var chartWidth = mapSizes[pageSize]["chartWidth"]

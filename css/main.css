@@ -209,12 +209,32 @@ hr.after-toggle{
   margin-top: -50px;
 }
 
+
+.voronoi path {
+  fill: none;
+  pointer-events: all;
+}
+
+.voronoi--show path {
+  stroke: red;
+  stroke-opacity: 0.2;
+}
 .state {
   z-index: 1;
   pointer-events: all;
+  cursor: pointer;
 
 }
 
+.state path.line.hovered-state {
+  stroke: #ec008b;
+  fill: none;
+  stroke-width: 2.5;
+}
+
+.line-hover {
+  stroke: #000;
+}
 .state path.line.selected-state {
   stroke: #ec008b;
   fill: none;
