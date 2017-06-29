@@ -74,9 +74,11 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
     var graphData = trendsDataFull.filter(function(d) { 
       return d.State == "USA"
     })
+    var trendsDataNestUSA = d3.nest()
+      .key(function(d) {return d.State })
+      .entries(graphData);
 
-
-    console.log(graphData)
+  
 
     graphX.domain(d3.extent(graphData, function(d) { return d.Year; }));
     graphY.domain([d3.min(graphData, function(d) {return d[selectedCategory]; }), d3.max(graphData, function(d) {return d[selectedCategory]; })]);
@@ -91,12 +93,12 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
      .attr("class", "threshold")
 
     graphSvg.append("path")
-      .data([graphData])
+      .data([trendsDataNestUSA])
       .attr("class", "line-usa")
      // .attr("d", graphLine);
-      .attr("d", function(d) { console.log(graphLine(d[selectedCategory]))
-          console.log(graphLine(d[selectedCategory]));
-          return graphLine(d[selectedCategory]);
+      .attr("d", function(d) { d.graphLine = this;
+        console.log(graphLine(d[0].values))
+          return (graphLine(d[0].values));
         });
 
     //ADD USA LABEL
@@ -126,7 +128,7 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
       .attr("class", "voronoi");
   
   voronoiGroup.selectAll("path")
-    .data(voronoi.polygons(graphData))
+    .data(voronoi.polygons(d3.merge(trendsDataNestUSA.map(function(d) { console.log(d.values); return d.values; }))))
     .enter().append("path")
       .attr("d", function(d) { return d ? "M" + d.join("L") + "Z" : null; })
       .on("mouseover", mouseover)
@@ -134,9 +136,8 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
 
   }
 
- function mouseover(d) {console.log(d.State)
-    var pathUSA = (d3.select(".line-usa").attr("d"))
-    pathUSA.classed("line-hover", true);
+ function mouseover(d) {console.log(d)
+        d3.select("." + d.State).classed("line-hover", true);
   
   }
 
@@ -175,9 +176,7 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
     var trendsDataNest = d3.nest()
       .key(function(d) {return d.State })
       .entries(trendsData);
-    var trendsDataNestUSA = d3.nest()
-      .key(function(d) {return d.state_full })
-      .entries(trendsData);
+
 
     //generate a list of states in the dataset. For any states not in the dataset (stored temporarily in tmpKeys) but in the `stateData` object (which is in the global scope, stored in `stateData.js`, create a new data set, just for the blank states (not in data csv), which wil be greyed out
     var tmpKeys = []
