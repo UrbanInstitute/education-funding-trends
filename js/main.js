@@ -94,7 +94,7 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
 
     graphSvg.append("path")
       .data([trendsDataNestUSA])
-      .attr("class", "line-usa")
+      .attr("class", "line-USA")
      // .attr("d", graphLine);
       .attr("d", function(d) { d.graphLine = this;
         console.log(graphLine(d[0].values))
@@ -128,7 +128,9 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
       .attr("class", "voronoi");
   
   voronoiGroup.selectAll("path")
-    .data(voronoi.polygons(d3.merge(trendsDataNestUSA.map(function(d) { console.log(d.values); return d.values; }))))
+    .data(voronoi.polygons(d3.merge(trendsDataNestUSA.map(function(d) { 
+      console.log(d.values); return d.values; 
+    }))))
     .enter().append("path")
       .attr("d", function(d) { return d ? "M" + d.join("L") + "Z" : null; })
       .on("mouseover", mouseover)
@@ -136,9 +138,8 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
 
   }
 
- function mouseover(d) {console.log(d)
-        d3.select("." + d.State).classed("line-hover", true);
-  
+ function mouseover(d) {console.log(d.data)
+        d3.select(".line-" + d.data.State).classed("line-hover", true);
   }
 
   //CREATE INITIAL MAP ON LOAD
@@ -445,8 +446,8 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
   //ADJUSTS LINE GRAPH TO ACCOMMODATE CHANGING Y-AXIS DUE TO ADDITION OR REMOVAL OF STATE LINES
   function updateLineGraph(variable) { console.log('hi')
     //IF ALL TOGGLES WERE TURNED OFF BEFORE, THIS ENSURES THAT OPACITY IS RESET TO 1
-    if (d3.selectAll(".line-usa, .line-state").attr("opacity") == 0) { console.log('zero')
-    graphSvg.selectAll(".line-usa, .line-state, .threshold")
+    if (d3.selectAll(".line-USA, .line-state").attr("opacity") == 0) { console.log('zero')
+    graphSvg.selectAll(".line-USA, .line-state, .threshold")
           // .transition()
           // .duration(1200)
           .attr("opacity", 1)
@@ -458,7 +459,10 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
       }
     })
 
-    console.log(variable)
+   var graphDataAllNest = d3.nest()
+    .key(function(d) {return d.State;})
+    .entries(graphDataAll);
+
 
     var graphWidth =  graphSizes[pageSize]["width"]- graphMargin.left - graphMargin.right,
         graphHeight = graphSizes[pageSize]["height"] - graphMargin.top - graphMargin.bottom;
@@ -485,10 +489,26 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
           .ticks(5)
           .tickFormat(d3.format('.2f')));
 
-    d3.selectAll(".line-usa, .line-state")
+    d3.selectAll(".line-USA, .line-state")
       .transition()
       .duration(1200)
-        .attr("d", graphLine)
+        // .attr("d", graphLine)
+      .attr("d", function(d) { d.graphLine = this;
+        console.log(graphLine(d[0].values))
+          return (graphLine(d[0].values));
+        });
+  
+    var voronoiGroup = graphSvg.append("g")
+        .attr("class", "voronoi");
+    
+    voronoiGroup.selectAll("path")
+      .data(voronoi.polygons(d3.merge(graphDataAllNest.map(function(d) { 
+        console.log(d.values); return d.values; 
+      }))))
+      .enter().append("path")
+        .attr("d", function(d) { return d ? "M" + d.join("L") + "Z" : null; })
+        .on("mouseover", mouseover)
+
 
     var threshold = d3.select(".threshold")
      .attr("x1", 0)
@@ -524,7 +544,6 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
     var trendsData = d3.select("#vis").datum()
     var trendsDataNest = d3.nest()
       .key(function(d) {return d.State;})
-      .key(function(d) {return d.state_name})
       .entries(trendsData);
 
     var chartWidth = mapSizes[pageSize]["chartWidth"]
@@ -644,7 +663,7 @@ console.log('remove')
 
   function removeGraphLine() { console.log('remove')
 
-    d3.selectAll(".line-usa, .line-state")
+    d3.selectAll(".line-USA, .line-state")
      .transition()
      .duration(0)
      .attr("opacity", 1)
@@ -661,15 +680,31 @@ console.log('remove')
     var graphDataState = trendsDataFull.filter(function(d) { 
       return d.State == state
     })
+    var trendsData = trendsDataFull.filter(function(d) { 
+      return d.State !== "USA"
+    })
 
+   var graphDataStateNest = d3.nest()
+    .key(function(d) {return d.State;})
+    .entries(graphDataState);
+console.log(graphDataStateNest)
     //IF LINE HASN'T BEEN ADDED YET TO THE GRAPH:
     if ($(".line-" + state).length == 0) { console.log(state)
       stateLinesArray.push(state); // ADD NEW STATE TO ARRAY 
         console.log(stateLinesArray)
+
       graphSvg.append("path")
-            .data([graphDataState])
-            .attr("class", "line-state line-" + state)
-            .attr("d", graphLine)
+        .data([graphDataStateNest])
+        .attr("class", "line-state line-" + state)
+       // .attr("d", graphLine);
+        .attr("d", function(d) { d.graphLine = this;
+          console.log(graphLine(d[0].values))
+            return (graphLine(d[0].values));
+          });
+      // graphSvg.append("path")
+      //       .data([graphDataState])
+      //       .attr("class", "line-state line-" + state)
+      //       .attr("d", graphLine)
     } else { console.log(state)
         for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
             if (stateLinesArray[i] === state) {
