@@ -5,14 +5,31 @@ body{
   font-family: Lato;
   background: none !important;
 }
-.container {
-  width: 890px;
+
+hr {
+  width: 25%;
+  border: 3px solid #1896d2;
+}
+.main-content {
+  width: 700px;
+  margin-bottom: 200px;
+  margin-top: 50px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.main-text {
+  font-size: 18px;
+  line-height: 1.5;
+}
+.headline {
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 30px;
 }
 
 .tab-content {
-  margin-left: 50px;
-  margin-right: 50px;
-  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /*TABS*/
@@ -100,9 +117,17 @@ body{
   font-weight: bold;
   margin-bottom: 10px;
 }
-
+.viz-content {
+  width: 100%;
+  margin-top: 100px;
+}
 #extra-space {
   height: 300px;
+}
+
+.lineChart-div {
+  float: left;
+  width: 35%;
 }
 #visTitle{
   position: fixed;
@@ -125,56 +150,52 @@ body{
   margin-left: 10px;
 }
 #vis {
-  float: right;
-  clear: both;
-  display: inline-block;
+  float: left;
   position: relative;
-  margin-top: 50px;
+  margin-top: -50px;
   /*top: calc(50% - 300px);*/
   margin-left: 0;
   /* height: 600px; */
   /* width: 600px; */
   /* background-color: #ddd; */
+  width: 60%;
 }
 
 /*LINE CHART*/
 
 .line-usa {
   fill: none;
-  stroke: #fdbf11;
+  stroke: #1696d2;
   stroke-width: 1.5;
 }
 
 .line-state {
   fill: none;
-  stroke: #1696d2;
+  stroke: #ec008b;
   stroke-width: 1.5;
 }
 
 #lineChart{
-  display: inline-block;
-  position: fixed;
+  position: relative;
   bottom: 20px;
   z-index: 1;
   margin-left: 50px;  
   width: 300px;
   background: transparent;
   height: 340px;
-  top: 320px;
   left: 0px;
 }
 
 #lineChart-details {
-  display: inline-block;
-  position: fixed;
+
   bottom: 20px;
   z-index: 1;
   margin-left: 100px;  
   width: 300px;
   background: transparent;
-  height: 177px;
-  top: 650px;
+  height: 0px;
   left: 0px;
+  margin-top: -50px;
 }
 
 .state {
@@ -272,11 +293,16 @@ text.mapLable.blank{
   float: left;
 }
 
-#switch-div {
-  width: 100%;
-  margin-left: 20px;
+.switch-div-text {
   float: left;
-  margin-top: 100px;
+  padding-top: 20px;
+}
+
+#switch-div {
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 100px;
 }
 .urban-switch.large {
     font-size: 13px;
@@ -288,7 +314,7 @@ text.mapLable.blank{
     line-height: 12px;
     text-align: left;
     border-radius: 10px;
-    padding-right: 10px;
+    padding-right: 20px;
     margin-bottom: 18px;
     margin-top: 18px;
 }

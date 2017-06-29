@@ -178,6 +178,7 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
         var tmp = stateData.features.filter(function(o) { return o.properties.abbr == d.key} )
         return "translate(" + geoPath.centroid(tmp[0]) + ")"
       })
+    map
       .on("click", function() { console.log('hover')
         var clickedState = d3.select(this).attr("class").split(" ")[1]
         updateStateLine(clickedState)
@@ -591,14 +592,14 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
       return d.State == state
     })
 
-
+    //IF LINE HASN'T BEEN ADDED YET TO THE GRAPH:
     if ($(".line-" + state).length == 0) { console.log(state)
       stateLinesArray.push(state); // ADD NEW STATE TO ARRAY 
         console.log(stateLinesArray)
       graphSvg.append("path")
             .data([graphDataState])
             .attr("class", "line-state line-" + state)
-            .attr("d", graphLine);
+            .attr("d", graphLine)
     } else { console.log(state)
         for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
             if (stateLinesArray[i] === state) {
