@@ -77,17 +77,29 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
 
     graphX.domain(d3.extent(graphData, function(d) { return d.Year; }));
     graphY.domain([d3.min(graphData, function(d) {return d[selectedCategory]; }), d3.max(graphData, function(d) {return d[selectedCategory]; })]);
+  
+    var threshold = graphSvg.append("line")
+     .attr("x1", 0)
+     .attr("y1", graphY(1))
+     .attr("x2", graphWidth)
+     .attr("y2", graphY(1))
+     .style("stroke-dasharray", 5)
+     .attr("stroke", "#5c5859")
+     .attr("class", "threshold")
 
     graphSvg.append("path")
       .data([graphData])
       .attr("class", "line-usa")
       .attr("d", graphLine);
+
+    //ADD USA LABEL
     // graphSvg.append("text")
     //   .data(graphData, function(d) { console.log(d.Year.length - 1)
         // var j = d.Year.length - 1;
         // while (d.values[j].position == 0 && j > 0)
         // return {name: d.name, value: d.values[j]};
       // })
+
 
 
     graphSvg.append("g")
@@ -391,10 +403,12 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
   //ADJUSTS LINE GRAPH TO ACCOMMODATE CHANGING Y-AXIS DUE TO ADDITION OR REMOVAL OF STATE LINES
   function updateLineGraph(variable) { console.log('hi')
     //IF ALL TOGGLES WERE TURNED OFF BEFORE, THIS ENSURES THAT OPACITY IS RESET TO 1
-    d3.selectAll(".line-usa, .line-state")
+    if (d3.selectAll(".line-usa, .line-state").attr("opacity") == 0) { console.log('zero')
+    graphSvg.selectAll(".line-usa, .line-state, .threshold")
           // .transition()
           // .duration(1200)
           .attr("opacity", 1)
+    }
 
     var graphDataAll = trendsDataFull.filter(function(d) { 
       if ((stateLinesArray.includes(d.State)) || (d.State == "USA")) {
@@ -434,9 +448,24 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
       .duration(1200)
         .attr("d", graphLine)
 
+    var threshold = d3.select(".threshold")
+     .attr("x1", 0)
+     .attr("y1", graphY(1))
+     .attr("x2", graphWidth)
+     .attr("y2", graphY(1))
+     // .style("stroke-dasharray", 5)
+     // .attr("stroke", "#5c5859");
+     // .attr("class", "threshold")
+     d3.select(".threshold")
+      // .transition()
+      // .delay(200)
+      // .duration(1200)
+        .attr("d", threshold)
+
   }
   function drawMapLine(variable, startYear, endYear){
     //IF ALL TOGGLES WERE TURNED OFF BEFORE, THIS ENSURES THAT OPACITY IS RESET TO 1
+    if (d3.selectAll(".positive-area").attr("opacity") == 0) { console.log('zero')
     d3.selectAll(".positive-area")
           // .transition()
           // .duration(1200)
@@ -445,7 +474,9 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
           // .transition()
           // .duration(1200)
           .attr("opacity", 1)
-
+    d3.selectAll(".ratioOneLine")
+      .classed("hidden", false)
+    }
 
     //reshape the data
     var trendsData = d3.select("#vis").datum()
@@ -549,10 +580,10 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
   }
 
 
-  function removeMapAttributes() { console.log('remove')
+  function removeMapAttributes() { 
   //To create the illusion of the lines in the chart animating across the chart area (left to right, small to large X values), I created a "curtain" which is a rect covering the line chart. Then, by animating it's width to 0, the animation effect is simulated. I would imagine that when the user switches between different units, on the graphs, e.g. when they switch from dollars to ratios, the curtain should draw back. On the other hand, if a user switches between combinations of state/local/federal, or toggles the adjustment on/off, the curtain should not draw back. Does that sound right to you?
 
-    d3.selectAll(".standard.line")
+    d3.selectAll(".standard.line, .positive-area")
      .transition()
      .duration(0)
      .attr("opacity", 1)
@@ -560,21 +591,17 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
       .delay( 200)
       .duration(1200)
       .attr("opacity", 0)
-    d3.selectAll(".positive-area")
-      .transition()
-      .duration(0)
-      .attr("opacity", 1)
-      .transition()
-      .delay( 200)
-      .duration(1200)
-        .attr("opacity",0)
 
+console.log('remove')
+     d3.selectAll(".ratioOneLine")
+      .classed("hidden", true)
+   
   }
 
 
   function removeGraphLine() { console.log('remove')
 
-    d3.select(".line-usa")
+    d3.selectAll(".line-usa, .line-state")
      .transition()
      .duration(0)
      .attr("opacity", 1)
