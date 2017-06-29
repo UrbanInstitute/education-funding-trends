@@ -10,7 +10,7 @@
 <div class="main-content">
   <div class="headline">
     Headline for the education funding trends project
-    <hr />
+    <hr class="title"/>
   </div>
 
   <div class="main-text">
@@ -33,47 +33,54 @@
     <div class="content">
     </div> 
   </div>
-
+</div>
 <!--END TABS-->
   <!--TAB CONTENT GOES HERE: -->
   <div class="tab-content">
-    <div id="switch-div">
-      <div class="switch-div-individual">
-        <div class="switch-div-text">
-          Local
-        </div>
-        <div class="urban-switch blue large">
-          <div class="lo button_toggle switch large on" id="lo">
+      <div class="switch-div-full">
+      <div id="switch-div">
+        <div class="switch-div-individual">
+          <div class="switch-div-text">
+            Local
+          </div>
+          <div class="urban-switch blue large">
+            <div class="lo button_toggle switch large on" id="lo">
+            </div>
           </div>
         </div>
+        <div class="switch-div-individual">
+          <div class="switch-div-text">
+            State
+          </div>
+          <div class="urban-switch blue large">
+            <div class="st button_toggle switch large on" id="st">
+            </div>
+          </div>
+        </div>
+        <div class="switch-div-individual">
+          <div class="switch-div-text">
+            Federal
+          </div>
+          <div class="urban-switch blue large">
+            <div class="fe button_toggle switch large on" id="fe">
+            </div>
+          </div>
+        </div>
+        <div class="switch-div-individual">
+          <form>
+            <div>
+              <input type="checkbox" id="adjusted-checkbox" checked>
+              <label class="checkbox-label" for="adjusted-checkbox">adjusted</label>
+            </div>
+          </form>
+        </div>
+      <hr class="after-toggle" />
+      <div class="switch-main-text">
+        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis 
       </div>
-      <div class="switch-div-individual">
-        <div class="switch-div-text">
-          State
-        </div>
-        <div class="urban-switch blue large">
-          <div class="st button_toggle switch large on" id="st">
-          </div>
-        </div>
-      </div>
-      <div class="switch-div-individual">
-        <div class="switch-div-text">
-          Federal
-        </div>
-        <div class="urban-switch blue large">
-          <div class="fe button_toggle switch large on" id="fe">
-          </div>
-        </div>
-      </div>
-      <div class="switch-div-individual">
-        <form>
-          <div>
-            <input type="checkbox" id="adjusted-checkbox" checked>
-            <label class="checkbox-label" for="adjusted-checkbox">Adjusted</label>
-          </div>
-        </form>
       </div>
     </div>
+
     <div class="viz-content">
     <div class="lineChart-div">
       <div id="lineChart">
@@ -89,7 +96,6 @@
     <!--ADD NOTE ABOUT DC AND HAWAII ONLY HAVING ONE SCHOOL DISTRICT SO NOT ON MAP-->
     </div>
   </div>
-    </div>
 </div>
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>

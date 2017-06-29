@@ -6,10 +6,17 @@ body{
   background: none !important;
 }
 
-hr {
-  width: 25%;
-  border: 3px solid #1896d2;
+hr.title{
+  width: 20%;
+  border: 5px solid #1896d2;
 }
+
+hr.after-toggle{
+  width: 95%;
+  border: 1px solid #a7a9ac;
+}
+
+
 .main-content {
   width: 700px;
   margin-bottom: 200px;
@@ -37,6 +44,7 @@ hr {
   position: relative;   
   clear: both;
   margin: 25px 0;
+  width: 100%;
 }
 .tab {
   float: left;
@@ -84,6 +92,9 @@ hr {
   z-index: 1;
 }
 
+.checkbox-label {
+  font-size: 16px;
+}
 
 
 #graphic {
@@ -287,22 +298,35 @@ text.mapLable.blank{
   fill: #666666;
 }
 
-/*SWITCH BUTTONS*/
+/*SWITCH BUTTONS SECTION*/
+
+.switch-main-text {
+  font-size: 16px;
+  font-style: italic;
+  padding-top: 10px;
+  text-align: center;
+}
+.switch-div-full {
+  width: 100%;
+  padding-top: 50px;
+
+}
 
 .switch-div-individual {
   float: left;
+  padding: 0px 15px;
 }
 
 .switch-div-text {
   float: left;
   padding-top: 20px;
+  font-size: 18px;
 }
 
 #switch-div {
   width: 60%;
   margin-left: auto;
   margin-right: auto;
-  padding-top: 100px;
 }
 .urban-switch.large {
     font-size: 13px;
@@ -314,7 +338,6 @@ text.mapLable.blank{
     line-height: 12px;
     text-align: left;
     border-radius: 10px;
-    padding-right: 20px;
     margin-bottom: 18px;
     margin-top: 18px;
 }
