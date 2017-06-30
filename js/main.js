@@ -123,23 +123,48 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
         .call(d3.axisLeft(graphY)
           .ticks(5)
           .tickFormat(d3.format('.2f')));
-  
-  var voronoiGroup = graphSvg.append("g")
-      .attr("class", "voronoi");
-  
-  voronoiGroup.selectAll("path")
-    .data(voronoi.polygons(d3.merge(trendsDataNestUSA.map(function(d) { 
-      console.log(d.values); return d.values; 
-    }))))
-    .enter().append("path")
-      .attr("d", function(d) { return d ? "M" + d.join("L") + "Z" : null; })
-      .on("mouseover", mouseover)
-     // .on("mouseout", mouseout);
+
+    drawVoronoi(trendsDataNestUSA);
 
   }
 
+
+  function drawVoronoi(data) {
+    var voronoi = d3.voronoi()
+        .x(function(d) { return graphX(d.Year); })
+        .y(function(d) { return graphY(d[selectedCategory]); })
+        .extent([[-graphMargin.left, -graphMargin.top], [graphWidth + graphMargin.right, graphHeight + graphMargin.bottom]]);
+
+
+    voronoiGroup = graphSvg.selectAll(".voronoi")
+      .data(voronoi.polygons(d3.merge(data.map(function(d) { 
+        console.log(d.values); return d.values; 
+      }))))
+
+   voronoiGroup.exit().remove()
+
+    // voronoiGroup.transition()
+    //   .attr("d", function(d) { return d ? "M" + d.join("L") + "Z" : null; })
+    //   .style("fill", "#3a403d")
+    
+
+    voronoiGroup.enter().append("path")
+          .attr("class", function() { return "voronoi"})
+          .merge(voronoiGroup)
+          .attr("d", function(d) { console.log(d); return d ? "M" + d.join("L") + "Z" : null; })
+     //     .style("fill", "#45b29d")
+          .on("mouseover", mouseover)
+          .on("mouseout", mouseout);
+
+  }
+
+
  function mouseover(d) {console.log(d.data)
         d3.select(".line-" + d.data.State).classed("line-hover", true);
+  }
+
+ function mouseout(d) { console.log(d.data)
+        d3.select(".line-" + d.data.State).classed("line-hover", false);
   }
 
   //CREATE INITIAL MAP ON LOAD
@@ -498,18 +523,7 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
           return (graphLine(d[0].values));
         });
   
-    var voronoiGroup = graphSvg.append("g")
-        .attr("class", "voronoi");
     
-    voronoiGroup.selectAll("path")
-      .data(voronoi.polygons(d3.merge(graphDataAllNest.map(function(d) { 
-        console.log(d.values); return d.values; 
-      }))))
-      .enter().append("path")
-        .attr("d", function(d) { return d ? "M" + d.join("L") + "Z" : null; })
-        .on("mouseover", mouseover)
-
-
     var threshold = d3.select(".threshold")
      .attr("x1", 0)
      .attr("y1", graphY(1))
@@ -523,6 +537,8 @@ d3.csv("data/data.csv", function(error, trendsDataFull) {
       // .delay(200)
       // .duration(1200)
         .attr("d", threshold)
+
+    drawVoronoi(graphDataAllNest)
 
   }
   function drawMapLine(variable, startYear, endYear){

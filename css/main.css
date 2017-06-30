@@ -210,7 +210,7 @@ hr.after-toggle{
 }
 
 
-.voronoi path {
+.voronoi  {
   fill: none;
   pointer-events: all;
 }
