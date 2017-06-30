@@ -58,19 +58,21 @@ hr.after-toggle{
 
 .tab .top-tab {
   background: #eee; 
-  padding: 20px 50px 0px 50px; 
+  padding: 20px 50px 12px 50px; 
   border: 1px solid #ccc; 
   margin-left: -1px; 
   position: relative;
   left: 1px; 
   font-size: 24px;
-
+  color: #a7a9ac;
 }
 .tab [type=radio] {
   display: none;   
 }
 
-
+.top-tab.current {
+  color:#000;
+}
 
 .content {
   position: absolute;
@@ -79,8 +81,9 @@ hr.after-toggle{
   background: white;
   right: 0;
   bottom: 0;
-  padding: 20px;
+  padding:10px;
   border-top: 1px solid #ccc; 
+  margin-top: 12px;
 
 }
 [type=radio]:checked ~ label {
@@ -328,13 +331,14 @@ text.mapLable.blank{
 }
 .switch-div-full {
   width: 100%;
-  padding-top: 50px;
 
 }
 
 .switch-div-individual {
   float: left;
   padding: 0px 15px;
+  margin-top: 45px;
+
 }
 
 .switch-div-text {
