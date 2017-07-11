@@ -80,9 +80,17 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         }
       })
 
-      var trendsDataNestUSA = d3.nest()
+      var graphDataSelected = trendsDataFull.filter(function(d) {           
+       if ((stateLinesArray.includes(d.State)) || (d.State == "USA")) {         
+         return d;              
+       }         
+      })
+
+      console.log(graphDataSelected)
+
+      var trendsDataNest = d3.nest()
         .key(function(d) {return d.State })
-        .entries(graphData);
+        .entries(graphDataSelected);
 
     
 
@@ -99,7 +107,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
        .attr("class", "threshold")
 
       graphSvg.append("path")
-        .data([trendsDataNestUSA])
+        .data([trendsDataNest])
         .attr("class", "line-USA")
        // .attr("d", graphLine);
         .attr("d", function(d) { d.graphLine = this;
@@ -130,12 +138,13 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
             .ticks(5)
             .tickFormat(d3.format('.2f')));
 
-      drawVoronoi(trendsDataNestUSA);
+      drawVoronoi(trendsDataNest);
 
     }
 
 
     function drawVoronoi(data) {
+
       var voronoi = d3.voronoi()
           .x(function(d) { return graphX(d.Year); })
           .y(function(d) { return graphY(d[selectedCategory]); })
@@ -159,10 +168,9 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
             .attr("class", function() { return "voronoi"})
             .merge(voronoiGroup)
             .attr("d", function(d) {
-              // console.log(d);
               return d ? "M" + d.join("L") + "Z" : null;
             })
-       //     .style("fill", "#45b29d")
+          //  .style("fill", "#45b29d")
             .on("mouseover", mouseover)
             .on("mouseout", mouseout);
 
@@ -514,10 +522,18 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         }
       })
 
+      var graphDataSelected = trendsDataFull.filter(function(d) {           
+       if ((stateLinesArray.includes(d.State)) || (d.State == "USA")) {         
+         return d;              
+       }         
+      })
+
+      console.log(graphDataSelected)
+
 
      var graphDataNest = d3.nest()
       .key(function(d) {return d.State;})
-      .entries(graphData);
+      .entries(graphDataSelected);
 
 
       var graphWidth =  graphSizes[pageSize]["width"]- graphMargin.left - graphMargin.right,
