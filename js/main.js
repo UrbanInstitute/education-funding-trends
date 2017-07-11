@@ -72,8 +72,14 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
   //CREATE INITIAL LINE GRAPH ON LOAD
     function renderGraph() {
       var graphData = trendsDataFull.filter(function(d) { 
-        return d.State == "USA"
+        if (selectedCategory.includes("revratio")) {
+          return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
+        }
+        else {
+          return d.State !== "AK" 
+        }
       })
+
       var trendsDataNestUSA = d3.nest()
         .key(function(d) {return d.State })
         .entries(graphData);
@@ -499,15 +505,19 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
             .attr("opacity", 1)
       }
 
-      var graphDataAll = trendsDataFull.filter(function(d) { 
-        if ((stateLinesArray.includes(d.State)) || (d.State == "USA")) {
-          return d;
+      var graphData = trendsDataFull.filter(function(d) { 
+        if (selectedCategory.includes("revratio")) { console.log('ratio')
+          return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
+        }
+        else { console.log('no ratio')
+          return d.State !== "AK" 
         }
       })
 
-     var graphDataAllNest = d3.nest()
+
+     var graphDataNest = d3.nest()
       .key(function(d) {return d.State;})
-      .entries(graphDataAll);
+      .entries(graphData);
 
 
       var graphWidth =  graphSizes[pageSize]["width"]- graphMargin.left - graphMargin.right,
@@ -515,15 +525,15 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
 
       d3.select("#lineChart svg")
         .select("g")
-        .data(graphDataAll)
+        .data(graphData)
 
       var graphX = d3.scaleTime().range([0, graphWidth]);
       var graphY = d3.scaleLinear().range([graphHeight, 0]);
-      var max = d3.max(graphDataAll, function(d) { return d[variable]; })
-      var min = d3.min(graphDataAll, function(d) { return d[variable]; })
+      var max = d3.max(graphData, function(d) { return d[variable]; })
+      var min = d3.min(graphData, function(d) { return d[variable]; })
 
-      graphX.domain(d3.extent(graphDataAll, function(d) { return d.Year; }));
-      graphY.domain([d3.min(graphDataAll, function(d) {return d[variable]; }), d3.max(graphDataAll, function(d) {return d[variable]; })]);
+      graphX.domain(d3.extent(graphData, function(d) { return d.Year; }));
+      graphY.domain([d3.min(graphData, function(d) {return d[variable]; }), d3.max(graphData, function(d) {return d[variable]; })]);
 
       var graphLine = d3.line()
         .x(function(d) { return graphX(d.Year); })
@@ -559,7 +569,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         // .duration(1200)
           .attr("d", threshold)
 
-      drawVoronoi(graphDataAllNest)
+      drawVoronoi(graphDataNest)
 
     }
     function updateMapLine(variable, startYear, endYear){
