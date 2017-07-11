@@ -261,7 +261,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           })
           // console.log(hoveredStateName)
           d3.select(".standard.line." + hoveredState)
-            .data(hoveredStateName)
+            // .data(hoveredStateName)
             .classed("hovered-state", true)
         })
         .on("mouseout", function() {
@@ -625,7 +625,6 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         // .transition()
         // .duration(1200)
           .attr("d", function(d){
-            // console.log((d.values));
             return mapline(d.values)
           })
 
@@ -743,7 +742,8 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           .data([graphDataStateNest])
           .attr("class", "line-state line-" + state)
          // .attr("d", graphLine);
-          .attr("d", function(d) { d.graphLine = this;
+          .attr("d", function(d) {
+            d.graphLine = this;
             // console.log(graphLine(d[0].values))
               return (graphLine(d[0].values));
             });
