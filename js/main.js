@@ -67,7 +67,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           }
         }
       });
-console.log(toggleText)
+// console.log(toggleText)
 
   //CREATE INITIAL LINE GRAPH ON LOAD
     function renderGraph() {
@@ -97,7 +97,7 @@ console.log(toggleText)
         .attr("class", "line-USA")
        // .attr("d", graphLine);
         .attr("d", function(d) { d.graphLine = this;
-          console.log(graphLine(d[0].values))
+          // console.log(graphLine(d[0].values))
             return (graphLine(d[0].values));
           });
 
@@ -138,7 +138,8 @@ console.log(toggleText)
 
       voronoiGroup = graphSvg.selectAll(".voronoi")
         .data(voronoi.polygons(d3.merge(data.map(function(d) { 
-          console.log(d.values); return d.values; 
+          // console.log(d.values); 
+          return d.values; 
         }))))
 
      voronoiGroup.exit().remove()
@@ -151,7 +152,10 @@ console.log(toggleText)
       voronoiGroup.enter().append("path")
             .attr("class", function() { return "voronoi"})
             .merge(voronoiGroup)
-            .attr("d", function(d) { console.log(d); return d ? "M" + d.join("L") + "Z" : null; })
+            .attr("d", function(d) {
+              // console.log(d);
+              return d ? "M" + d.join("L") + "Z" : null;
+            })
        //     .style("fill", "#45b29d")
             .on("mouseover", mouseover)
             .on("mouseout", mouseout);
@@ -159,11 +163,13 @@ console.log(toggleText)
     }
 
 
-   function mouseover(d) {console.log(d.data)
+   function mouseover(d) {
+    // console.log(d.data)
           d3.select(".line-" + d.data.State).classed("line-hover", true);
     }
 
-   function mouseout(d) { console.log(d.data)
+   function mouseout(d) {
+    // console.log(d.data)
           d3.select(".line-" + d.data.State).classed("line-hover", false);
     }
 
@@ -171,7 +177,7 @@ console.log(toggleText)
     function  renderMap(startYear, endYear) {
 
 
-    console.log(startYear+ endYear)
+    // console.log(startYear+ endYear)
 
 
     //function called on load to create the svg and draw an initial set of line charts. trendsData is passed in from a csv, and startYear/endYear are just for the file uploader (will be constants in final features)
@@ -245,19 +251,21 @@ console.log(toggleText)
           var clickedState = d3.select(this).attr("class").split(" ")[1]
           updateStateLine(clickedState)
           updateLineGraph(selectedCategory)
-            console.log(selectedCategory)
+            // console.log(selectedCategory)
         })
-        .on("mouseover", function() {console.log('hover')
+        .on("mouseover", function() {
+          // console.log('hover')
           var hoveredState = d3.select(this).attr("class").split(" ")[1]
           var hoveredStateName = trendsDataFull.filter(function(d) { 
             return d.State == hoveredState
           })
-          console.log(hoveredStateName)
+          // console.log(hoveredStateName)
           d3.select(".standard.line." + hoveredState)
             .data(hoveredStateName)
             .classed("hovered-state", true)
         })
-        .on("mouseout", function() {console.log('hover')
+        .on("mouseout", function() {
+          // console.log('hover')
           var hoveredState = d3.select(this).attr("class").split(" ")[1]
           d3.select(".standard.line." + hoveredState)
             .classed("hovered-state", false)
@@ -305,7 +313,9 @@ console.log(toggleText)
       map.append("rect")
           .attr("width",chartWidth-2*chartMargin + 8)
        //   .attr("height",(chartWidth-2*chartMargin + 8)/2)
-          .attr("height", function() { console.log(mapY(1)); return (rectWidth - mapY(1) - chartMargin/2)
+          .attr("height", function() {
+            // console.log(mapY(1));
+            return (rectWidth - mapY(1) - chartMargin/2)
             //return (mapY(1) - rectWidth + chartMargin/2)
           })
           .attr("x",chartMargin - 4)
@@ -316,7 +326,7 @@ console.log(toggleText)
       var keys = Object.keys(trendsData[0])
 
       mapX.domain([startYear,endYear]);
-      console.log(startYear+ endYear)
+      // console.log(startYear+ endYear)
 
       mapY.domain([d3.min(trendsData, function(d) { return d[firstKey]; }), d3.max(trendsData, function(d) { return d[firstKey]; })]); 
 
@@ -392,15 +402,16 @@ console.log(toggleText)
       if (d3.select('#adjusted-checkbox').property('checked') == true) { console.log('adj')
         adjusted = "adj_";
         selectedCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
-        console.log(selectedCategory)
+        // console.log(selectedCategory)
         selectedToggles == "" ? removeGraphLine() :  updateLineGraph(selectedCategory)
         selectedToggles == "" ? removeMapAttributes() : updateMapLine(selectedCategory, startYear, endYear) 
         
 
-      } else { console.log("not adjusted")
+      } else {
+        // console.log("not adjusted")
           adjusted = ""
           selectedCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
-          console.log(selectedCategory)
+          // console.log(selectedCategory)
           updateLineGraph(selectedCategory)
           updateMapLine(selectedCategory, startYear, endYear)
         }
@@ -439,13 +450,13 @@ console.log(toggleText)
        d3.selectAll(".button_toggle.on")
               .each(function(d, i) { //get class of each toggle that is still turned on and add it to the combinedClasses array
                 var toggleClass = d3.select(this).attr('class').split(" ")[0];
-                console.log(combinedClassesArray)
+                // console.log(combinedClassesArray)
                 combinedClassesArray.push(toggleClass);
               })
       var initialSelectedToggles = combinedClassesArray.join('')
       initialSelectedToggles == "lostfe" ? selectedToggles = "all" : selectedToggles = initialSelectedToggles
       var selectedText = combinedClassesArray.join('')
-      console.log(selectedToggles)
+      // console.log(selectedToggles)
     }
 
   // WHEN CLICKING ON EACH TOGGLE:
@@ -457,7 +468,7 @@ console.log(toggleText)
           d3.select(this).classed("off", true)
           getCombinedClasses();
           selectedCategory = adjusted + d3.select(".current").attr("id") + selectedToggles
-          console.log(selectedCategory)
+          // console.log(selectedCategory)
           d3.select(".switch-main-text")
             .text(function() {
             return toggleText[0][d3.select(".current").attr("id") + selectedToggles];
@@ -470,16 +481,18 @@ console.log(toggleText)
           d3.select(this).classed("off", false)
           getCombinedClasses();
           selectedCategory = adjusted + d3.select(".current").attr("id") + selectedToggles
-          console.log(selectedCategory)
+          // console.log(selectedCategory)
           checkAdjusted();
         }
 
       }) 
 
     //ADJUSTS LINE GRAPH TO ACCOMMODATE CHANGING Y-AXIS DUE TO ADDITION OR REMOVAL OF STATE LINES
-    function updateLineGraph(variable) { console.log('hi')
+    function updateLineGraph(variable) {
+      // console.log('hi')
       //IF ALL TOGGLES WERE TURNED OFF BEFORE, THIS ENSURES THAT OPACITY IS RESET TO 1
-      if (d3.selectAll(".line-USA, .line-state").attr("opacity") == 0) { console.log('zero')
+      if (d3.selectAll(".line-USA, .line-state").attr("opacity") == 0) {
+        // console.log('zero')
       graphSvg.selectAll(".line-USA, .line-state, .threshold")
             // .transition()
             // .duration(1200)
@@ -527,7 +540,7 @@ console.log(toggleText)
         .duration(1200)
           // .attr("d", graphLine)
         .attr("d", function(d) { d.graphLine = this;
-          console.log(graphLine(d[0].values))
+          // console.log(graphLine(d[0].values))
             return (graphLine(d[0].values));
           });
     
@@ -550,10 +563,11 @@ console.log(toggleText)
 
     }
     function updateMapLine(variable, startYear, endYear){
-  console.log(variable)
+  // console.log(variable)
 
       //IF ALL TOGGLES WERE TURNED OFF BEFORE, THIS ENSURES THAT OPACITY IS RESET TO 1
-      if (d3.selectAll(".positive-area").attr("opacity") == 0) { console.log('zero')
+      if (d3.selectAll(".positive-area").attr("opacity") == 0) {
+        // console.log('zero')
       d3.selectAll(".positive-area")
             // .transition()
             // .duration(1200)
@@ -574,7 +588,7 @@ console.log(toggleText)
 
       var chartWidth = mapSizes[pageSize]["chartWidth"]
       var chartMargin = mapSizes[pageSize]["chartMargin"]
-  console.log(trendsDataNest)
+  // console.log(trendsDataNest)
       //update data binding
       map = d3.select("#vis svg")
         .selectAll(".state")
@@ -610,7 +624,10 @@ console.log(toggleText)
       map.selectAll("#vis svg .line")
         // .transition()
         // .duration(1200)
-          .attr("d", function(d){ console.log((d.values)); return mapline(d.values)})
+          .attr("d", function(d){
+            // console.log((d.values));
+            return mapline(d.values)
+          })
 
       //move y=1 line. Note this will need to be hidden (or whatever comparable elements exist will be hidden) for the levels graphs
       d3.selectAll(".ratioOneLine")
@@ -631,7 +648,8 @@ console.log(toggleText)
           .transition()
           .duration(1200)
           .attr("height", function() { 
-          if (d3.select(".current").attr("id") == "revratio_") { console.log(selectedCategory);
+          if (d3.select(".current").attr("id") == "revratio_") {
+            // console.log(selectedCategory);
           return (( rectWidth - (rectWidth - mapY(1))- chartMargin + 2 )) //BEN, WHY IS THIS CALCULATION DIFFERENT THAN THE INITIAL CALCULATION OF THE HEIGHT ON LOAD?
           } else { 
             return rectWidth;
@@ -679,14 +697,15 @@ console.log(toggleText)
         .duration(1200)
         .attr("opacity", 0)
 
-  console.log('remove')
+  // console.log('remove')
        d3.selectAll(".ratioOneLine")
         .classed("hidden", true)
      
     }
 
 
-    function removeGraphLine() { console.log('remove')
+    function removeGraphLine() {
+      // console.log('remove')
 
       d3.selectAll(".line-USA, .line-state")
        .transition()
@@ -701,7 +720,8 @@ console.log(toggleText)
     }
 
   //ADDS NEW STATE LINE AND UPDATES STATE ARRAY
-    function updateStateLine(state) { console.log(state)
+    function updateStateLine(state) {
+      // console.log(state)
       var graphDataState = trendsDataFull.filter(function(d) { 
         return d.State == state
       })
@@ -712,30 +732,33 @@ console.log(toggleText)
      var graphDataStateNest = d3.nest()
       .key(function(d) {return d.State;})
       .entries(graphDataState);
-  console.log(graphDataStateNest)
+  // console.log(graphDataStateNest)
       //IF LINE HASN'T BEEN ADDED YET TO THE GRAPH:
-      if ($(".line-" + state).length == 0) { console.log(state)
+      if ($(".line-" + state).length == 0) {
+        // console.log(state)
         stateLinesArray.push(state); // ADD NEW STATE TO ARRAY 
-          console.log(stateLinesArray)
+          // console.log(stateLinesArray)
 
         graphSvg.append("path")
           .data([graphDataStateNest])
           .attr("class", "line-state line-" + state)
          // .attr("d", graphLine);
           .attr("d", function(d) { d.graphLine = this;
-            console.log(graphLine(d[0].values))
+            // console.log(graphLine(d[0].values))
               return (graphLine(d[0].values));
             });
         // graphSvg.append("path")
         //       .data([graphDataState])
         //       .attr("class", "line-state line-" + state)
         //       .attr("d", graphLine)
-      } else { console.log(state)
+      } else {
+        // console.log(state)
           for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
               if (stateLinesArray[i] === state) {
                   stateLinesArray.splice(i, 1);
               }
-          }        console.log(stateLinesArray)
+          }
+          // console.log(stateLinesArray)
 
         graphSvg.select("path.line-" + state) 
           .remove()
@@ -743,7 +766,8 @@ console.log(toggleText)
       
       d3.select(".standard.line." + state)
         .classed("selected-state", function(){
-          if (d3.select(".standard.line." + state).classed("selected-state") == true) { console.log('hi')
+          if (d3.select(".standard.line." + state).classed("selected-state") == true) {
+            // console.log('hi')
             return false
           } else {
             return true
