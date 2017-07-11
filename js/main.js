@@ -444,7 +444,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           d3.selectAll(".top-tab").classed('current', false)
           d3.select(this).classed('current', true)
           d3.select(".switch-main-text")
-            .text(function() {
+            .text(function() { 
             return toggleText[0][d3.select(".current").attr("id") + selectedToggles];
           })
           checkAdjusted();
@@ -481,29 +481,75 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           d3.select(this).classed("on", false)
           d3.select(this).classed("off", true)
           getCombinedClasses();
-          selectedCategory = adjusted + d3.select(".current").attr("id") + selectedToggles
-          // console.log(selectedCategory)
           d3.select(".switch-main-text")
-            .text(function() {
+            .text(function() { 
             return toggleText[0][d3.select(".current").attr("id") + selectedToggles];
           })
           checkAdjusted();
 
         }
-        else {
+        else { console.log('hi')
           d3.select(this).classed("on", true)
           d3.select(this).classed("off", false)
           getCombinedClasses();
-          selectedCategory = adjusted + d3.select(".current").attr("id") + selectedToggles
-          // console.log(selectedCategory)
+          d3.select(".switch-main-text")
+            .text(function() { 
+            return toggleText[0][d3.select(".current").attr("id") + selectedToggles];
+          })
           checkAdjusted();
         }
 
       }) 
+  //WHEN CLICKING ON CLOSE SIGN UNDER SELECTED STATE LIST
+    d3.selectAll(".close-sign")
+      .on('click', function() { console.log('hi')
+        console.log(d3.select(this).attr('class'))
+      })
+
+  //WHEN CLICKING ON CLEAR ALL UNDER SELECTED STATE LIST
+    d3.select(".state-clear")
+      .on('click', function() {
+        d3.selectAll(".state-item")
+        .remove();
+        d3.selectAll(".lineChart-details, .lineChart-notes-under")
+          .classed("show", false)
+        d3.select(".lineChart-notes-above")
+          .classed("show", true)
+        d3.selectAll(".selected-state")
+          .classed("selected-state", false)
+        d3.selectAll(".line-state")
+          .remove()
+      })
+
+    function addStateList(state) { 
+      d3.selectAll(".lineChart-details, .lineChart-notes-under")
+        .classed("show", true)
+      d3.select(".lineChart-notes-above")
+        .classed("show", false)
+      var stateItem = d3.select("#state-list")
+        .append("li")
+          .html(state)
+        .attr("class", "state-item item-" + state);
+      stateItem.append("div")
+        .attr("class", "close-sign close-sign-" + state)
+
+    }
+
+    function removeStateList(state) {
+      d3.select(".item-" + state)
+        .remove();
+        console.log(d3.select(".state-item").size())
+      if (d3.select(".state-item").size() == 0) {
+        d3.selectAll(".lineChart-details, .lineChart-notes-under")
+          .classed("show", false)
+        d3.select(".lineChart-notes-above")
+          .classed("show", true)
+      }
+    }
+    
 
     //ADJUSTS LINE GRAPH TO ACCOMMODATE CHANGING Y-AXIS DUE TO ADDITION OR REMOVAL OF STATE LINES
     function updateLineGraph(variable) {
-      // console.log('hi')
       //IF ALL TOGGLES WERE TURNED OFF BEFORE, THIS ENSURES THAT OPACITY IS RESET TO 1
       if (d3.selectAll(".line-USA, .line-state").attr("opacity") == 0) {
         // console.log('zero')
@@ -794,16 +840,16 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .classed("selected-state", function(){
           if (d3.select(".standard.line." + state).classed("selected-state") == true) {
             // console.log('hi')
+            removeStateList(state);
             return false
           } else {
-            return true
+            addStateList(state);
+            return true;            
           }
          })
     }
 
-    function switchText() {
-
-    }
+    
 
       renderGraph();
       renderMap(1995, 2014);

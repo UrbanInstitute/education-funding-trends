@@ -9,12 +9,14 @@
 
 <div class="main-content">
   <div class="headline">
-    Headline for the education funding trends project
+    How has education funding changed over time? 
     <hr class="title"/>
   </div>
 
   <div class="main-text">
-    Apart from counting words and characters, our online editor can help you to improve word choice and writing style, and, optionally, help you to detect grammar mistakes and plagiarism. To check word count, simply place your cursor into the text box above and start typing. You'll see the number of characters and words increase or decrease as you type, delete, and edit them. You can also copy and paste text from another program over into the online editor above. The Auto-Save feature will make sure you won't lose any changes while editing, even if you leave the site and come back later. Tip: Bookmark this page now.Apart from counting words and characters, our online editor can help you to improve word choice and writing style, and, optionally, help you to detect grammar mistakes and plagiarism. To check word count, simply place your cursor into the text box above and start typing. You'll see the number of characters and words increase or decrease as you type, delete, and edit them. You can also copy and paste text from another program over into the online editor above. The Auto-Save feature will make sure you won't lose any changes while editing, even if you leave the site and come back later. Tip: Bookmark this page now.Apart from counting words and characters, our online editor can help you to improve word choice and writing style, and, optionally, help you to detect grammar mistakes and plagiarism. 
+    <p>Elementary and secondary education is funded through a complex mix of federal, state, and local dollars. How that funding has changed over time depends on local economies, legislative decisions, and in many cases court orders. This tool examines where education funding has—and has not—changed the most.</p>
+    <p>To understand how school funding has changed we look both at the level of funding over time and at the changes in <a href="http://apps.urban.org/features/school-funding-do-poor-kids-get-fair-share/" target="_blank">funding progressivity</a>, or how much more is spent on educating low-income students relative to nonpoor students. (Our default is to compare states using cost-adjusted dollars based on the salaries of college graduates in each district, but you can turn that adjustment off using the checkbox below.) Though education funding has generally increased and become more progressive, states vary widely in how much money they spend on education and how they distribute that money. </p>
+    <p>Below, you can explore how local, state, and federal funding has changed over the past two decades. The chart to the left shows the national average, and clicking a state will add its trend line to the chart so you can compare. If you want to look only at one type of funding—state-level, for example, you can turn the different funding sources on or off. </p>
   </div>
 </div>
 <div class="tabs">  
@@ -22,14 +24,14 @@
 <!--BEGIN TABS--> 
   <div class="tab">
     <input type="radio" id="tab-1" name="tab-group-1" checked>
-    <label id = "revratio_" class="top-tab current" for="tab-1">Ratio</label>
+    <label id = "revratio_" class="top-tab current" for="tab-1">Progressivity</label>
     <div class="content">
     </div> 
   </div>
     
   <div class="tab">
     <input type="radio" id="tab-2" name="tab-group-1">
-    <label id="revpp_" class="top-tab" for="tab-2">Levels</label>       
+    <label id="revpp_" class="top-tab" for="tab-2">Funding levels</label>       
     <div class="content">
     </div> 
   </div>
@@ -70,13 +72,13 @@
           <form>
             <div>
               <input type="checkbox" id="adjusted-checkbox" checked>
-              <label class="checkbox-label" for="adjusted-checkbox">adjusted</label>
+              <label class="checkbox-label" for="adjusted-checkbox">cost-adjusted</label>
             </div>
           </form>
         </div>
       <hr class="after-toggle" />
       <div class="switch-main-text">
-        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis 
+        Overall school funding is about as progressive today, on average, as it was in 1995. In that time, six states increased in progressivity by at least 5 percentage points, while only two states became regressive. 
       </div>
       </div>
     </div>
@@ -85,9 +87,21 @@
     <div class="lineChart-div">
       <div id="lineChart">
       </div>
-      <div id="lineChart-details">
-        <div class="state-title">State</div>
-        <div class="state-name"></div>
+      <div class="lineChart-notes-above show">
+      We measured the progressivity of school funding as a ratio. A ratio of 1.0 means funding is equal for poor and non-poor students; a number above one means funding is progressive; a number below one means funding is regressive. An estimate of 1.1, for example, would imply that on average poor students attend districts that receive 10 percent more in per-student funding than the districts nonpoor students attend.
+      </div>
+      <div class="lineChart-details">
+      <div class="header-row">
+        <div class="state-title">SELECTED STATES</div>
+        <div class="state-clear">clear all</div>
+      </div>
+        <div class="state-name">
+          <ul id="state-list">
+          </ul>
+        </div>
+      </div>
+      <div class="lineChart-notes-under">
+      We measured the progressivity of school funding as a ratio. A ratio of 1.0 means funding is equal for poor and non-poor students; a number above one means funding is progressive; a number below one means funding is regressive. An estimate of 1.1, for example, would imply that on average poor students attend districts that receive 10 percent more in per-student funding than the districts nonpoor students attend.
       </div>
     </div>
     <div id = "vis">

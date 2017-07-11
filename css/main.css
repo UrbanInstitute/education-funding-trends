@@ -16,6 +16,33 @@ hr.after-toggle{
   border: 1px solid #a7a9ac;
 }
 
+ul#state-list{
+  list-style-type: none;
+  padding-left: 0px;
+
+}
+
+ul#state-list li {
+  line-height: 36px;
+  background-color: #ececec;
+  border-bottom: 2px solid #fff;
+  text-indent: 10px;
+}
+
+.state-item {
+
+}
+div.close-sign {
+  background-image: url("../img/close-sign.png");
+  background-repeat: no-repeat;
+  margin-left: 365px;
+  margin-top: -30px;
+  height: 30px;
+  pointer-events: all;
+  cursor: pointer;
+}
+
+
 
 .main-content {
   width: 700px;
@@ -141,7 +168,7 @@ hr.after-toggle{
 
 .lineChart-div {
   float: left;
-  width: 35%;
+  width: 435px;
 }
 #visTitle{
   position: fixed;
@@ -191,7 +218,6 @@ hr.after-toggle{
 
 #lineChart{
   position: relative;
-  bottom: 20px;
   z-index: 1;
   margin-left: 50px;  
   width: 300px;
@@ -200,18 +226,42 @@ hr.after-toggle{
   left: 0px;
 }
 
-#lineChart-details {
-
+.lineChart-details {
   bottom: 20px;
   z-index: 1;
-  margin-left: 100px;  
-  width: 300px;
+  margin-left: 35px;  
+  width: 400px;
   background: transparent;
   height: 0px;
   left: 0px;
-  margin-top: -50px;
+  display: none;
+
 }
 
+.show {
+  display: block !important;
+}
+
+.lineChart-notes-above {
+  display: block;
+  font-style: italic;
+  font-size: 13px;
+  margin-left: 35px;
+  display: none;
+  color: #696969;
+
+}
+
+.lineChart-notes-under {
+  display: none;
+  font-style: italic;
+  font-size: 13px;
+  margin-left: 35px;
+  display: none;
+  width: 100%;
+  float: left;
+  color: #696969;
+}
 
 .voronoi  {
   fill: none;
@@ -244,10 +294,24 @@ hr.after-toggle{
   stroke-width: 2.5;
 }
 
+.header-row {
+  width: 100%;
+}
 .state-title {
   text-transform: uppercase;
+  margin-bottom:5px;
+  float: left;
+}
+
+.state-clear {
+  float: right;
   color: #1896d2;
-  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.state-name {
+  width: 100%;
+  float: left;
 }
 
 #vis .title {
