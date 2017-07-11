@@ -206,14 +206,18 @@ div.close-sign {
 
 .line-USA {
   fill: none;
-  stroke: #1696d2;
-  stroke-width: 1.5;
+  stroke: #fbbe15;
+  stroke-width: 2;
 }
 
+.threshold {
+  stroke: #939598;
+
+}
 .line-state {
   fill: none;
-  stroke: #ec008b;
-  stroke-width: 1.5;
+  stroke: #11719f;
+  stroke-width: 2;
 }
 
 #lineChart{

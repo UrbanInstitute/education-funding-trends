@@ -76,7 +76,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
         }
         else {
-          return d.State !== "AK" 
+          return d.State;
         }
       })
 
@@ -198,11 +198,19 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
 
       // generateButtons(trendsData, startYear, endYear) //just for the file uploader
 
-      //FILTERING DATA FOR MAP SO IT DOESN'T INCLUDE USA
-      var trendsData = trendsDataFull.filter(function(d) { 
-        return d.State !== "USA"
-      })
+      //FILTERING DATA FOR MAP SO IT DOESN'T INCLUDE AK, HI, OR DC
+      // var trendsData = trendsDataFull.filter(function(d) { 
+      //   return d.State !== "USA"
+      // })
 
+      var trendsData = trendsDataFull.filter(function(d) { 
+        if (selectedCategory.includes("revratio")) {
+          return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
+        }
+        else {
+          return d.State;
+        }
+      })
 
       mapSvg = d3.select("#vis")
         .data([trendsData])
@@ -564,7 +572,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
         }
         else { console.log('no ratio')
-          return d.State !== "AK" 
+          return d.State;
         }
       })
 
@@ -622,7 +630,6 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
        .attr("y1", graphY(1))
        .attr("x2", graphWidth)
        .attr("y2", graphY(1))
-       // .style("stroke-dasharray", 5)
        // .attr("stroke", "#5c5859");
        // .attr("class", "threshold")
        d3.select(".threshold")
