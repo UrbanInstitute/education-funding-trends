@@ -311,6 +311,12 @@ console.log(trendsDataNestBlank)
         .attr("x",chartMargin - 4)
         .attr("y",chartMargin - 4)
         .style("fill","#b3b3b3") 
+      blank.append("text")
+        .text(function(d){ return d.key })
+        .attr("class", "mapLabel standard")
+        .attr("text-anchor", "end")
+        .attr("x",chartWidth+chartMargin - 25)
+        .attr("y",chartWidth+chartMargin - 25)
 
       //chart background
       map.append("rect")
@@ -374,6 +380,11 @@ console.log(trendsDataNestBlank)
       map.append("path")
         .attr("class", function(d){ return "standard line " + d.key })
         .attr("d", function(d){  return mapline(d.values)})
+      map.selectAll(".standard.line.DC, .standard.line.HI")
+          .style("opacity", function() {
+          return (d3.select("#revpp_").classed("current") == true) ?  1 : 0;
+        })
+
 
       //see drawBackMapCurtain for explanation--draw a "curtain" on top of the line, which can be animated away to simulate the line animating left to right
       map.append("rect")
@@ -693,10 +704,18 @@ console.log(trendsDataNestBlank)
           .attr("y1",mapY(1))
           .attr("y2",mapY(1))
           
-      //REMOVE BLANK BOXES FROM HI AND DC ON LEVELS TAB
+      //REMOVE BLANK BOXES AND MAKES LINES APPEAR FOR HI AND DC ON LEVELS TAB
       d3.selectAll(".blank")
           .style("opacity", function() {
           return (d3.select("#revpp_").classed("current") == true) ?  0 : 1;
+        })
+        .transition()
+        .duration(1200)
+          .attr("y1",mapY(1))
+          .attr("y2",mapY(1))
+      d3.selectAll(".standard.line.DC, .standard.line.HI")
+          .style("opacity", function() {
+          return (d3.select("#revpp_").classed("current") == true) ?  1 : 0;
         })
         .transition()
         .duration(1200)
