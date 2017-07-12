@@ -136,17 +136,16 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
     }
 
 
-    function drawVoronoi(data) {
-
+    function drawVoronoi(data) { console.log('voronoi')
+console.log(selectedCategory)
       var voronoi = d3.voronoi()
           .x(function(d) { return graphX(d.Year); })
-          .y(function(d) { return graphY(d[selectedCategory]); })
+          .y(function(d) { console.log(graphY(d[selectedCategory])); return graphY(d[selectedCategory]); })
           .extent([[-graphMargin.left, -graphMargin.top], [graphWidth + graphMargin.right, graphHeight + graphMargin.bottom]]);
 
 
       voronoiGroup = graphSvg.selectAll(".voronoi")
         .data(voronoi.polygons(d3.merge(data.map(function(d) { 
-          // console.log(d.values); 
           return d.values; 
         }))))
 
@@ -163,7 +162,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
             .attr("d", function(d) {
               return d ? "M" + d.join("L") + "Z" : null;
             })
-          //  .style("fill", "#45b29d")
+           // .style("fill", "#45b29d")
             .on("mouseover", mouseover)
             .on("mouseout", mouseout);
 
@@ -381,7 +380,14 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       map.append("path")
         .attr("class", function(d){ return "standard line " + d.key })
         .attr("d", function(d){  return mapline(d.values)})
-
+      map.selectAll(".standard.line.DC, .standard.line.HI")
+        .classed("hidden", function() { 
+           if (selectedCategory.includes("revratio")) { 
+            return true;
+           } else {
+            return false;
+           }
+        })
       //see drawBackMapCurtain for explanation--draw a "curtain" on top of the line, which can be animated away to simulate the line animating left to right
       map.append("rect")
         .attr("class","mapCurtain")
@@ -629,6 +635,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           // console.log(graphLine(d[0].values))
             return (graphLine(d[0].values));
           });
+
     
       
       var threshold = d3.select(".threshold")
@@ -704,6 +711,14 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         // .duration(1200)
           .attr("d", function(d){
             return mapline(d.values)
+          })
+      map.selectAll(".standard.line.DC, .standard.line.HI")
+          .classed("hidden", function() { 
+             if (selectedCategory.includes("revratio")) { 
+              return true;
+             } else {
+              return false;
+             }
           })
 
       //move y=1 line. Note this will need to be hidden (or whatever comparable elements exist will be hidden) for the levels graphs
