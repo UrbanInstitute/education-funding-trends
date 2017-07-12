@@ -754,14 +754,14 @@ console.log(trendsDataNestBlank)
 
       //update the line. In some cases may need to drawBackMapCurtain here (see below)
       map.selectAll("#vis svg .line:not(.AK)")
-        // .transition()
-        // .duration(1200)
+        .transition()
+        .duration(1200)
           .attr("d", function(d){
             return mapline(d.values)
           })
       d3.select(".line.AK")
-        // .transition()
-        // .duration(1200)
+        .transition()
+        .duration(1200)
           .attr("d", function(d){
             return mapline2(d.values)
           })
