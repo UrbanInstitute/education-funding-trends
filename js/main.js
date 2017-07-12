@@ -623,34 +623,78 @@ console.log(trendsDataNestBlank)
     }
     
 
+    function updateScales(variable, oldVariable){
+        var domainController;
+        if(variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_"){
+          domainController = variable;
+          selectedCategory = variable;
+        }else{
+          if(variable != oldVariable){
+            //blank variable, from changing toggles
+            domainController = oldVariable;
+          }else{
+            //blank variable, from clicking on state
+            domainController = selectedCategory;
+          }
+        }
+        var trendsDataMinMax = trendsDataFull.filter(function(d) { 
+          if (selectedCategory.includes("revratio")) {
+            if (d3.select(".standard.line.AK.selected-state").node() !== null) { 
+              // console.log('AK')
+              return d.State !== "HI" && d.State !== "DC"
+            }
+            // console.log('no AK')
+            return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
+          }
+          else {
+            return d.State;
+          }
+        })
+
+
+        var graphDataSelected = trendsDataFull.filter(function(d) {           
+         if ((stateLinesArray.includes(d.State)) || (d.State == "USA")) {         
+           return d;              
+         }         
+        })
+
+
+       var graphDataNest = d3.nest()
+        .key(function(d) {return d.State;})
+        .entries(graphDataSelected);
+
+
+        var graphWidth =  graphSizes[pageSize]["width"]- graphMargin.left - graphMargin.right,
+            graphHeight = graphSizes[pageSize]["height"] - graphMargin.top - graphMargin.bottom;
+
+        d3.select("#lineChart svg")
+          .select("g")
+          .data(trendsDataFiltered)
+
+        var graphX = d3.scaleTime().range([0, graphWidth]);
+        var graphY = d3.scaleLinear().range([graphHeight, 0]);
+        console.log(domainController)
+        var max = d3.max(trendsDataMinMax, function(d) { return d[domainController]; })
+        var min = (domainController.search("ratio") != -1) ? d3.min(trendsDataMinMax, function(d) {return d[domainController]; }) : 0;
+
+
+        graphX.domain(d3.extent(trendsDataFiltered, function(d) { return d.Year; }));
+        graphY.domain([min, max]);
+
+        var graphLine = d3.line()
+          .x(function(d) { return graphX(d.Year); })
+          .y(function(d) { return graphY(d[variable]); });
+
+        return {"graphY": graphY, "graphLine": graphLine, "graphDataNest": graphDataNest}
+      
+    }
+
     //ADJUSTS LINE GRAPH TO ACCOMMODATE CHANGING Y-AXIS DUE TO ADDITION OR REMOVAL OF STATE LINES
     function updateLineGraph(variable, oldVariable) {
-      var domainController;
-      if(variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_"){
-        domainController = variable;
-        selectedCategory = variable;
-      }else{
-        if(variable != oldVariable){
-          //blank variable, from changing toggles
-          domainController = oldVariable;
-        }else{
-          //blank variable, from clicking on state
-          domainController = selectedCategory;
-        }
-      }
-      var trendsDataMinMax = trendsDataFull.filter(function(d) { 
-        if (selectedCategory.includes("revratio")) {
-          if (d3.select(".standard.line.AK.selected-state").node() !== null) { 
-            // console.log('AK')
-            return d.State !== "HI" && d.State !== "DC"
-          }
-          // console.log('no AK')
-          return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
-        }
-        else {
-          return d.State;
-        }
-      })
+      var scales = updateScales(variable, oldVariable)
+      var graphY = scales.graphY
+      var graphLine = scales.graphLine
+      var graphDataNest = scales.graphDataNest
       //IF ALL TOGGLES WERE TURNED OFF BEFORE, THIS ENSURES THAT OPACITY IS RESET TO 1
       if (d3.selectAll(".line-USA, .line-state").attr("opacity") == 0) {
         // console.log('zero')
@@ -660,40 +704,7 @@ console.log(trendsDataNestBlank)
             .attr("opacity", 1)
       }
 
-      var graphDataSelected = trendsDataFull.filter(function(d) {           
-       if ((stateLinesArray.includes(d.State)) || (d.State == "USA")) {         
-         return d;              
-       }         
-      })
 
-
-     var graphDataNest = d3.nest()
-      .key(function(d) {return d.State;})
-      .entries(graphDataSelected);
-
-
-      var graphWidth =  graphSizes[pageSize]["width"]- graphMargin.left - graphMargin.right,
-          graphHeight = graphSizes[pageSize]["height"] - graphMargin.top - graphMargin.bottom;
-
-      d3.select("#lineChart svg")
-        .select("g")
-        .data(trendsDataFiltered)
-
-      var graphX = d3.scaleTime().range([0, graphWidth]);
-      var graphY = d3.scaleLinear().range([graphHeight, 0]);
-      var max = d3.max(trendsDataMinMax, function(d) { return d[domainController]; })
-      var min = (domainController.search("ratio") != -1) ? d3.min(trendsDataMinMax, function(d) {return d[domainController]; }) : 0;
-
-
-      graphX.domain(d3.extent(trendsDataFiltered, function(d) { return d.Year; }));
-      graphY.domain([min, max]);
-      
-// console.log(max)
-// console.log(min)
-
-      var graphLine = d3.line()
-        .x(function(d) { return graphX(d.Year); })
-        .y(function(d) { return graphY(d[variable]); });
 
       d3.selectAll("#lineChart .y.graphAxis")
           .transition().duration(1200).ease(d3.easeSinInOut)
@@ -705,7 +716,7 @@ console.log(trendsDataNestBlank)
         .transition()
         .duration(1200)
           // .attr("d", graphLine)
-        .attr("d", function(d) { d.graphLine = this;
+        .attr("d", function(d) {
           // console.log(graphLine(d[0].values))
             return (graphLine(d[0].values));
           });
@@ -892,6 +903,11 @@ console.log(trendsDataNestBlank)
 
   //ADDS NEW STATE LINE AND UPDATES STATE ARRAY
     function updateStateLine(state) {
+      var adjusted = (d3.select('#adjusted-checkbox').property('checked') == true) ? "adj_" : ""
+      var newCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
+
+      var scales = updateScales(newCategory, newCategory)
+      var graphLine = scales.graphLine
       // console.log(state)
       var graphDataState = trendsDataFull.filter(function(d) { 
         return d.State == state
