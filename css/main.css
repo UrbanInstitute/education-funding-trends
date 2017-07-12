@@ -382,12 +382,12 @@ div.close-sign {
 
 
 
-text.mapLable.standard{
+text.mapLabel.standard{
   font-size: 12.24px;
   fill: #fff;
   /*fill: red !important;*/
 }
-text.mapLable.blank{
+text.mapLabel.blank{
   font-size: 12.24px;
   fill: #666666;
 }

@@ -67,7 +67,34 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           }
         }
       });
-// console.log(toggleText)
+    //FILTERING DATA FOR MAP TO NOT INCLUDE USA
+    var trendsData = trendsDataFull.filter(function(d) { 
+      return d.State !== "USA"
+    })
+
+    var trendsDataFiltered = trendsDataFull.filter(function(d) { 
+      if (selectedCategory.includes("revratio")) {
+        return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
+      }
+      else {
+        return d.State;
+      }
+    })
+
+    var trendsDataAK = trendsDataFull.filter(function(d) { 
+      if (selectedCategory.includes("revratio")) {
+        return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
+      }
+      else {
+        return d.State;
+      }
+    })
+    //FILTERING DATA TO HI AND DC TO DRAW BOXES OVER TILES
+    var blankStateData = trendsDataFull.filter(function(d) { 
+      if (selectedCategory.includes("revratio")) {
+        return d.State == "HI" || d.State == "DC"
+      }
+    })
 
   //CREATE INITIAL LINE GRAPH ON LOAD
     function renderGraph() {
@@ -190,28 +217,6 @@ console.log(selectedCategory)
 
       // generateButtons(trendsData, startYear, endYear) //just for the file uploader
 
-      //FILTERING DATA FOR MAP SO IT DOESN'T INCLUDE AK, HI, OR DC
-      var trendsData = trendsDataFull.filter(function(d) { 
-        return d.State !== "USA"
-      })
-
-      var trendsDataFiltered = trendsDataFull.filter(function(d) { 
-        if (selectedCategory.includes("revratio")) {
-          return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
-        }
-        else {
-          return d.State;
-        }
-      })
-
-      var trendsDataAK = trendsDataFull.filter(function(d) { 
-        if (selectedCategory.includes("revratio")) {
-          return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
-        }
-        else {
-          return d.State;
-        }
-      })
 
       mapSvg = d3.select("#vis")
         .data([trendsData])
@@ -221,16 +226,15 @@ console.log(selectedCategory)
           .append("g")
             .attr("transform", "translate(" + -330 + "," + mapMargin.top + ")");
 
-      //Filter data by year. Note that `startYear` and `endYear` will be fixed for the actual feature, they're just variables here for purposes of the tester/file uploader
-      trendsData = trendsData.filter(function(o){ 
-        return +o.Year >= startYear
-      })
-
 
       //reshape data, nesting by State 
       var trendsDataNest = d3.nest()
         .key(function(d) {return d.State})
         .entries(trendsData);
+
+      var trendsDataNestBlank = d3.nest()
+        .key(function(d) { return d.State})
+        .entries(blankStateData);
 
 
       //generate a list of states in the dataset. For any states not in the dataset (stored temporarily in tmpKeys) but in the `stateData` object (which is in the global scope, stored in `stateData.js`, create a new data set, just for the blank states (not in data csv), which wil be greyed out
@@ -241,12 +245,6 @@ console.log(selectedCategory)
           tmpKeys.push(obj.key)
         }
       }
-
-      var blankStateData = stateData.features.filter(function(o) { 
-        return tmpKeys.indexOf(o.properties.abbr) == -1
-      })
-
-      // console.log(blankStateData)
 
 
       //tile grid map projection and geo path
@@ -261,7 +259,6 @@ console.log(selectedCategory)
       //for each non blank state, create a group which will hold the line chart
       var chartWidth = mapSizes[pageSize]["chartWidth"]
       var chartMargin = mapSizes[pageSize]["chartMargin"]
-
       var map = mapSvg
         .selectAll(".state")
         .data(trendsDataNest)
@@ -270,7 +267,7 @@ console.log(selectedCategory)
         .attr("class", function(d){ return "state " + d.key })
         .attr("transform", function(d,i){
           //grab the element in statesData corresponding to the correct trendsData state, and position accordingly
-          var tmp = stateData.features.filter(function(o) { return o.properties.abbr == d.key} )
+          var tmp = stateData.features.filter(function(o) {  return o.properties.abbr == d.key} )
           return "translate(" + geoPath.centroid(tmp[0]) + ")"
         })
       map
@@ -300,25 +297,30 @@ console.log(selectedCategory)
           //   .html("")
         })
 
+console.log(trendsDataNestBlank)
 
-      //draw greyed out blank states
-      var blank = mapSvg
-        .selectAll(".blank")
-        .data(blankStateData)
-        .enter()
-        .append("g")
+      //draw greyed out blank states for HI and DC
+        var blank = mapSvg
+          .selectAll(".blank")
+          .data(trendsDataNestBlank)
+          .enter()
+          .append("g")
           .attr("class","blank")
-          .attr("transform", function(d,i){
-            return "translate(" + geoPath.centroid(d) + ")"
+          .attr("transform", function(d,i){ 
+            var tmp = stateData.features.filter(function(o) { console.log( d.key); return o.properties.abbr == d.key} )
+            return "translate(" + geoPath.centroid(tmp[0]) + ")"
           })
+          // .attr("transform", function(d,i){
+          //   return "translate(" + geoPath.centroid(d) + ")"
+          // })
 
       //blank sate background
-      // blank.append("rect")
-      //   .attr("width",chartWidth-2*chartMargin + 8)
-      //   .attr("height",chartWidth-2*chartMargin + 8)
-      //   .attr("x",chartMargin - 4)
-      //   .attr("y",chartMargin - 4)
-      //   .style("fill","#b3b3b3") 
+      blank.append("rect")
+        .attr("width",chartWidth-2*chartMargin + 8)
+        .attr("height",chartWidth-2*chartMargin + 8)
+        .attr("x",chartMargin - 4)
+        .attr("y",chartMargin - 4)
+        .style("fill","#b3b3b3") 
 
       //chart background
       map.append("rect")
@@ -374,7 +376,9 @@ console.log(selectedCategory)
         .attr("x2",chartWidth-chartMargin)
         .attr("y1",mapY(1))
         .attr("y2",mapY(1))
-        .attr("class","ratioOneLine")
+        .attr("class", function(d) {
+          return "ratioOneLine ratioOneLine-" + d.State
+        })
 
       //draw the line on the chart!
       map.append("path")
@@ -400,7 +404,7 @@ console.log(selectedCategory)
       //draw the state name on the tile
       map.append("text")
         .text(function(d){ return d.key })
-        .attr("class", "mapLable standard")
+        .attr("class", "mapLabel standard")
         .attr("text-anchor", "end")
         .attr("x",chartWidth+chartMargin - 25)
         .attr("y",chartWidth+chartMargin - 25)
