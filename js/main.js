@@ -582,22 +582,17 @@ console.log(trendsDataNestBlank)
     function updateLineGraph(variable, oldVariable) {
       var domainController;
       if(variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_"){
-        console.log("a")
         domainController = variable;
         selectedCategory = variable;
       }else{
         if(variable != oldVariable){
-          console.log("b")
+          //blank variable, from changing toggles
           domainController = oldVariable;
-          // selectedCategory = variable;
         }else{
-          console.log("c")
+          //blank variable, from clicking on state
           domainController = selectedCategory;
-          // selectedCategory = variable;
         }
       }
-      console.log("f", variable, oldVariable, domainController, selectedCategory)
-      // var domainController = (variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_") ? variable : oldVariable;
       var trendsDataMinMax = trendsDataFull.filter(function(d) { 
         if (selectedCategory.includes("revratio")) {
           if (d3.select(".standard.line.AK.selected-state").node() !== null) { 
@@ -648,8 +643,8 @@ console.log(trendsDataNestBlank)
       graphX.domain(d3.extent(trendsDataFiltered, function(d) { return d.Year; }));
       graphY.domain([min, max]);
       
-console.log(max)
-console.log(min)
+// console.log(max)
+// console.log(min)
 
       var graphLine = d3.line()
         .x(function(d) { return graphX(d.Year); })
