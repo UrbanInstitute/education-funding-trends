@@ -296,7 +296,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           var hoveredStateName = trendsDataFull.filter(function(d) { 
             return d.State == hoveredState
           })
-          // console.log(hoveredStateName)
+           console.log(hoveredState)
           d3.select(".standard.line." + hoveredState)
             // .data(hoveredStateName)
             .classed("hovered-state", true)
@@ -311,8 +311,9 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           //   .html("")
           //IF LINE IS ADDED THEN REMOVE
           if (d3.select(".standard.line." + hoveredState).classed("selected-state") == true) {
+            console.log('dont remove')
           }
-           else { 
+           else { console.log('remove')
             for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
                 if (stateLinesArray[i] === hoveredState) { 
                     stateLinesArray.splice(i, 1);
@@ -901,13 +902,13 @@ console.log(trendsDataNestBlank)
       .entries(graphDataState);
 
       //IF LINE HASN'T BEEN ADDED YET TO THE GRAPH:
-      if ($(".line-" + state).length == 0) { 
+      if ($(".line-" + state).length == 0) { console.log('push')
         stateLinesArray.push(state); // ADD NEW STATE TO ARRAY 
         graphSvg.append("path")
           .data([graphDataStateNest])
           .attr("class", "line-state line-" + state)
          // .attr("d", graphLine);
-          .attr("d", function(d) {
+          .attr("d", function(d) { console.log(graphLine(d[0].values))
             d.graphLine = this;               
               return (graphLine(d[0].values));
             });
