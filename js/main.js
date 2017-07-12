@@ -13,8 +13,8 @@ var mapSizes = {
 
 
 var category = "revratio";
-var startYear = 1994;
-var endYear = 2014;
+var startYear = 1995;
+var endYear = 2015;
 
 var mapMargin = {top: 30, right: 20, bottom: 30, left: 50},
 mapWidth = mapSizes[pageSize]["width"] - mapMargin.left - mapMargin.right,
@@ -207,7 +207,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
     }
 
     //CREATE INITIAL MAP ON LOAD
-    function  renderMap(startYear, endYear) {
+    function  renderMap() {
 
 
     // console.log(startYear+ endYear)
@@ -379,7 +379,6 @@ console.log(trendsDataNestBlank)
 
       mapX.domain([startYear,endYear]);
       // console.log(startYear+ endYear)
-
       //NEED TWO Y-AXES:
       //ALL STATES EXCEPT AK
       mapY.domain([d3.min(trendsDataFiltered, function(d) { return d[firstKey]; }), d3.max(trendsDataFiltered, function(d) { return d[firstKey]; })]); 
@@ -481,7 +480,7 @@ console.log(trendsDataNestBlank)
       adjusted = (d3.select('#adjusted-checkbox').property('checked') == true) ? "adj_" : ""
       var newCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
       updateLineGraph(newCategory, selectedCategory)
-      updateMapLine(newCategory, selectedCategory, startYear, endYear)
+      updateMapLine(newCategory, selectedCategory)
       
       
       // if (d3.select('#adjusted-checkbox').property('checked') == true) { console.log('adj')
@@ -671,14 +670,12 @@ console.log(trendsDataNestBlank)
           .select("g")
           .data(trendsDataFiltered)
 
-        var graphX = d3.scaleTime().range([0, graphWidth]);
         var graphY = d3.scaleLinear().range([graphHeight, 0]);
         console.log(domainController)
         var max = d3.max(trendsDataMinMax, function(d) { return d[domainController]; })
         var min = (domainController.search("ratio") != -1) ? d3.min(trendsDataMinMax, function(d) {return d[domainController]; }) : 0;
 
 
-        graphX.domain(d3.extent(trendsDataFiltered, function(d) { return d.Year; }));
         graphY.domain([min, max]);
 
         var graphLine = d3.line()
@@ -736,7 +733,7 @@ console.log(trendsDataNestBlank)
       drawVoronoi(graphDataNest, variable, graphY)
 
     }
-    function updateMapLine(variable, oldVariable, startYear, endYear){
+    function updateMapLine(variable, oldVariable){
     var domainController = (variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_") ? variable : oldVariable;
 
       //reshape the data
@@ -756,10 +753,12 @@ console.log(trendsDataNestBlank)
 
       //update scales
       var mapX = d3.scaleLinear().range([chartMargin, chartWidth-chartMargin]);
+
       var mapY = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin]);
       var mapY2 = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin]);
 
       mapX.domain([startYear,endYear]);
+
 
       //min and max value for scales determined by min/max values in all data (so they're the same for all states)
       var max = d3.max(trendsDataFiltered, function(d) { return d[domainController]; })
@@ -941,7 +940,7 @@ console.log(trendsDataNestBlank)
     
 
       renderGraph();
-      renderMap(1995, 2014);
+      renderMap();
 
   })
 })
