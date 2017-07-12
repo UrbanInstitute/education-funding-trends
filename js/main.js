@@ -414,9 +414,9 @@ console.log(trendsDataNestBlank)
       //see drawBackMapCurtain for explanation--draw a "curtain" on top of the line, which can be animated away to simulate the line animating left to right
       map.append("rect")
         .attr("class","mapCurtain")
-        .attr("width",chartWidth-2*chartMargin)
+        .attr("width",0)
         .attr("height",chartWidth-2*chartMargin)
-        .attr("x",chartMargin)
+        .attr("x",0)
         .attr("y",chartMargin)
         .style("fill","#9d9d9d")
 
@@ -448,8 +448,6 @@ console.log(trendsDataNestBlank)
       .attr("transform", "translate(" + chartMargin + ",0)")
       .call(mapYAxis);
 
-      //draw back the curtain, animating the line on load
-      drawBackMapCurtain(0)
     }
 
     /*IF ADJUSTED IS CHECKED*/
@@ -497,6 +495,7 @@ console.log(trendsDataNestBlank)
             return toggleText[0][d3.select(".current").attr("id") + selectedToggles];
           })
           checkAdjusted();
+          drawBackMapCurtain(0)
           //selectedCategory = adjusted + d3.select(this).attr('id') + selectedToggles;
         //  updateLineGraph(selectedCategory)
         //  updateMapLine(selectedCategory, startYear, endYear)
@@ -807,7 +806,6 @@ console.log(trendsDataNestBlank)
       //pretty sure this line can be remove, since x axis/scales aren't changing (as can all other references to x scale in this function), but keeping here in case it turns out the scales will change with different variabels (in which case you'll need to add some more code to animate the x axes etc)
       var mapXAxis = d3.axisBottom(mapX)
 
-      // drawBackMapCurtain(0)
 
     }
 
@@ -824,13 +822,13 @@ console.log(trendsDataNestBlank)
       d3.selectAll(".mapCurtain")
       .transition()
       .duration(0)
-        .attr("width",chartWidth-2*chartMargin)
-        .attr("x",chartMargin)
+        .attr("width",chartWidth-2*chartMargin+4)
+        .attr("x",chartMargin-2)
         .transition()
         .delay(delay + 200)
         .duration(1200)
           .attr("width",0)
-          .attr("x", chartWidth - chartMargin)
+          .attr("x", chartWidth - chartMargin + 4)
     }
 
 
