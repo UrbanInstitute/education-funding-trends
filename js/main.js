@@ -153,22 +153,25 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
             .ticks(5)
             .tickFormat(d3.format('.2f')));
 
-      drawVoronoi(trendsDataNest);
+      drawVoronoi(trendsDataNest, selectedCategory, graphY);
 
     }
 
 
-    function drawVoronoi(data) { console.log('voronoi')
+    function drawVoronoi(data, variable, yScale) {
+      // console.log('voronoi', variable, data)
       var voronoi = d3.voronoi()
           .x(function(d) { return graphX(d.Year); })
-          .y(function(d) { return graphY(d[selectedCategory]); })
+          .y(function(d) { return yScale(d[variable]); })
           .extent([[-graphMargin.left, -graphMargin.top], [graphWidth + graphMargin.right, graphHeight + graphMargin.bottom]]);
 
 
+          // graphSvg.classed("voronoi--show", true)
       voronoiGroup = graphSvg.selectAll(".voronoi")
         .data(voronoi.polygons(d3.merge(data.map(function(d) { 
           return d.values; 
         }))))
+
 
      voronoiGroup.exit().remove()
 
@@ -693,7 +696,7 @@ console.log(trendsDataNestBlank)
         // .duration(1200)
           .attr("d", threshold)
 
-      drawVoronoi(graphDataNest)
+      drawVoronoi(graphDataNest, variable, graphY)
 
     }
     function updateMapLine(variable, oldVariable, startYear, endYear){
