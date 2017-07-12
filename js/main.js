@@ -269,6 +269,17 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
                 adjusted = (d3.select('#adjusted-checkbox').property('checked') == true) ? "adj_" : ""
       var newCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
           var clickedState = d3.select(this).attr("class").split(" ")[1]
+          d3.select(".standard.line." + clickedState)
+          .classed("selected-state", function(){
+            if (d3.select(".standard.line." + clickedState).classed("selected-state") == true) {
+              // console.log('hi')
+              removeStateList(clickedState);
+              return false
+            } else { console.log('click')
+              addStateList(clickedState);
+              return true;            
+            }
+         })
           updateStateLine(clickedState, clickedState)
           updateLineGraph(newCategory, newCategory)
             // console.log(selectedCategory)
@@ -292,7 +303,21 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
             .classed("hovered-state", false)
           // d3.selectAll(".state-name")
           //   .html("")
-          updateStateLine(hoveredState)
+          //IF LINE IS ADDED THEN REMOVE
+          if (d3.select(".standard.line." + hoveredState).classed("selected-state") == true) {
+            console.log('do nothing')
+          }
+           else { console.log('remove')
+            for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
+                if (stateLinesArray[i] === hoveredState) { console.log('mouseout')
+                    stateLinesArray.splice(i, 1);
+                }
+              }
+            graphSvg.select("path.line-" + hoveredState) 
+              .remove()
+          }
+          console.log(stateLinesArray)
+      
         })
 
 console.log(trendsDataNestBlank)
@@ -873,9 +898,9 @@ console.log(trendsDataNestBlank)
       .key(function(d) {return d.State;})
       .entries(graphDataState);
 
-
+console.log(stateLinesArray)
       //IF LINE HASN'T BEEN ADDED YET TO THE GRAPH:
-      if ($(".line-" + state).length == 0) {
+      if ($(".line-" + state).length == 0) { console.log('new line')
         stateLinesArray.push(state); // ADD NEW STATE TO ARRAY 
         graphSvg.append("path")
           .data([graphDataStateNest])
@@ -883,32 +908,26 @@ console.log(trendsDataNestBlank)
          // .attr("d", graphLine);
           .attr("d", function(d) {
             console.log(d)
-            d.graphLine = this;
+            d.graphLine = this;               console.log(stateLinesArray);
               return (graphLine(d[0].values));
             });
-      } else { //IF LINE IS ADDED THEN REMOVE
-          for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
-              if (stateLinesArray[i] === state) {
-                  stateLinesArray.splice(i, 1);
-              }
-          }
-          // console.log(stateLinesArray)
+      } 
+      // else { //IF LINE IS ADDED THEN REMOVE
+      //     for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
+      //         if (stateLinesArray[i] === state) {
+      //             stateLinesArray.splice(i, 1);
+      //         }
+      //     }
+      //     // console.log(stateLinesArray)
 
-        graphSvg.select("path.line-" + state) 
-          .remove()
-      }
+      //   graphSvg.select("path.line-" + state) 
+      //     .remove()
+      // }
       
-      d3.select(".standard.line." + state)
-        .classed("selected-state", function(){
-          if (d3.select(".standard.line." + state).classed("selected-state") == true) {
-            // console.log('hi')
-            removeStateList(state);
-            return false
-          } else {
-            addStateList(state);
-            return true;            
-          }
-         })
+    }
+
+    function clickedState() {
+
     }
 
     
