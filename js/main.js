@@ -57,6 +57,7 @@ var voronoi = d3.voronoi()
 d3.csv("data/toggle_text.csv", function(error, toggleText) {
   d3.csv("data/data.csv", function(error, trendsDataFull) {
       trendsDataFull.forEach(function(d) {
+        // console.log(d)
         keys = Object.keys(d);
         for(var i = 0; i<keys.length; i++){
           var key = keys[i]
@@ -66,6 +67,10 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
             d[key] = +d[key]
           }
         }
+        d.adj_revratio_ = 1;
+        d.revratio_ = 1;
+        d.adj_revpp_ = 0;
+        d.revpp_ = 0;
       });
     //FILTERING DATA FOR MAP TO NOT INCLUDE USA
     var trendsData = trendsDataFull.filter(function(d) { 
@@ -431,22 +436,28 @@ console.log(trendsDataNestBlank)
     var adjusted = "adj_"
 
     function checkAdjusted() {
-      if (d3.select('#adjusted-checkbox').property('checked') == true) { console.log('adj')
-        adjusted = "adj_";
-        selectedCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
-        // console.log(selectedCategory)
-        selectedToggles == "" ? removeGraphLine() :  updateLineGraph(selectedCategory)
-        selectedToggles == "" ? removeMapAttributes() : updateMapLine(selectedCategory, startYear, endYear) 
+      adjusted = (d3.select('#adjusted-checkbox').property('checked') == true) ? "adj_" : ""
+      var newCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
+      updateLineGraph(newCategory, selectedCategory)
+      updateMapLine(newCategory, selectedCategory, startYear, endYear)
+      console.log(newCategory)
+      selectedCategory = newCategory;
+      // if (d3.select('#adjusted-checkbox').property('checked') == true) { console.log('adj')
+      //   adjusted = "adj_";
+      //   selectedCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
+      //   // console.log(selectedCategory)
+      //   // selectedToggles == "" ? removeGraphLine() :  updateLineGraph(selectedCategory)
+      //   // selectedToggles == "" ? removeMapAttributes() : updateMapLine(selectedCategory, startYear, endYear) 
         
 
-      } else {
-        // console.log("not adjusted")
-          adjusted = ""
-          selectedCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
-          // console.log(selectedCategory)
-          updateLineGraph(selectedCategory)
-          updateMapLine(selectedCategory, startYear, endYear)
-        }
+      // } else {
+      //   // console.log("not adjusted")
+      //     adjusted = ""
+      //     selectedCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
+      //     // console.log(selectedCategory)
+      //     updateLineGraph(selectedCategory)
+      //     updateMapLine(selectedCategory, startYear, endYear)
+      //   }
     }
 
 
@@ -567,7 +578,8 @@ console.log(trendsDataNestBlank)
     
 
     //ADJUSTS LINE GRAPH TO ACCOMMODATE CHANGING Y-AXIS DUE TO ADDITION OR REMOVAL OF STATE LINES
-    function updateLineGraph(variable) {
+    function updateLineGraph(variable, oldVariable) {
+      var domainController = (variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_") ? variable : oldVariable;
       //IF ALL TOGGLES WERE TURNED OFF BEFORE, THIS ENSURES THAT OPACITY IS RESET TO 1
       if (d3.selectAll(".line-USA, .line-state").attr("opacity") == 0) {
         // console.log('zero')
@@ -598,11 +610,13 @@ console.log(trendsDataNestBlank)
 
       var graphX = d3.scaleTime().range([0, graphWidth]);
       var graphY = d3.scaleLinear().range([graphHeight, 0]);
-      var max = d3.max(trendsDataFiltered, function(d) { return d[variable]; })
-      var min = d3.min(trendsDataFiltered, function(d) { return d[variable]; })
+      var max = d3.max(trendsDataFiltered, function(d) { return d[domainController]; })
+      var min = (domainController.search("ratio") != -1) ? d3.min(trendsDataFiltered, function(d) {return d[domainController]; }) : 0;
+
 
       graphX.domain(d3.extent(trendsDataFiltered, function(d) { return d.Year; }));
-      graphY.domain([d3.min(trendsDataFiltered, function(d) {return d[variable]; }), d3.max(trendsDataFiltered, function(d) {return d[variable]; })]);
+      graphY.domain([min, max]);
+      
 
       var graphLine = d3.line()
         .x(function(d) { return graphX(d.Year); })
@@ -641,9 +655,8 @@ console.log(trendsDataNestBlank)
       drawVoronoi(graphDataNest)
 
     }
-    function updateMapLine(variable, startYear, endYear){
-  // console.log(variable)
-
+    function updateMapLine(variable, oldVariable, startYear, endYear){
+    var domainController = (variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_") ? variable : oldVariable;
       //reshape the data
       var trendsData = d3.select("#vis").datum()
       var trendsDataNest = d3.nest()
@@ -666,10 +679,11 @@ console.log(trendsDataNestBlank)
 
       //min and max value for scales determined by min/max values in all data (so they're the same for all states)
       var mapY = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin])
-      var max = d3.max(trendsDataFiltered, function(d) { return d[variable]; })
-      var min = d3.min(trendsDataFiltered, function(d) {return d[variable]; })
+      var max = d3.max(trendsDataFiltered, function(d) { return d[domainController]; })
+      var min = (domainController.search("ratio") != -1) ? d3.min(trendsDataFiltered, function(d) {return d[domainController]; }) : 0;
 
       mapY.domain([min, max]); 
+      
 
       //udpdate line function
       var mapline = d3.line()
@@ -733,7 +747,7 @@ console.log(trendsDataNestBlank)
       //pretty sure this line can be remove, since x axis/scales aren't changing (as can all other references to x scale in this function), but keeping here in case it turns out the scales will change with different variabels (in which case you'll need to add some more code to animate the x axes etc)
       var mapXAxis = d3.axisBottom(mapX)
 
-      drawBackMapCurtain(0)
+      // drawBackMapCurtain(0)
 
     }
 

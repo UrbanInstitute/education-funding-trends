@@ -401,6 +401,7 @@ text.mapLabel.blank{
   font-style: italic;
   padding-top: 10px;
   text-align: center;
+  height: 30px;
 }
 .switch-div-full {
   width: 100%;
