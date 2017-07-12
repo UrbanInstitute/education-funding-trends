@@ -568,6 +568,17 @@ console.log(trendsDataNestBlank)
 
     //ADJUSTS LINE GRAPH TO ACCOMMODATE CHANGING Y-AXIS DUE TO ADDITION OR REMOVAL OF STATE LINES
     function updateLineGraph(variable) {
+      var trendsDataMinMax = trendsDataFull.filter(function(d) { 
+        if (selectedCategory.includes("revratio")) {
+          if (d3.select(".standard.line.AK.selected-state").node() !== null) { console.log('AK')
+            return d.State !== "HI" && d.State !== "DC"
+          } console.log('no AK')
+          return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
+        }
+        else {
+          return d.State;
+        }
+      })
       //IF ALL TOGGLES WERE TURNED OFF BEFORE, THIS ENSURES THAT OPACITY IS RESET TO 1
       if (d3.selectAll(".line-USA, .line-state").attr("opacity") == 0) {
         // console.log('zero')
@@ -598,11 +609,12 @@ console.log(trendsDataNestBlank)
 
       var graphX = d3.scaleTime().range([0, graphWidth]);
       var graphY = d3.scaleLinear().range([graphHeight, 0]);
-      var max = d3.max(trendsDataFiltered, function(d) { return d[variable]; })
-      var min = d3.min(trendsDataFiltered, function(d) { return d[variable]; })
-
+      var max = d3.max(trendsDataMinMax, function(d) { return d[variable]; })
+      var min = d3.min(trendsDataMinMax, function(d) { return d[variable]; })
+console.log(max)
+console.log(min)
       graphX.domain(d3.extent(trendsDataFiltered, function(d) { return d.Year; }));
-      graphY.domain([d3.min(trendsDataFiltered, function(d) {return d[variable]; }), d3.max(trendsDataFiltered, function(d) {return d[variable]; })]);
+      graphY.domain([min, max]);
 
       var graphLine = d3.line()
         .x(function(d) { return graphX(d.Year); })
