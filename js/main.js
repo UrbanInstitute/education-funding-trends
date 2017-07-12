@@ -584,7 +584,10 @@ console.log(trendsDataNestBlank)
     function removeStateList(state) {
       d3.select(".item-" + state)
         .remove();
-        console.log(d3.select(".state-item").size())
+      d3.select(".line-state.line-" + state)
+        .remove()
+      d3.selectAll("g.state." + state + " .selected-state")
+        .classed("selected-state", false)
       if (d3.select(".state-item").size() == 0) {
         d3.selectAll(".lineChart-details, .lineChart-notes-under")
           .classed("show", false)
