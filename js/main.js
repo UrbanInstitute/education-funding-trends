@@ -282,6 +282,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           d3.select(".standard.line." + hoveredState)
             // .data(hoveredStateName)
             .classed("hovered-state", true)
+          updateStateLine(hoveredState)
         })
         .on("mouseout", function() {
           // console.log('hover')
@@ -290,6 +291,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
             .classed("hovered-state", false)
           // d3.selectAll(".state-name")
           //   .html("")
+          updateStateLine(hoveredState)
         })
 
 console.log(trendsDataNestBlank)
@@ -560,7 +562,7 @@ console.log(trendsDataNestBlank)
         d3.selectAll(".line-state")
           .remove()
       })
-
+  //WHEN CLICKING ON STATE, ADD TAG TO BOTTOM OF LINE GRAPH
     function addStateList(state) { 
       d3.selectAll(".lineChart-details, .lineChart-notes-under")
         .classed("show", true)
@@ -853,28 +855,20 @@ console.log(min)
      var graphDataStateNest = d3.nest()
       .key(function(d) {return d.State;})
       .entries(graphDataState);
-  // console.log(graphDataStateNest)
+
+
       //IF LINE HASN'T BEEN ADDED YET TO THE GRAPH:
       if ($(".line-" + state).length == 0) {
-        // console.log(state)
         stateLinesArray.push(state); // ADD NEW STATE TO ARRAY 
-          // console.log(stateLinesArray)
-
         graphSvg.append("path")
           .data([graphDataStateNest])
           .attr("class", "line-state line-" + state)
          // .attr("d", graphLine);
           .attr("d", function(d) {
             d.graphLine = this;
-            // console.log(graphLine(d[0].values))
               return (graphLine(d[0].values));
             });
-        // graphSvg.append("path")
-        //       .data([graphDataState])
-        //       .attr("class", "line-state line-" + state)
-        //       .attr("d", graphLine)
-      } else {
-        // console.log(state)
+      } else { //IF LINE IS ADDED THEN REMOVE
           for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
               if (stateLinesArray[i] === state) {
                   stateLinesArray.splice(i, 1);
