@@ -115,13 +115,6 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
             return (graphLine(d[0].values));
           });
 
-      //ADD USA LABEL
-      // graphSvg.append("text")
-      //   .data(graphData, function(d) { console.log(d.Year.length - 1)
-          // var j = d.Year.length - 1;
-          // while (d.values[j].position == 0 && j > 0)
-          // return {name: d.name, value: d.values[j]};
-        // })
 
       graphSvg.append("g")
           .attr("transform", "translate(0," + graphHeight + ")")
@@ -199,11 +192,20 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       // generateButtons(trendsData, startYear, endYear) //just for the file uploader
 
       //FILTERING DATA FOR MAP SO IT DOESN'T INCLUDE AK, HI, OR DC
-      // var trendsData = trendsDataFull.filter(function(d) { 
-      //   return d.State !== "USA"
-      // })
-
       var trendsData = trendsDataFull.filter(function(d) { 
+        return d.State !== "USA"
+      })
+
+      var trendsDataFiltered = trendsDataFull.filter(function(d) { 
+        if (selectedCategory.includes("revratio")) {
+          return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
+        }
+        else {
+          return d.State;
+        }
+      })
+
+      var trendsDataAK = trendsDataFull.filter(function(d) { 
         if (selectedCategory.includes("revratio")) {
           return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
         }
@@ -226,9 +228,9 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       })
 
 
-      //reshape data, nesting by State
+      //reshape data, nesting by State 
       var trendsDataNest = d3.nest()
-        .key(function(d) {return d.State })
+        .key(function(d) {return d.State})
         .entries(trendsData);
 
 
@@ -236,12 +238,16 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       var tmpKeys = []
       for(var i = 0; i < trendsDataNest.length; i++){
         var obj = trendsDataNest[i]
-        if(obj.hasOwnProperty("key")){
+        if(obj.hasOwnProperty("key")){ 
           tmpKeys.push(obj.key)
         }
       }
 
-      var blankStateData = stateData.features.filter(function(o) { return tmpKeys.indexOf(o.properties.abbr) == -1})
+      var blankStateData = stateData.features.filter(function(o) { 
+        return tmpKeys.indexOf(o.properties.abbr) == -1
+      })
+
+      // console.log(blankStateData)
 
 
       //tile grid map projection and geo path
@@ -308,12 +314,12 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           })
 
       //blank sate background
-      blank.append("rect")
-        .attr("width",chartWidth-2*chartMargin + 8)
-        .attr("height",chartWidth-2*chartMargin + 8)
-        .attr("x",chartMargin - 4)
-        .attr("y",chartMargin - 4)
-        .style("fill","#b3b3b3") 
+      // blank.append("rect")
+      //   .attr("width",chartWidth-2*chartMargin + 8)
+      //   .attr("height",chartWidth-2*chartMargin + 8)
+      //   .attr("x",chartMargin - 4)
+      //   .attr("y",chartMargin - 4)
+      //   .style("fill","#b3b3b3") 
 
       //chart background
       map.append("rect")
@@ -330,19 +336,19 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       var mapX = d3.scaleLinear().range([chartMargin, chartWidth-chartMargin]);
       var mapY = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin]);
 
-      var rectWidth = d3.select("rect.nonblank-rect").attr("width")
-
-      map.append("rect")
-          .attr("width",chartWidth-2*chartMargin + 8)
-       //   .attr("height",(chartWidth-2*chartMargin + 8)/2)
-          .attr("height", function() {
-            // console.log(mapY(1));
-            return (rectWidth - mapY(1) - chartMargin/2)
-            //return (mapY(1) - rectWidth + chartMargin/2)
-          })
-          .attr("x",chartMargin - 4)
-          .attr("y",chartMargin - 4)
-          .attr("class", "positive-area")
+//       var rectWidth = d3.select(".state").attr("width")
+// console.log(rectWidth)
+//       map.append("rect")
+//           .attr("width",chartWidth-2*chartMargin + 8)
+//        //   .attr("height",(chartWidth-2*chartMargin + 8)/2)
+//           .attr("height", function() {
+//             // console.log(mapY(1));
+//             return (rectWidth - mapY(1) - chartMargin/2)
+//             //return (mapY(1) - rectWidth + chartMargin/2)
+//           })
+//           .attr("x",chartMargin - 4)
+//           .attr("y",chartMargin - 4)
+//           .attr("class", "positive-area")
       //this is just for the file uploader, setting the key onload to whatever column is first in the data file, other than State/Year. In the real feature, firstKey will just be a constant
       var firstKey = "adj_revratio_all"
       var keys = Object.keys(trendsData[0])
@@ -350,7 +356,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       mapX.domain([startYear,endYear]);
       // console.log(startYear+ endYear)
 
-      mapY.domain([d3.min(trendsData, function(d) { return d[firstKey]; }), d3.max(trendsData, function(d) { return d[firstKey]; })]); 
+      mapY.domain([d3.min(trendsDataFiltered, function(d) { return d[firstKey]; }), d3.max(trendsDataFiltered, function(d) { return d[firstKey]; })]); 
 
 
 
@@ -383,7 +389,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .attr("height",chartWidth-2*chartMargin)
         .attr("x",chartMargin)
         .attr("y",chartMargin)
-        .style("fill","#1696d2")
+        .style("fill","#9d9d9d")
 
       //draw the state name on the tile
       map.append("text")
@@ -394,12 +400,12 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .attr("y",chartWidth+chartMargin - 25)
 
       //draw state names, with a different class, on blank tiles
-      blank.append("text")
-        .text(function(d){ return d.properties.abbr })
-        .attr("class", "mapLable blank")
-        .attr("text-anchor", "end")
-        .attr("x",chartWidth+chartMargin - 25)
-        .attr("y",chartWidth+chartMargin - 25)
+      // blank.append("text")
+      //   .text(function(d){ return d.properties.abbr })
+      //   .attr("class", "mapLable blank")
+      //   .attr("text-anchor", "end")
+      //   .attr("x",chartWidth+chartMargin - 25)
+      //   .attr("y",chartWidth+chartMargin - 25)
 
       //add the X axis 
       map.append("g")
@@ -644,21 +650,14 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
     function updateMapLine(variable, startYear, endYear){
   // console.log(variable)
 
-      //IF ALL TOGGLES WERE TURNED OFF BEFORE, THIS ENSURES THAT OPACITY IS RESET TO 1
-      if (d3.selectAll(".positive-area").attr("opacity") == 0) {
-        // console.log('zero')
-      d3.selectAll(".positive-area")
-            // .transition()
-            // .duration(1200)
-            .attr("opacity", 1)
-      d3.selectAll(".standard.line")
-            // .transition()
-            // .duration(1200)
-            .attr("opacity", 1)
-      d3.selectAll(".ratioOneLine")
-        .classed("hidden", false)
-      }
-
+      var trendsDataFiltered = trendsDataFull.filter(function(d) { 
+        if (selectedCategory.includes("revratio")) {
+          return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
+        }
+        else {
+          return d.State;
+        }
+      })
       //reshape the data
       var trendsData = d3.select("#vis").datum()
       var trendsDataNest = d3.nest()
@@ -681,8 +680,8 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
 
       //min and max value for scales determined by min/max values in all data (so they're the same for all states)
       var mapY = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin])
-      var max = d3.max(trendsData, function(d) { return d[variable]; })
-      var min = d3.min(trendsData, function(d) {return d[variable]; })
+      var max = d3.max(trendsDataFiltered, function(d) { return d[variable]; })
+      var min = d3.min(trendsDataFiltered, function(d) {return d[variable]; })
 
       mapY.domain([min, max]); 
 
@@ -722,22 +721,15 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       var chartWidth = mapSizes[pageSize]["chartWidth"]
       var chartMargin = mapSizes[pageSize]["chartMargin"]
 
-      d3.selectAll("rect.positive-area")
-          .transition()
-          .duration(1200)
-          .attr("height", function() { 
-          if (d3.select(".current").attr("id") == "revratio_") {
-            // console.log(selectedCategory);
-          return (( rectWidth - (rectWidth - mapY(1))- chartMargin + 2 )) //BEN, WHY IS THIS CALCULATION DIFFERENT THAN THE INITIAL CALCULATION OF THE HEIGHT ON LOAD?
-          } else { 
-            return rectWidth;
-          } 
-        })
+  
 
 
 
       //pretty sure this line can be remove, since x axis/scales aren't changing (as can all other references to x scale in this function), but keeping here in case it turns out the scales will change with different variabels (in which case you'll need to add some more code to animate the x axes etc)
       var mapXAxis = d3.axisBottom(mapX)
+
+      drawBackMapCurtain(0)
+
     }
 
 

@@ -352,6 +352,7 @@ div.close-sign {
 }
 .ratioOneLine{
   stroke: white;
+  stroke-dasharray: 5;
 }
 
 /*.state .axis path {
