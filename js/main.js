@@ -692,6 +692,16 @@ console.log(trendsDataNestBlank)
         .duration(1200)
           .attr("y1",mapY(1))
           .attr("y2",mapY(1))
+          
+      //REMOVE BLANK BOXES FROM HI AND DC ON LEVELS TAB
+      d3.selectAll(".blank")
+          .style("opacity", function() {
+          return (d3.select("#revpp_").classed("current") == true) ?  0 : 1;
+        })
+        .transition()
+        .duration(1200)
+          .attr("y1",mapY(1))
+          .attr("y2",mapY(1))
 
       var rectWidth = d3.select("rect.nonblank-rect").attr("width")
       var chartWidth = mapSizes[pageSize]["chartWidth"]
