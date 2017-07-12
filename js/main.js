@@ -98,14 +98,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
 
   //CREATE INITIAL LINE GRAPH ON LOAD
     function renderGraph() {
-      var graphData = trendsDataFull.filter(function(d) { 
-        if (selectedCategory.includes("revratio")) {
-          return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
-        }
-        else {
-          return d.State;
-        }
-      })
+
 
       var graphDataSelected = trendsDataFull.filter(function(d) {           
        if ((stateLinesArray.includes(d.State)) || (d.State == "USA")) {         
@@ -113,16 +106,14 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
        }         
       })
 
-      console.log(graphDataSelected)
-
       var trendsDataNest = d3.nest()
         .key(function(d) {return d.State })
         .entries(graphDataSelected);
 
     
 
-      graphX.domain(d3.extent(graphData, function(d) { return d.Year; }));
-      graphY.domain([d3.min(graphData, function(d) {return d[selectedCategory]; }), d3.max(graphData, function(d) {return d[selectedCategory]; })]);
+      graphX.domain(d3.extent(trendsDataFiltered, function(d) { return d.Year; }));
+      graphY.domain([d3.min(trendsDataFiltered, function(d) {return d[selectedCategory]; }), d3.max(trendsDataFiltered, function(d) {return d[selectedCategory]; })]);
     
       var threshold = graphSvg.append("line")
        .attr("x1", 0)
@@ -164,10 +155,9 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
 
 
     function drawVoronoi(data) { console.log('voronoi')
-console.log(selectedCategory)
       var voronoi = d3.voronoi()
           .x(function(d) { return graphX(d.Year); })
-          .y(function(d) { console.log(graphY(d[selectedCategory])); return graphY(d[selectedCategory]); })
+          .y(function(d) { return graphY(d[selectedCategory]); })
           .extent([[-graphMargin.left, -graphMargin.top], [graphWidth + graphMargin.right, graphHeight + graphMargin.bottom]]);
 
 
@@ -384,14 +374,7 @@ console.log(trendsDataNestBlank)
       map.append("path")
         .attr("class", function(d){ return "standard line " + d.key })
         .attr("d", function(d){  return mapline(d.values)})
-      map.selectAll(".standard.line.DC, .standard.line.HI")
-        .classed("hidden", function() { 
-           if (selectedCategory.includes("revratio")) { 
-            return true;
-           } else {
-            return false;
-           }
-        })
+
       //see drawBackMapCurtain for explanation--draw a "curtain" on top of the line, which can be animated away to simulate the line animating left to right
       map.append("rect")
         .attr("class","mapCurtain")
@@ -583,22 +566,11 @@ console.log(trendsDataNestBlank)
             .attr("opacity", 1)
       }
 
-      var graphData = trendsDataFull.filter(function(d) { 
-        if (selectedCategory.includes("revratio")) { console.log('ratio')
-          return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
-        }
-        else { console.log('no ratio')
-          return d.State;
-        }
-      })
-
       var graphDataSelected = trendsDataFull.filter(function(d) {           
        if ((stateLinesArray.includes(d.State)) || (d.State == "USA")) {         
          return d;              
        }         
       })
-
-      console.log(graphDataSelected)
 
 
      var graphDataNest = d3.nest()
@@ -611,15 +583,15 @@ console.log(trendsDataNestBlank)
 
       d3.select("#lineChart svg")
         .select("g")
-        .data(graphData)
+        .data(trendsDataFiltered)
 
       var graphX = d3.scaleTime().range([0, graphWidth]);
       var graphY = d3.scaleLinear().range([graphHeight, 0]);
-      var max = d3.max(graphData, function(d) { return d[variable]; })
-      var min = d3.min(graphData, function(d) { return d[variable]; })
+      var max = d3.max(trendsDataFiltered, function(d) { return d[variable]; })
+      var min = d3.min(trendsDataFiltered, function(d) { return d[variable]; })
 
-      graphX.domain(d3.extent(graphData, function(d) { return d.Year; }));
-      graphY.domain([d3.min(graphData, function(d) {return d[variable]; }), d3.max(graphData, function(d) {return d[variable]; })]);
+      graphX.domain(d3.extent(trendsDataFiltered, function(d) { return d.Year; }));
+      graphY.domain([d3.min(trendsDataFiltered, function(d) {return d[variable]; }), d3.max(trendsDataFiltered, function(d) {return d[variable]; })]);
 
       var graphLine = d3.line()
         .x(function(d) { return graphX(d.Year); })
@@ -661,14 +633,6 @@ console.log(trendsDataNestBlank)
     function updateMapLine(variable, startYear, endYear){
   // console.log(variable)
 
-      var trendsDataFiltered = trendsDataFull.filter(function(d) { 
-        if (selectedCategory.includes("revratio")) {
-          return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
-        }
-        else {
-          return d.State;
-        }
-      })
       //reshape the data
       var trendsData = d3.select("#vis").datum()
       var trendsDataNest = d3.nest()
@@ -716,14 +680,7 @@ console.log(trendsDataNestBlank)
           .attr("d", function(d){
             return mapline(d.values)
           })
-      map.selectAll(".standard.line.DC, .standard.line.HI")
-          .classed("hidden", function() { 
-             if (selectedCategory.includes("revratio")) { 
-              return true;
-             } else {
-              return false;
-             }
-          })
+
 
       //move y=1 line. Note this will need to be hidden (or whatever comparable elements exist will be hidden) for the levels graphs
       d3.selectAll(".ratioOneLine")
@@ -813,9 +770,6 @@ console.log(trendsDataNestBlank)
       // console.log(state)
       var graphDataState = trendsDataFull.filter(function(d) { 
         return d.State == state
-      })
-      var trendsData = trendsDataFull.filter(function(d) { 
-        return d.State !== "USA"
       })
 
      var graphDataStateNest = d3.nest()
