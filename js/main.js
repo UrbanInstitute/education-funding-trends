@@ -543,11 +543,7 @@ console.log(trendsDataNestBlank)
         }
 
       }) 
-  //WHEN CLICKING ON CLOSE SIGN UNDER SELECTED STATE LIST
-    d3.selectAll(".close-sign")
-      .on('click', function() { console.log('hi')
-        console.log(d3.select(this).attr('class'))
-      })
+
 
   //WHEN CLICKING ON CLEAR ALL UNDER SELECTED STATE LIST
     d3.select(".state-clear")
@@ -570,11 +566,15 @@ console.log(trendsDataNestBlank)
       d3.select(".lineChart-notes-above")
         .classed("show", false)
       var stateItem = d3.select("#state-list")
+        .datum(state)
         .append("li")
           .html(state)
         .attr("class", "state-item item-" + state);
       stateItem.append("div")
         .attr("class", "close-sign close-sign-" + state)
+        .on('click', function(d) {
+          removeStateList(d)
+        })
 
     }
 
