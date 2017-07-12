@@ -119,14 +119,8 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       graphX.domain(d3.extent(trendsDataFiltered, function(d) { return d.Year; }));
       graphY.domain([d3.min(trendsDataFiltered, function(d) {return d[selectedCategory]; }), d3.max(trendsDataFiltered, function(d) {return d[selectedCategory]; })]);
     
-      var threshold = graphSvg.append("line")
-       .attr("x1", 0)
-       .attr("y1", graphY(1))
-       .attr("x2", graphWidth)
-       .attr("y2", graphY(1))
-       .style("stroke-dasharray", 5)
-       .attr("stroke", "#5c5859")
-       .attr("class", "threshold")
+
+
 
       graphSvg.append("path")
         .data([trendsDataNest])
@@ -154,6 +148,15 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
             .tickFormat(d3.format('.2f')));
 
       drawVoronoi(trendsDataNest, selectedCategory, graphY);
+
+      var threshold = graphSvg.append("line")
+       .attr("x1", 0)
+       .attr("y1", graphY(1))
+       .attr("x2", graphWidth)
+       .attr("y2", graphY(1))
+       .style("stroke-dasharray", 5)
+       .attr("stroke", "#5c5859")
+       .attr("class", "threshold")
 
     }
 
@@ -687,17 +690,14 @@ console.log(trendsDataNestBlank)
     
       
       var threshold = d3.select(".threshold")
-       .attr("x1", 0)
+       .transition()
+       .duration(1200)
        .attr("y1", graphY(1))
-       .attr("x2", graphWidth)
        .attr("y2", graphY(1))
-       // .attr("stroke", "#5c5859");
-       // .attr("class", "threshold")
-       d3.select(".threshold")
-        // .transition()
-        // .delay(200)
-        // .duration(1200)
-          .attr("d", threshold)
+
+      threshold.node().parentNode.appendChild(threshold.node())
+
+
 
       drawVoronoi(graphDataNest, variable, graphY)
 
@@ -902,6 +902,7 @@ console.log(trendsDataNestBlank)
 
         graphSvg.select("path.line-" + state) 
           .remove()
+        d3.select(".threshold").node().parentNode.appendChild(d3.select(".threshold").node())
       }
       
       d3.select(".standard.line." + state)
