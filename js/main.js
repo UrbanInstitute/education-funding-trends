@@ -57,7 +57,6 @@ var voronoi = d3.voronoi()
 d3.csv("data/toggle_text.csv", function(error, toggleText) {
   d3.csv("data/data.csv", function(error, trendsDataFull) {
       trendsDataFull.forEach(function(d) {
-        // console.log(d)
         keys = Object.keys(d);
         for(var i = 0; i<keys.length; i++){
           var key = keys[i]
@@ -267,9 +266,11 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         })
       map
         .on("click", function() { 
+                adjusted = (d3.select('#adjusted-checkbox').property('checked') == true) ? "adj_" : ""
+      var newCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
           var clickedState = d3.select(this).attr("class").split(" ")[1]
-          updateStateLine(clickedState)
-          updateLineGraph(selectedCategory)
+          updateStateLine(clickedState, clickedState)
+          updateLineGraph(newCategory, newCategory)
             // console.log(selectedCategory)
         })
         .on("mouseover", function() {
@@ -440,8 +441,8 @@ console.log(trendsDataNestBlank)
       var newCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
       updateLineGraph(newCategory, selectedCategory)
       updateMapLine(newCategory, selectedCategory, startYear, endYear)
-      console.log(newCategory)
-      selectedCategory = newCategory;
+      
+      
       // if (d3.select('#adjusted-checkbox').property('checked') == true) { console.log('adj')
       //   adjusted = "adj_";
       //   selectedCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
@@ -579,12 +580,31 @@ console.log(trendsDataNestBlank)
 
     //ADJUSTS LINE GRAPH TO ACCOMMODATE CHANGING Y-AXIS DUE TO ADDITION OR REMOVAL OF STATE LINES
     function updateLineGraph(variable, oldVariable) {
-      var domainController = (variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_") ? variable : oldVariable;
+      var domainController;
+      if(variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_"){
+        console.log("a")
+        domainController = variable;
+        selectedCategory = variable;
+      }else{
+        if(variable != oldVariable){
+          console.log("b")
+          domainController = oldVariable;
+          // selectedCategory = variable;
+        }else{
+          console.log("c")
+          domainController = selectedCategory;
+          // selectedCategory = variable;
+        }
+      }
+      console.log("f", variable, oldVariable, domainController, selectedCategory)
+      // var domainController = (variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_") ? variable : oldVariable;
       var trendsDataMinMax = trendsDataFull.filter(function(d) { 
         if (selectedCategory.includes("revratio")) {
-          if (d3.select(".standard.line.AK.selected-state").node() !== null) { console.log('AK')
+          if (d3.select(".standard.line.AK.selected-state").node() !== null) { 
+            // console.log('AK')
             return d.State !== "HI" && d.State !== "DC"
-          } console.log('no AK')
+          }
+          // console.log('no AK')
           return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
         }
         else {
@@ -670,7 +690,9 @@ console.log(min)
     }
     function updateMapLine(variable, oldVariable, startYear, endYear){
     var domainController = (variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_") ? variable : oldVariable;
+
       //reshape the data
+      
       var trendsData = d3.select("#vis").datum()
       var trendsDataNest = d3.nest()
         .key(function(d) {return d.State;})
@@ -701,7 +723,7 @@ console.log(min)
       //udpdate line function
       var mapline = d3.line()
         .x(function(d) { return mapX(d.Year); })
-        .y(function(d) { return mapY(d[variable]); });
+        .y(function(d) { return mapY(d[selectedCategory]); });
 
       var mapYAxis = d3.axisLeft(mapY)
 
@@ -843,6 +865,7 @@ console.log(min)
           .attr("class", "line-state line-" + state)
          // .attr("d", graphLine);
           .attr("d", function(d) {
+            console.log(d)
             d.graphLine = this;
             // console.log(graphLine(d[0].values))
               return (graphLine(d[0].values));
