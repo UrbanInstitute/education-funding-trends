@@ -88,7 +88,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
 
     var trendsDataAK = trendsDataFull.filter(function(d) { 
       if (selectedCategory.includes("revratio")) {
-        return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
+        return d.State == "AK"
       }
       else {
         return d.State;
@@ -337,20 +337,9 @@ console.log(trendsDataNestBlank)
       //set up scales for charts. THe code here assumes all states are on the same x/y scale. Alaska and the US avg will prob need to have special scales written for them, since they will be on a separate scale (I think). Also note currently there is no US average chart/tile.
       var mapX = d3.scaleLinear().range([chartMargin, chartWidth-chartMargin]);
       var mapY = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin]);
+      var mapY2 = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin]);
 
-//       var rectWidth = d3.select(".state").attr("width")
-// console.log(rectWidth)
-//       map.append("rect")
-//           .attr("width",chartWidth-2*chartMargin + 8)
-//        //   .attr("height",(chartWidth-2*chartMargin + 8)/2)
-//           .attr("height", function() {
-//             // console.log(mapY(1));
-//             return (rectWidth - mapY(1) - chartMargin/2)
-//             //return (mapY(1) - rectWidth + chartMargin/2)
-//           })
-//           .attr("x",chartMargin - 4)
-//           .attr("y",chartMargin - 4)
-//           .attr("class", "positive-area")
+
       //this is just for the file uploader, setting the key onload to whatever column is first in the data file, other than State/Year. In the real feature, firstKey will just be a constant
       var firstKey = "adj_revratio_all"
       var keys = Object.keys(trendsData[0])
@@ -358,7 +347,11 @@ console.log(trendsDataNestBlank)
       mapX.domain([startYear,endYear]);
       // console.log(startYear+ endYear)
 
+      //NEED TWO Y-AXES:
+      //ALL STATES EXCEPT AK
       mapY.domain([d3.min(trendsDataFiltered, function(d) { return d[firstKey]; }), d3.max(trendsDataFiltered, function(d) { return d[firstKey]; })]); 
+      //AK ONLY
+      mapY2.domain([d3.min(trendsDataAK, function(d) {return d[firstKey]; }), d3.max(trendsDataAK, function(d) { return d[firstKey]; })]); 
 
 
 
@@ -366,13 +359,17 @@ console.log(trendsDataNestBlank)
       var mapXAxis = d3.axisBottom(mapX)
       var mapYAxis = d3.axisLeft(mapY)
 
-      //line chart line
+      //for each map chart line
       var mapline = d3.line()
         .x(function(d) { return mapX(d.Year); })
         .y(function(d) { return mapY(d[firstKey]); });
+      var mapline2 = d3.line()
+        .x(function(d) { return mapX(d.Year); })
+        .y(function(d) { return mapY2(d[firstKey]); });
 
       //A white line at y=1. This is just a placeholder. In the final feature, we want some sort of distinction of y=1 for the ratio graphs, but not the level graphs. Will likely be two rects (above and below y=1) instead of a line, but TBD
-      map.append("line")
+      //DRAWING THE RATIO LINE FOR ALL STATES BUT AK
+      d3.selectAll(".state:not(.AK)").append("line")
         .attr("x1",chartMargin)
         .attr("x2",chartWidth-chartMargin)
         .attr("y1",mapY(1))
@@ -380,11 +377,25 @@ console.log(trendsDataNestBlank)
         .attr("class", function(d) {
           return "ratioOneLine ratioOneLine-" + d.State
         })
+      //DRAWING THE RATIO LINE FOR AK
+      d3.select(".state.AK").append("line")
+        .attr("x1",chartMargin)
+        .attr("x2",chartWidth-chartMargin)
+        .attr("y1",mapY2(1))
+        .attr("y2",mapY2(1))
+        .attr("class", function(d) {
+          return "ratioOneLine ratioOneLine-" + d.State
+        })
 
-      //draw the line on the chart!
-      map.append("path")
+      //DRAWING THE GRAPH LINE FOR ALL STATES BUT AKK
+      d3.selectAll(".state:not(.AK)").append("path")
         .attr("class", function(d){ return "standard line " + d.key })
         .attr("d", function(d){  return mapline(d.values)})
+      //DRAWING THE GRAPH LINE FOR AK
+      d3.select(".state.AK").append("path")
+        .attr("class", function(d){ return "standard line " + d.key })
+        .attr("d", function(d){  return mapline2(d.values)})
+      //NEED TO HIDE THE GRAPH LINE FOR DC AND HI FOR THE RATIO TAB
       map.selectAll(".standard.line.DC, .standard.line.HI")
           .style("opacity", function() {
           return (d3.select("#revpp_").classed("current") == true) ?  1 : 0;
@@ -687,21 +698,27 @@ console.log(min)
       //update scales
       var mapX = d3.scaleLinear().range([chartMargin, chartWidth-chartMargin]);
       var mapY = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin]);
+      var mapY2 = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin]);
 
       mapX.domain([startYear,endYear]);
 
       //min and max value for scales determined by min/max values in all data (so they're the same for all states)
-      var mapY = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin])
       var max = d3.max(trendsDataFiltered, function(d) { return d[domainController]; })
       var min = (domainController.search("ratio") != -1) ? d3.min(trendsDataFiltered, function(d) {return d[domainController]; }) : 0;
-
-      mapY.domain([min, max]); 
+      //FOR AK ONLY:
+      var max2 = d3.max(trendsDataAK, function(d) { return d[domainController]; })
+      var min2 = (domainController.search("ratio") != -1) ? d3.min(trendsDataAK, function(d) {return d[domainController]; }) : 0;
       
+      mapY.domain([min, max]); 
+      mapY2.domain([min2, max2]);      
 
       //udpdate line function
       var mapline = d3.line()
         .x(function(d) { return mapX(d.Year); })
         .y(function(d) { return mapY(d[variable]); });
+      var mapline2 = d3.line()
+        .x(function(d) { return mapX(d.Year); })
+        .y(function(d) { return mapY2(d[variable]); });
 
       var mapYAxis = d3.axisLeft(mapY)
 
@@ -712,13 +729,18 @@ console.log(min)
           .call(mapYAxis)
 
       //update the line. In some cases may need to drawBackMapCurtain here (see below)
-      map.selectAll("#vis svg .line")
+      map.selectAll("#vis svg .line:not(.AK)")
         // .transition()
         // .duration(1200)
           .attr("d", function(d){
             return mapline(d.values)
           })
-
+      d3.select(".line.AK")
+        // .transition()
+        // .duration(1200)
+          .attr("d", function(d){
+            return mapline2(d.values)
+          })
 
       //move y=1 line. Note this will need to be hidden (or whatever comparable elements exist will be hidden) for the levels graphs
       d3.selectAll(".ratioOneLine")
