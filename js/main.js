@@ -119,14 +119,8 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       graphX.domain(d3.extent(trendsDataFiltered, function(d) { return d.Year; }));
       graphY.domain([d3.min(trendsDataFiltered, function(d) {return d[selectedCategory]; }), d3.max(trendsDataFiltered, function(d) {return d[selectedCategory]; })]);
     
-      var threshold = graphSvg.append("line")
-       .attr("x1", 0)
-       .attr("y1", graphY(1))
-       .attr("x2", graphWidth)
-       .attr("y2", graphY(1))
-       .style("stroke-dasharray", 5)
-       .attr("stroke", "#5c5859")
-       .attr("class", "threshold")
+
+
 
       graphSvg.append("path")
         .data([trendsDataNest])
@@ -153,22 +147,34 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
             .ticks(5)
             .tickFormat(d3.format('.2f')));
 
-      drawVoronoi(trendsDataNest);
+      drawVoronoi(trendsDataNest, selectedCategory, graphY);
+
+      var threshold = graphSvg.append("line")
+       .attr("x1", 0)
+       .attr("y1", graphY(1))
+       .attr("x2", graphWidth)
+       .attr("y2", graphY(1))
+       .style("stroke-dasharray", 5)
+       .attr("stroke", "#5c5859")
+       .attr("class", "threshold")
 
     }
 
 
-    function drawVoronoi(data) { console.log('voronoi')
+    function drawVoronoi(data, variable, yScale) {
+      // console.log('voronoi', variable, data)
       var voronoi = d3.voronoi()
           .x(function(d) { return graphX(d.Year); })
-          .y(function(d) { return graphY(d[selectedCategory]); })
+          .y(function(d) { return yScale(d[variable]); })
           .extent([[-graphMargin.left, -graphMargin.top], [graphWidth + graphMargin.right, graphHeight + graphMargin.bottom]]);
 
 
+          // graphSvg.classed("voronoi--show", true)
       voronoiGroup = graphSvg.selectAll(".voronoi")
         .data(voronoi.polygons(d3.merge(data.map(function(d) { 
           return d.values; 
         }))))
+
 
      voronoiGroup.exit().remove()
 
@@ -305,18 +311,16 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           //   .html("")
           //IF LINE IS ADDED THEN REMOVE
           if (d3.select(".standard.line." + hoveredState).classed("selected-state") == true) {
-            console.log('do nothing')
           }
-           else { console.log('remove')
+           else { 
             for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
-                if (stateLinesArray[i] === hoveredState) { console.log('mouseout')
+                if (stateLinesArray[i] === hoveredState) { 
                     stateLinesArray.splice(i, 1);
                 }
               }
             graphSvg.select("path.line-" + hoveredState) 
               .remove()
           }
-          console.log(stateLinesArray)
       
         })
 
@@ -433,9 +437,9 @@ console.log(trendsDataNestBlank)
       //see drawBackMapCurtain for explanation--draw a "curtain" on top of the line, which can be animated away to simulate the line animating left to right
       map.append("rect")
         .attr("class","mapCurtain")
-        .attr("width",chartWidth-2*chartMargin)
+        .attr("width",0)
         .attr("height",chartWidth-2*chartMargin)
-        .attr("x",chartMargin)
+        .attr("x",0)
         .attr("y",chartMargin)
         .style("fill","#9d9d9d")
 
@@ -467,8 +471,6 @@ console.log(trendsDataNestBlank)
       .attr("transform", "translate(" + chartMargin + ",0)")
       .call(mapYAxis);
 
-      //draw back the curtain, animating the line on load
-      drawBackMapCurtain(0)
     }
 
     /*IF ADJUSTED IS CHECKED*/
@@ -516,6 +518,7 @@ console.log(trendsDataNestBlank)
             return toggleText[0][d3.select(".current").attr("id") + selectedToggles];
           })
           checkAdjusted();
+          drawBackMapCurtain(0)
           //selectedCategory = adjusted + d3.select(this).attr('id') + selectedToggles;
         //  updateLineGraph(selectedCategory)
         //  updateMapLine(selectedCategory, startYear, endYear)
@@ -606,7 +609,10 @@ console.log(trendsDataNestBlank)
     function removeStateList(state) {
       d3.select(".item-" + state)
         .remove();
-        console.log(d3.select(".state-item").size())
+      d3.select(".line-state.line-" + state)
+        .remove()
+      d3.selectAll("g.state." + state + " .selected-state")
+        .classed("selected-state", false)
       if (d3.select(".state-item").size() == 0) {
         d3.selectAll(".lineChart-details, .lineChart-notes-under")
           .classed("show", false)
@@ -706,19 +712,16 @@ console.log(trendsDataNestBlank)
     
       
       var threshold = d3.select(".threshold")
-       .attr("x1", 0)
+       .transition()
+       .duration(1200)
        .attr("y1", graphY(1))
-       .attr("x2", graphWidth)
        .attr("y2", graphY(1))
-       // .attr("stroke", "#5c5859");
-       // .attr("class", "threshold")
-       d3.select(".threshold")
-        // .transition()
-        // .delay(200)
-        // .duration(1200)
-          .attr("d", threshold)
 
-      drawVoronoi(graphDataNest)
+      threshold.node().parentNode.appendChild(threshold.node())
+
+
+
+      drawVoronoi(graphDataNest, variable, graphY)
 
     }
     function updateMapLine(variable, oldVariable, startYear, endYear){
@@ -826,7 +829,6 @@ console.log(trendsDataNestBlank)
       //pretty sure this line can be remove, since x axis/scales aren't changing (as can all other references to x scale in this function), but keeping here in case it turns out the scales will change with different variabels (in which case you'll need to add some more code to animate the x axes etc)
       var mapXAxis = d3.axisBottom(mapX)
 
-      // drawBackMapCurtain(0)
 
     }
 
@@ -843,13 +845,13 @@ console.log(trendsDataNestBlank)
       d3.selectAll(".mapCurtain")
       .transition()
       .duration(0)
-        .attr("width",chartWidth-2*chartMargin)
-        .attr("x",chartMargin)
+        .attr("width",chartWidth-2*chartMargin+4)
+        .attr("x",chartMargin-2)
         .transition()
         .delay(delay + 200)
         .duration(1200)
           .attr("width",0)
-          .attr("x", chartWidth - chartMargin)
+          .attr("x", chartWidth - chartMargin + 4)
     }
 
 
@@ -898,33 +900,22 @@ console.log(trendsDataNestBlank)
       .key(function(d) {return d.State;})
       .entries(graphDataState);
 
-console.log(stateLinesArray)
       //IF LINE HASN'T BEEN ADDED YET TO THE GRAPH:
-      if ($(".line-" + state).length == 0) { console.log('new line')
+      if ($(".line-" + state).length == 0) { 
         stateLinesArray.push(state); // ADD NEW STATE TO ARRAY 
         graphSvg.append("path")
           .data([graphDataStateNest])
           .attr("class", "line-state line-" + state)
          // .attr("d", graphLine);
           .attr("d", function(d) {
-            console.log(d)
-            d.graphLine = this;               console.log(stateLinesArray);
+            d.graphLine = this;               
               return (graphLine(d[0].values));
             });
       } 
-      // else { //IF LINE IS ADDED THEN REMOVE
-      //     for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
-      //         if (stateLinesArray[i] === state) {
-      //             stateLinesArray.splice(i, 1);
-      //         }
-      //     }
-      //     // console.log(stateLinesArray)
-
-      //   graphSvg.select("path.line-" + state) 
-      //     .remove()
-      // }
+    
+    } 
       
-    }
+  
 
     function clickedState() {
 

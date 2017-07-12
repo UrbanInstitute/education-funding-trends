@@ -272,7 +272,7 @@ div.close-sign {
   pointer-events: all;
 }
 
-.voronoi--show path {
+.voronoi--show path.voronoi {
   stroke: red;
   stroke-opacity: 0.2;
 }
