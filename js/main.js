@@ -297,7 +297,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
               }
             })
           updateStateLine(clickedState, clickedState)
-          updateLineGraph(newCategory, newCategory)
+          updateLineGraph(newCategory, newCategory, "click", clickedState)
           // console.log(selectedCategory)
         })
         .on("mouseover", function() {
@@ -311,9 +311,11 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           d3.select(".mapLabel.standard." + hoveredState)
             .classed("hovered-text", true)
           updateStateLine(hoveredState)
+          updateLineGraph(newCategory, newCategory, "hover", hoveredState)
 
         })
         .on("mouseout", function() {
+          var newCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
           var hoveredState = d3.select(this).attr("class").split(" ")[1]
           d3.select(".nonblank-rect." + hoveredState)
             .classed("hovered-state", false)
@@ -344,8 +346,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           // d3.selectAll(".state-name")
           //   .html("")
           //IF LINE IS ADDED THEN REMOVE
-          if (d3.select(".nonblank-rect." + hoveredState).classed("selected-state") == true) {
-          } else {
+          if (d3.select(".nonblank-rect." + hoveredState).classed("selected-state") == false) {
             // console.log('remove')
             for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
               if (stateLinesArray[i] === hoveredState) { 
@@ -357,6 +358,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           }
           d3.select(".mapLabel.standard." + hoveredState)
             .classed("hovered-text", false)
+          updateLineGraph(newCategory, newCategory, "remove", hoveredState)
         })
 
       // console.log(trendsDataNestBlank)
@@ -517,7 +519,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
     function checkAdjusted() {
       adjusted = (d3.select('#adjusted-checkbox').property('checked') == true) ? "adj_" : ""
       var newCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
-      updateLineGraph(newCategory, selectedCategory)
+      updateLineGraph(newCategory, selectedCategory, "click", null)
       updateMapLine(newCategory, selectedCategory)
     }
 
@@ -540,9 +542,6 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           })
         checkAdjusted();
         drawBackMapCurtain(0, currentTab)
-        //selectedCategory = adjusted + d3.select(this).attr('id') + selectedToggles;
-        //  updateLineGraph(selectedCategory)
-        //  updateMapLine(selectedCategory, startYear, endYear)
       })
 
     /*TOGGLE BUTTONS*/
@@ -628,7 +627,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           removeStateList(d)
           adjusted = (d3.select('#adjusted-checkbox').property('checked') == true) ? "adj_" : ""
           var newCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
-          updateLineGraph(newCategory, newCategory)
+          updateLineGraph(newCategory, newCategory, "remove", d)
         })
     }
 
@@ -676,6 +675,10 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         }
       })
 
+      var trendsDataAK = trendsDataFull.filter(function(d){
+        return d.State ==  "AK"
+      })
+
 
       var graphDataSelected = trendsDataFull.filter(function(d) {           
         if ((stateLinesArray.includes(d.State)) || (d.State == "USA")) {         
@@ -688,6 +691,10 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .key(function(d) {return d.State;})
         .entries(graphDataSelected);
 
+      var akNest = d3.nest()
+        .key(function(d) {return d.State;})
+        .entries(trendsDataAK);
+
 
       var graphWidth =  graphSizes[pageSize]["width"]- graphMargin.left - graphMargin.right,
       graphHeight = graphSizes[pageSize]["height"] - graphMargin.top - graphMargin.bottom;
@@ -697,26 +704,46 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .data(trendsDataFiltered)
 
       var graphY = d3.scaleLinear().range([graphHeight, 0]);
+      var graphY2 = d3.scaleLinear().range([graphHeight, 0]);
+
       var max = d3.max(trendsDataMinMax, function(d) { return d[domainController]; })
       var min = (domainController.search("ratio") != -1) ? d3.min(trendsDataMinMax, function(d) {return d[domainController]; }) : 0;
 
 
+      var max2 = d3.max(trendsDataAK, function(d) { return d[domainController]; })
+      var min2 = (domainController.search("ratio") != -1) ? d3.min([1, d3.min(trendsDataAK, function(d) {return d[domainController]; })]) : 0;
+
+      if(max > max2){
+        max2 = max;
+        min2 = min;
+      }
+      if(min < min2){
+        min2 = min;
+      }
+
+
+
       graphY.domain([min, max]);
+      graphY2.domain([min2, max2])
 
       var graphLine = d3.line()
         .x(function(d) { return graphX(d.Year); })
         .y(function(d) { return graphY(d[variable]); });
 
-      return {"graphY": graphY, "graphLine": graphLine, "graphDataNest": graphDataNest}
+      var graphLine2 = d3.line()
+        .x(function(d) { return graphX(d.Year); })
+        .y(function(d) { return graphY2(d[variable]); });
+
+      return {"graphY": graphY, "graphY2": graphY2, "graphLine": graphLine, "graphLine2":graphLine2, "graphDataNest": graphDataNest, "akNest": akNest}
 
     }
 
     //ADJUSTS LINE GRAPH TO ACCOMMODATE CHANGING Y-AXIS DUE TO ADDITION OR REMOVAL OF STATE LINES
-    function updateLineGraph(variable, oldVariable) {
+    function updateLineGraph(variable, oldVariable, action, state) {
       var scales = updateScales(variable, oldVariable)
-      var graphY = scales.graphY
-      var graphLine = scales.graphLine
-      var graphDataNest = scales.graphDataNest
+      var graphY = (state == "AK" && action != "remove") ? scales.graphY2 : scales.graphY;
+      var graphLine = (state == "AK" && action != "remove") ? scales.graphLine2 : scales.graphLine
+      var graphDataNest = (state == "AK" && action != "remove") ? scales.akNest : scales.graphDataNest
       //IF ALL TOGGLES WERE TURNED OFF BEFORE, THIS ENSURES THAT OPACITY IS RESET TO 1
       if (d3.selectAll(".line-USA, .line-state").attr("opacity") == 0) {
         // console.log('zero')
@@ -750,7 +777,9 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       threshold.node().parentNode.appendChild(threshold.node())
       d3.selectAll(".grid").node().parentNode.appendChild(d3.selectAll(".grid").node())
 
-      drawVoronoi(graphDataNest, variable, graphY)
+      if(action == "click"){
+        drawVoronoi(graphDataNest, variable, graphY)
+      }
 
    }
     function updateMapLine(variable, oldVariable){
