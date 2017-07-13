@@ -119,6 +119,10 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       }
     })
 
+    function make_y_gridlines() {   
+        return d3.axisLeft(graphY)
+            .ticks(5)
+    }
     //CREATE INITIAL LINE GRAPH ON LOAD
     function renderGraph() {
 
@@ -142,12 +146,6 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
             .tickSize(-graphWidth)
             .tickFormat("")
         )
-      
-      function make_y_gridlines() {   
-          return d3.axisLeft(graphY)
-              .ticks(5)
-      }
-
 
       graphSvg.append("path")
         .data([trendsDataNest])
@@ -790,9 +788,17 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .style("opacity", function() {
           return (d3.select("#revpp_").classed("current") == true) ? 0 : 1
         })
-
+      function make_y_gridlines() {   
+          return d3.axisLeft(graphY)
+              .ticks(5)
+      }
       threshold.node().parentNode.appendChild(threshold.node())
-      d3.selectAll(".grid").node().parentNode.appendChild(d3.selectAll(".grid").node())
+     // d3.selectAll(".grid").node().parentNode.appendChild(d3.selectAll(".grid").node())
+      graphSvg.selectAll(".grid")
+        .call(make_y_gridlines()
+            .tickSize(-graphWidth)
+            .tickFormat("")
+        )
 
       if(action == "click"){
         drawVoronoi(graphDataNest, variable, graphY)
