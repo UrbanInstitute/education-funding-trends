@@ -46,7 +46,7 @@ var graphSvg = d3.select("#lineChart")
   .attr("width", graphWidth + graphMargin.left + graphMargin.right)
   .attr("height", graphHeight + graphMargin.top + graphMargin.bottom)
   .append("g")
-  .attr("transform", "translate(" + graphMargin.left + "," + graphMargin.top + ")");
+  .attr("transform", "translate(" + graphMargin.left + ")");
 
 var voronoi = d3.voronoi()
   .x(function(d) { return graphX(d.Year); })
@@ -182,9 +182,9 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .tickFormat(d3.format('.2f')))
 
       graphSvg.append("text")
-        .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+        .attr("text-anchor", "middle") 
         .text("Progressivity Ratio")
-        .attr("transform", "translate("+ (graphWidth*.07) +","+(graphHeight/12)+")")  // centre below axis
+        .attr("transform", "translate("+ (graphWidth*.07) +","+(graphHeight/12)+")") 
         .attr("class", "y-label")
 
 
@@ -644,14 +644,28 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .attr("class", "state-item item-" + state);
       stateItem.append("div")
         .attr("class", "close-sign close-sign-" + state)
-        // .on('click', function(d) {
-        //   removeStateList(d)
-        // })
-        .on("click", function(d) { 
+        .on("click", function(d) {
           removeStateList(d)
           adjusted = (d3.select('#adjusted-checkbox').property('checked') == true) ? "adj_" : ""
           var newCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
           updateLineGraph(newCategory, newCategory, "remove", d)
+          d3.select(".nonblank-rect." + d)
+            .classed("selected-state", false)
+            .style("fill", function(){
+              if (d3.select("#revratio_").classed("current") == true){
+                return "#a2d3eb"
+              }else if (d3.select("#revpp_").classed("current") == true){
+                return "#094c6a"
+              }
+            })
+          d3.select(".mapLabel.standard." + d)
+            .style("fill", function(){
+              if (d3.select("#revratio_").classed("current") == true){
+                return "#353535"
+              }else if (d3.select("#revpp_").classed("current") == true){
+                return "#ffffff"
+              }
+            })
         })
     }
 
@@ -797,14 +811,13 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       graphSvg.selectAll(".grid")
         .call(make_y_gridlines()
             .tickSize(-graphWidth)
-            .tickFormat("")
-        )
+            .tickFormat(""))
 
       if(action == "click"){
         drawVoronoi(graphDataNest, variable, graphY)
       }
+    }
 
-   }
     function updateMapLine(variable, oldVariable){
       var domainController = (variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_") ? variable : oldVariable;
 
@@ -812,11 +825,18 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       graphSvg.select(".y-label")
         .text(function() {
           if (d3.select("#revpp_").classed("current") == true) {
-          return "Funding Levels"
+          return "Progressivity Levels"
           } else {
             return "Progressivity Ratio"
           }
         })
+        .attr("transform", function() {
+          if (d3.select("#revpp_").classed("current") == true) {
+            return "translate("+ (graphWidth*.04) +","+(graphHeight/12)+")"
+          } else {
+            return "translate("+ (graphWidth*.07) +","+(graphHeight/12)+")"
+          }
+        })  
 
       var trendsData = d3.select("#vis").datum()
       var trendsDataNest = d3.nest()
@@ -1020,15 +1040,12 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .delay( 200)
         .duration(1200)
         .attr("opacity", 0)
-
-      // console.log('remove')
       d3.selectAll(".ratioOneLine")
         .classed("hidden", true)
     }
 
 
     function removeGraphLine() {
-    // console.log('remove')
       d3.selectAll(".line-USA, .line-state")
         .transition()
         .duration(0)
@@ -1092,7 +1109,6 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           return (graphLine(d[0].values));
         });
       } 
-
     } 
 
 
