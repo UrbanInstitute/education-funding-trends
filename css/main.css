@@ -36,7 +36,21 @@ ul#state-list li {
   fill: #353535 !important;
 }*/
 /**large line graph**/
+path.domain {
+  stroke: #fff;
+}
 
+.y-label {
+  font-size: 14px;
+  font-style: italic;
+}
+
+.tick {
+  font-size: 12px;
+}
+.x.graphAxis > .domain {
+  stroke: #000;
+}
 .y.graphAxis path {
   stroke: #ffffff;
 }
