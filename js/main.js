@@ -767,8 +767,9 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       d3.selectAll("#lineChart .y.graphAxis")
         .transition().duration(1200).ease(d3.easeSinInOut)
         .call(d3.axisLeft(graphY)
-        .ticks(5)
-        .tickFormat(d3.format('.2f')));
+          .ticks(5)
+          .tickFormat((d3.select("#revpp_").classed("current") == true) ? d3.format('.0s') : d3.format('.2f'))
+        );
 
 
       var duration = (action == "toggle" || state == "AK") ? 1200 : 0
@@ -786,6 +787,9 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .duration(1200)
         .attr("y1", graphY(1))
         .attr("y2", graphY(1))
+        .style("opacity", function() {
+          return (d3.select("#revpp_").classed("current") == true) ? 0 : 1
+        })
 
       threshold.node().parentNode.appendChild(threshold.node())
       d3.selectAll(".grid").node().parentNode.appendChild(d3.selectAll(".grid").node())
