@@ -33,6 +33,35 @@ ul#state-list li {
 
 }
 
+/**large line graph**/
+
+.y.graphAxis path {
+  stroke: #ffffff;
+}
+
+.y.graphAxis line {
+  stroke: #ffffff;
+}
+
+.tick > line {
+    stroke-width: 1;
+}
+.tick.minor > line {
+    stroke-width: 0.5;
+}
+
+
+.tick.minor > text {
+    opacity: 0;
+}
+
+
+.grid line {
+  stroke: #dedddd;
+  stroke-width: 1px;
+  shape-rendering: crispEdges;
+}
+
 /**checkbox**/
 
 

@@ -114,6 +114,18 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
 
       graphX.domain(d3.extent(trendsDataFiltered, function(d) { return d.Year; }));
       graphY.domain([d3.min(trendsDataFiltered, function(d) {return d[selectedCategory]; }), d3.max(trendsDataFiltered, function(d) {return d[selectedCategory]; })]);
+      //ADD GRIDLINES
+      graphSvg.append("g")     
+        .attr("class", "grid")
+        .call(make_y_gridlines()
+            .tickSize(-graphWidth)
+            .tickFormat("")
+        )
+      
+      function make_y_gridlines() {   
+          return d3.axisLeft(graphY)
+              .ticks(5)
+      }
 
 
       graphSvg.append("path")
@@ -130,16 +142,26 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .attr("transform", "translate(0," + graphHeight + ")")
         .attr("class", "x graphAxis")
         .call(d3.axisBottom(graphX)
-        .ticks(5)
+        .ticks(20)
+        //.ticks(5)
         .tickFormat(d3.format('')))
-
+      //ADD MAJOR AND MINOR TICKS ON X-AXIS
+      d3.selectAll('.x.graphAxis .tick').each(function(d, i) {  
+         // every 4th is 'major' without .minor class
+         d3.select(this).classed('minor', (i % 5 !== 0));
+      });
+      d3.selectAll('.x.graphAxis .tick.minor text').each(function(d, i) {  
+         // every 4th is 'major' without .minor class
+         d3.select(this).classed('minor', (i % 5 !== 0));
+      });
 
       // Add the Y Axis
       graphSvg.append("g")
         .attr("class", "y graphAxis")
         .call(d3.axisLeft(graphY)
         .ticks(5)
-        .tickFormat(d3.format('.2f')));
+        .tickFormat(d3.format('.2f')))
+
 
       drawVoronoi(trendsDataNest, selectedCategory, graphY);
 
@@ -677,6 +699,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .attr("y2", graphY(1))
 
       threshold.node().parentNode.appendChild(threshold.node())
+      d3.selectAll(".grid").node().parentNode.appendChild(d3.selectAll(".grid").node())
 
       drawVoronoi(graphDataNest, variable, graphY)
 
