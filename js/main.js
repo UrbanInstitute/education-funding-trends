@@ -275,19 +275,26 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           adjusted = (d3.select('#adjusted-checkbox').property('checked') == true) ? "adj_" : ""
           var newCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
           var clickedState = d3.select(this).attr("class").split(" ")[1]
-          d3.select(".standard.line." + clickedState)
+          d3.select(".nonblank-rect." + clickedState)
             .classed("selected-state", function(){
-              if (d3.select(".standard.line." + clickedState).classed("selected-state") == true) {
+              if (d3.select(".nonblank-rect." + clickedState).classed("selected-state") == true) {
                 // console.log('hi')
                 removeStateList(clickedState);
                 return false
-              }else { console.log('click')
+              }else { 
                 addStateList(clickedState);
                 return true;            
               }
-          })
-
-
+            })
+          d3.select(".mapLabel.standard." + clickedState)
+            .classed("selected-text", function(){
+              if (d3.select(".mapLabel.standard." + clickedState).classed("selected-text") == true) {
+                // console.log('hi')
+                return false
+              }else { 
+                return true;            
+              }
+            })
           updateStateLine(clickedState, clickedState)
           updateLineGraph(newCategory, newCategory)
           // console.log(selectedCategory)
@@ -298,24 +305,46 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           var hoveredStateName = trendsDataFull.filter(function(d) { 
             return d.State == hoveredState
           })
-          // console.log(hoveredState)
-          d3.select(".standard.line." + hoveredState)
-            // .data(hoveredStateName)
+          d3.select(".nonblank-rect." + hoveredState)
             .classed("hovered-state", true)
+          d3.select(".mapLabel.standard." + hoveredState)
+            .classed("hovered-text", true)
           updateStateLine(hoveredState)
 
         })
         .on("mouseout", function() {
-          // console.log('hover')
           var hoveredState = d3.select(this).attr("class").split(" ")[1]
-          d3.select(".standard.line." + hoveredState)
+          d3.select(".nonblank-rect." + hoveredState)
             .classed("hovered-state", false)
+          d3.select(".nonblank-rect." + hoveredState)
+            .style("fill", function(){
+              if (d3.select("#revratio_").classed("current") == true){
+                if (d3.select(".nonblank-rect." + hoveredState).classed("selected-state") == true)  {
+                  return "#353535"
+                } return "#a2d3eb"
+              }else if (d3.select("#revpp_").classed("current") == true){
+                if (d3.select(".nonblank-rect." + hoveredState).classed("selected-state") == true)  {
+                 return "#fbbe15"
+                } return "#094c6a"
+              }
+            })
+          d3.select(".mapLabel.standard." + hoveredState)
+            .style("fill", function(){
+              if (d3.select("#revratio_").classed("current") == true){
+                if (d3.select(".mapLabel.standard." + hoveredState).classed("selected-text") == true)  {
+                  return "#ffffff"
+                } return "#353535"
+              }else if (d3.select("#revpp_").classed("current") == true){
+                if (d3.select(".mapLabel.standard." + hoveredState).classed("selected-text") == true)  {
+                 return "#353535"
+                } return "#ffffff"
+              }
+            })
           // d3.selectAll(".state-name")
           //   .html("")
           //IF LINE IS ADDED THEN REMOVE
-          if (d3.select(".standard.line." + hoveredState).classed("selected-state") == true) {
-           console.log('dont remove')
-          }else {
+          if (d3.select(".nonblank-rect." + hoveredState).classed("selected-state") == true) {
+          } else {
             // console.log('remove')
             for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
               if (stateLinesArray[i] === hoveredState) { 
@@ -325,6 +354,8 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
             graphSvg.select("path.line-" + hoveredState) 
               .remove()
           }
+          d3.select(".mapLabel.standard." + hoveredState)
+            .classed("hovered-text", false)
         })
 
       // console.log(trendsDataNestBlank)
@@ -352,19 +383,24 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .style("fill","#b3b3b3") 
       blank.append("text")
         .text(function(d){ return d.key })
-        .attr("class", "mapLabel standard")
+        .attr("class", function(d) {
+          return "mapLabel standard " + d.key
+        })
         .attr("text-anchor", "end")
         .attr("x",chartWidth+chartMargin - 25)
         .attr("y",chartWidth+chartMargin - 25)
 
       //chart background
-      map.append("rect")
+      map
+        .append("rect")
         .attr("width",chartWidth-2*chartMargin + 8)
         .attr("height",chartWidth-2*chartMargin + 8)
         .attr("x",chartMargin - 4)
         .attr("y",chartMargin - 4)
         .style("fill","#a2d3eb") 
-        .attr("class", "nonblank-rect")
+        .attr("class", function(d) { 
+          return "nonblank-rect " + d.key
+        })
 
       //set up scales for charts. THe code here assumes all states are on the same x/y scale. Alaska and the US avg will prob need to have special scales written for them, since they will be on a separate scale (I think). Also note currently there is no US average chart/tile.
       var mapX = d3.scaleLinear().range([chartMargin, chartWidth-chartMargin]);
@@ -434,7 +470,9 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
 
     //  see drawBackMapCurtain for explanation--draw a "curtain" on top of the line, which can be animated away to simulate the line animating left to right
       map.append("rect")
-        .attr("class","mapCurtain")
+        .attr("class", function(d) {
+          return "mapCurtain " + d.key 
+        })
         .attr("width",0)
         .attr("height",chartWidth-2*chartMargin)
         .attr("x",0)
@@ -444,7 +482,9 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       //draw the state name on the tile
       map.append("text")
         .text(function(d){ return d.key })
-        .attr("class", "mapLabel standard")
+        .attr("class", function(d) {
+          return "mapLabel standard " + d.key
+        })        
         .attr("text-anchor", "end")
         .attr("x",chartWidth+chartMargin - 25)
         .attr("y",chartWidth+chartMargin - 25)
@@ -822,12 +862,29 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
             return "#a2d3eb"
           }
         })
+      d3.selectAll(".nonblank-rect.selected-state")
+        .style("fill", function() {
+          if (tab == "revpp_") {
+            return "#fbbe15" 
+          } else {
+            return "#353535"
+          }
+        })
+
       d3.selectAll(".mapLabel.standard")
         .style("fill", function() {
           if (tab == "revpp_") {
             return "#fff"
           } else {
             return "#353535"
+          }
+        })
+      d3.selectAll(".mapLabel.standard.selected-text")
+        .style("fill", function() {
+          if (tab == "revpp_") {
+            return "#353535"
+          } else {
+            return "#fff"
           }
         })
       var chartWidth = mapSizes[pageSize]["chartWidth"]
@@ -882,7 +939,31 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
     }
 
     //ADDS NEW STATE LINE AND UPDATES STATE ARRAY
-    function updateStateLine(state) {
+    function updateStateLine(state) { 
+      d3.select(".nonblank-rect." + state)
+        .style("fill", function(){
+          if (d3.select("#revratio_").classed("current") == true){
+            if (d3.select(".nonblank-rect." + state).classed("selected-state") == true || d3.select(".nonblank-rect." + state).classed("hovered-state") == true )  {
+              return "#353535"
+            } return "#a2d3eb"
+          }else if (d3.select("#revpp_").classed("current") == true){
+            if (d3.select(".nonblank-rect." + state).classed("selected-state") == true || d3.select(".nonblank-rect." + state).classed("hovered-state") == true)  {
+             return "#fbbe15"
+            } return "#094c6a"
+          }
+        })
+      d3.select(".mapLabel.standard." + state)
+        .style("fill", function(){
+          if (d3.select("#revratio_").classed("current") == true){
+            if (d3.select(".mapLabel.standard." + state).classed("selected-text") == true || d3.select(".mapLabel.standard." + state).classed("hovered-text") == true)  {
+              return "#ffffff"
+            } return "#353535"
+          }else if (d3.select("#revpp_").classed("current") == true){
+            if (d3.select(".mapLabel.standard." + state).classed("selected-text") == true || d3.select(".mapLabel.standard." + state).classed("hovered-text") == true)  {
+             return "#353535"
+            } return "#ffffff"
+          }
+        })
       var adjusted = (d3.select('#adjusted-checkbox').property('checked') == true) ? "adj_" : ""
       var newCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
 

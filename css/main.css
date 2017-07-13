@@ -29,10 +29,12 @@ ul#state-list li {
   text-indent: 10px;
 }
 
-.state-item {
-
-}
-
+/*.nonblank-rect.selected-state {
+  fill: #353535 !important;
+}*/
+/*.nonblank-rect.hovered-state {
+  fill: #353535 !important;
+}*/
 /**large line graph**/
 
 .y.graphAxis path {
@@ -119,7 +121,7 @@ div.close-sign {
 
 .tab .top-tab {
   background: #eee; 
-  padding: 20px 50px 18px 50px; 
+  padding: 20px 50px 20px 50px; 
   border: 1px solid #ccc; 
   margin-left: -1px; 
   position: relative;
@@ -329,20 +331,11 @@ input[type="checkbox" i] {
 
 }
 
-.state path.line.hovered-state {
-  stroke: #ec008b;
-  fill: none;
-  stroke-width: 2.5;
-}
 
 .line-hover {
   stroke: #000;
 }
-.state path.line.selected-state {
-  stroke: #ec008b;
-  fill: none;
-  stroke-width: 2.5;
-}
+
 
 .header-row {
   width: 100%;
@@ -429,16 +422,22 @@ input[type="checkbox" i] {
 
 
 
-text.mapLabel.standard{
-  font-size: 12.24px;
-  fill: #353535;
-  /*fill: red !important;*/
-}
+
 text.mapLabel.blank{
   font-size: 12.24px;
   fill: #666666;
 }
 
+text.mapLabel.standard {
+  font-size: 12px;
+}
+
+/*text.mapLabel.standard.hovered-text {
+  fill: #fff;
+}
+text.mapLabel.standard.selected-text {
+  fill: #fff;
+}*/
 
 
 /*SWITCH BUTTONS SECTION*/
