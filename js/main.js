@@ -271,7 +271,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           // console.log(selectedCategory)
         })
         .on("mouseover", function() {
-          // console.log('hover')
+          var newCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
           var hoveredState = d3.select(this).attr("class").split(" ")[1]
           var hoveredStateName = trendsDataFull.filter(function(d) { 
             return d.State == hoveredState
@@ -281,6 +281,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
             // .data(hoveredStateName)
             .classed("hovered-state", true)
           updateStateLine(hoveredState)
+
         })
         .on("mouseout", function() {
           // console.log('hover')
@@ -340,7 +341,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .attr("height",chartWidth-2*chartMargin + 8)
         .attr("x",chartMargin - 4)
         .attr("y",chartMargin - 4)
-        .style("fill","#9d9d9d") 
+        .style("fill","#a2d3eb") 
         .attr("class", "nonblank-rect")
 
       //set up scales for charts. THe code here assumes all states are on the same x/y scale. Alaska and the US avg will prob need to have special scales written for them, since they will be on a separate scale (I think). Also note currently there is no US average chart/tile.
@@ -576,7 +577,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
     }
 
 
-    function updateScales(variable, oldVariable){ console.log('update scales')
+    function updateScales(variable, oldVariable){ 
       var domainController;
       if(variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_"){
         domainController = variable;
@@ -654,8 +655,6 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .attr("opacity", 1)
       }
 
-
-
       d3.selectAll("#lineChart .y.graphAxis")
         .transition().duration(1200).ease(d3.easeSinInOut)
         .call(d3.axisLeft(graphY)
@@ -670,8 +669,6 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         // console.log(graphLine(d[0].values))
           return (graphLine(d[0].values));
         });
-
-
 
       var threshold = d3.select(".threshold")
         .transition()
@@ -862,7 +859,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           .data([graphDataStateNest])
           .attr("class", "line-state line-" + state)
           // .attr("d", graphLine);
-          .attr("d", function(d) { console.log(graphLine(d[0].values))
+          .attr("d", function(d) { 
         d.graphLine = this;               
           return (graphLine(d[0].values));
         });

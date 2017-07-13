@@ -13,7 +13,7 @@ hr.title{
 
 hr.after-toggle{
   width: 95%;
-  border: 1px solid #a7a9ac;
+  border: 1px solid #d1d1d1;
 }
 
 ul#state-list{
@@ -32,6 +32,11 @@ ul#state-list li {
 .state-item {
 
 }
+
+/**checkbox**/
+
+
+
 div.close-sign {
   background-image: url("../img/close-sign.png");
   background-repeat: no-repeat;
@@ -85,12 +90,13 @@ div.close-sign {
 
 .tab .top-tab {
   background: #eee; 
-  padding: 20px 50px 12px 50px; 
+  padding: 20px 50px 18px 50px; 
   border: 1px solid #ccc; 
   margin-left: -1px; 
   position: relative;
   left: 1px; 
-  font-size: 24px;
+  font-size: 18px;
+  font-weight: 700;
   color: #a7a9ac;
 }
 .tab [type=radio] {
@@ -98,7 +104,7 @@ div.close-sign {
 }
 
 .top-tab.current {
-  color:#000;
+  color:#1896d2;
 }
 
 .content {
@@ -122,8 +128,10 @@ div.close-sign {
   z-index: 1;
 }
 
+
 .checkbox-label {
   font-size: 16px;
+  color: #353535;
 }
 
 
@@ -206,17 +214,18 @@ div.close-sign {
 
 .line-USA {
   fill: none;
-  stroke: #fbbe15;
-  stroke-width: 2;
+  stroke: #11719f;
+  stroke-width: 4;
 }
 
 .threshold {
-  stroke: #939598;
+  stroke: #eb098a;
+  stroke-width: 1;
 
 }
 .line-state {
   fill: none;
-  stroke: #11719f;
+  stroke: #1896d2;
   stroke-width: 2;
 }
 
@@ -345,14 +354,15 @@ div.close-sign {
 }
 
 .state path.line { 
-    stroke: #000;
+    stroke: #1896d2;
     stroke-width: 2;
     fill: none;
     /*opacity: .2*/
 }
 .ratioOneLine{
-  stroke: white;
+  stroke: #eb098a;
   stroke-dasharray: 5;
+  stroke-width: 1;
 }
 
 /*.state .axis path {
@@ -384,7 +394,7 @@ div.close-sign {
 
 text.mapLabel.standard{
   font-size: 12.24px;
-  fill: #fff;
+  fill: #353535;
   /*fill: red !important;*/
 }
 text.mapLabel.blank{
@@ -402,6 +412,7 @@ text.mapLabel.blank{
   padding-top: 10px;
   text-align: center;
   height: 30px;
+  color: #696969;
 }
 .switch-div-full {
   width: 100%;
@@ -418,7 +429,7 @@ text.mapLabel.blank{
 .switch-div-text {
   float: left;
   padding-top: 20px;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 #switch-div {
