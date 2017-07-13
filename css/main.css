@@ -431,6 +431,13 @@ text.mapLabel.blank{
   fill: #666666;
 }
 
+#ak-disclaimer{
+  position: absolute;
+  top: 24px;
+  left: 160px;
+  font-size: 14px;  
+  width: 240px;
+}
 
 
 /*SWITCH BUTTONS SECTION*/

@@ -53,6 +53,7 @@ var voronoi = d3.voronoi()
   .y(function(d) { return graphY(d[selectedCategory]); })
   .extent([[-graphMargin.left, -graphMargin.top], [graphWidth + graphMargin.right, graphHeight + graphMargin.bottom]]);
 
+var RATIO_FORMAT = d3.format(".2f")
 
 d3.csv("data/toggle_text.csv", function(error, toggleText) {
   d3.csv("data/data.csv", function(error, trendsDataFull) {
@@ -382,7 +383,9 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       //ALL STATES EXCEPT AK
       mapY.domain([d3.min(trendsDataFiltered, function(d) { return d[firstKey]; }), d3.max(trendsDataFiltered, function(d) { return d[firstKey]; })]); 
       //AK ONLY
-      mapY2.domain([d3.min(trendsDataAK, function(d) {return d[firstKey]; }), d3.max(trendsDataAK, function(d) { return d[firstKey]; })]); 
+      var min2 = d3.min([1, d3.min(trendsDataAK, function(d) {return d[firstKey]; })]);
+      var max2 = d3.max(trendsDataAK, function(d) { return d[firstKey]; })
+      mapY2.domain([min2, max2]); 
 
 
       //line chart axes
@@ -405,7 +408,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .attr("y1",mapY(1))
         .attr("y2",mapY(1))
         .attr("class", function(d) {
-          return "ratioOneLine ratioOneLine-" + d.State
+          return "ratioOneLine ratioOneLine-" + d.key
         })
       //DRAWING THE RATIO LINE FOR AK
       d3.select(".state.AK").append("line")
@@ -414,7 +417,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .attr("y1",mapY2(1))
         .attr("y2",mapY2(1))
         .attr("class", function(d) {
-          return "ratioOneLine ratioOneLine-" + d.State
+          return "ratioOneLine ratioOneLine-" + d.key
         })
 
       //DRAWING THE GRAPH LINE FOR ALL STATES BUT AKK
@@ -460,6 +463,11 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .attr("class", function(d){ return "y axis " + d.key})
         .attr("transform", "translate(" + chartMargin + ",0)")
         .call(mapYAxis);
+
+      d3.select("#vis")
+        .append("div")
+        .attr("id", "ak-disclaimer")
+        .html("Alaska data are displayed on a separate y axis scale (from <span id =\"ak-min\">" + RATIO_FORMAT(min2)+ "</span> to <span id =\"ak-max\">" + RATIO_FORMAT(max2) + "</span>) from the other 49 states.")
 
     }
 
@@ -736,7 +744,27 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       var min = (domainController.search("ratio") != -1) ? d3.min(trendsDataFiltered, function(d) {return d[domainController]; }) : 0;
       //FOR AK ONLY:
       var max2 = d3.max(trendsDataAK, function(d) { return d[domainController]; })
-      var min2 = (domainController.search("ratio") != -1) ? d3.min(trendsDataAK, function(d) {return d[domainController]; }) : 0;
+      var min2 = (domainController.search("ratio") != -1) ? d3.min([1, d3.min(trendsDataAK, function(d) {return d[domainController]; })]) : 0;
+
+      if(max > max2){
+        max2 = max;
+        min2 = min;
+        d3.select("#ak-disclaimer")
+          .transition()
+          .duration(1200)
+          .style("opacity",0)
+      }else{
+        d3.select("#ak-min")
+          .html(RATIO_FORMAT(min2))
+        d3.select("#ak-max")
+          .html(RATIO_FORMAT(max2))
+        d3.select("#ak-disclaimer")
+          .transition()
+          .duration(1200)
+          .style("opacity",1)
+      }
+      console.log(min, max)
+      console.log(min2, max2)
 
       mapY.domain([min, max]); 
       mapY2.domain([min2, max2]);      
@@ -778,8 +806,20 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         })
         .transition()
         .duration(1200)
-        .attr("y1",mapY(1))
-        .attr("y2",mapY(1))
+        .attr("y1",function(d){
+          if(d3.select(this).classed("ratioOneLine-AK")){
+            return mapY2(1)
+          }else{
+            return mapY(1)            
+          }
+        })
+        .attr("y2",function(d){
+          if(d3.select(this).classed("ratioOneLine-AK")){
+            return mapY2(1)
+          }else{
+            return mapY(1)            
+          }
+        })
 
       //REMOVE BLANK BOXES AND MAKES LINES APPEAR FOR HI AND DC ON LEVELS TAB
       d3.selectAll(".blank")
@@ -798,6 +838,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .duration(1200)
         .attr("y1",mapY(1))
         .attr("y2",mapY(1))
+
 
       var rectWidth = d3.select("rect.nonblank-rect").attr("width")
       var chartWidth = mapSizes[pageSize]["chartWidth"]
