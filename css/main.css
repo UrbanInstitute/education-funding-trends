@@ -158,6 +158,14 @@ div.close-sign {
 }
 
 
+
+input[type="checkbox" i] {
+      background: url('../img/empty-checkbox.png') no-repeat !important;
+      
+}
+
+
+
 .checkbox-label {
   font-size: 16px;
   color: #353535;

@@ -439,7 +439,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .attr("height",chartWidth-2*chartMargin)
         .attr("x",0)
         .attr("y",chartMargin)
-        .style("fill","#9d9d9d")
+        .style("fill", "#a2d3eb")
 
       //draw the state name on the tile
       map.append("text")
@@ -485,12 +485,13 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       .on("click", function(d){  
         d3.selectAll(".top-tab").classed('current', false)
         d3.select(this).classed('current', true)
+        var currentTab = d3.select(this).attr("id")
         d3.select(".switch-main-text")
           .text(function() { 
             return toggleText[0][d3.select(".current").attr("id") + selectedToggles];
           })
         checkAdjusted();
-        drawBackMapCurtain(0)
+        drawBackMapCurtain(0, currentTab)
         //selectedCategory = adjusted + d3.select(this).attr('id') + selectedToggles;
         //  updateLineGraph(selectedCategory)
         //  updateMapLine(selectedCategory, startYear, endYear)
@@ -811,13 +812,35 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
 
 
 
-    function drawBackMapCurtain(delay){
+    function drawBackMapCurtain(delay, tab){
       //To create the illusion of the lines in the chart animating across the chart area (left to right, small to large X values), I created a "curtain" which is a rect covering the line chart. Then, by animating it's width to 0, the animation effect is simulated. I would imagine that when the user switches between different units, on the graphs, e.g. when they switch from dollars to ratios, the curtain should draw back. On the other hand, if a user switches between combinations of state/local/federal, or toggles the adjustment on/off, the curtain should not draw back. Does that sound right to you?
-
+      d3.selectAll(".nonblank-rect")
+        .style("fill", function() {
+          if (tab == "revpp_") {
+            return "#094c6a"
+          } else {
+            return "#a2d3eb"
+          }
+        })
+      d3.selectAll(".mapLabel.standard")
+        .style("fill", function() {
+          if (tab == "revpp_") {
+            return "#fff"
+          } else {
+            return "#353535"
+          }
+        })
       var chartWidth = mapSizes[pageSize]["chartWidth"]
       var chartMargin = mapSizes[pageSize]["chartMargin"]
 
       d3.selectAll(".mapCurtain")
+        .style("fill", function() {
+          if (tab == "revpp_") {
+            return "#094c6a"
+          } else {
+            return "#a2d3eb"
+          }
+        })
         .transition()
         .duration(0)
         .attr("width",chartWidth-2*chartMargin+4)
