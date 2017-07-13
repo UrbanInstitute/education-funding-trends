@@ -296,9 +296,10 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           return "translate(" + geoPath.centroid(tmp[0]) + ")"
         })
       map
-        .on("click", function() { 
+        .on("click", function(d) { 
           adjusted = (d3.select('#adjusted-checkbox').property('checked') == true) ? "adj_" : ""
           var newCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
+          var stateName = d.values[0]["state_full"]
           var clickedState = d3.select(this).attr("class").split(" ")[1]
           d3.select(".nonblank-rect." + clickedState)
             .classed("selected-state", function(){
@@ -307,7 +308,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
                 removeStateList(clickedState);
                 return false
               }else { 
-                addStateList(clickedState);
+                addStateList(clickedState, stateName);
                 return true;            
               }
             })
@@ -632,7 +633,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           .remove()
       })
     //WHEN CLICKING ON STATE, ADD TAG TO BOTTOM OF LINE GRAPH
-    function addStateList(state) { 
+    function addStateList(state, stateName) { 
       d3.selectAll(".lineChart-details, .lineChart-notes-under")
         .classed("show", true)
       d3.select(".lineChart-notes-above")
@@ -640,7 +641,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       var stateItem = d3.select("#state-list")
         .datum(state)
         .append("li")
-        .html(state)
+        .html(stateName)
         .attr("class", "state-item item-" + state);
       stateItem.append("div")
         .attr("class", "close-sign close-sign-" + state)
