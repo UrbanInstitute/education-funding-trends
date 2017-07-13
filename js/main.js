@@ -57,6 +57,26 @@ var RATIO_FORMAT = d3.format(".2f")
 
 d3.csv("data/toggle_text.csv", function(error, toggleText) {
   d3.csv("data/data.csv", function(error, trendsDataFull) {
+
+
+      var trendsDataMinMax = trendsDataFull.filter(function(d) { 
+        if (selectedCategory.includes("revratio")) {
+          if (d3.select(".standard.line.AK.selected-state").node() !== null) { 
+            // console.log('AK')
+            return d.State !== "HI" && d.State !== "DC"
+          }else{
+            // console.log('no AK')
+            return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
+          }
+        }else {
+          return d.State;
+        }
+      })
+
+      var trendsDataAK = trendsDataFull.filter(function(d){
+        return d.State ==  "AK"
+      })
+    
     trendsDataFull.forEach(function(d) {
       keys = Object.keys(d);
       for(var i = 0; i<keys.length; i++){
@@ -661,23 +681,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           domainController = selectedCategory;
         }
       }
-      var trendsDataMinMax = trendsDataFull.filter(function(d) { 
-        if (selectedCategory.includes("revratio")) {
-          if (d3.select(".standard.line.AK.selected-state").node() !== null) { 
-            // console.log('AK')
-            return d.State !== "HI" && d.State !== "DC"
-          }else{
-            // console.log('no AK')
-            return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
-          }
-        }else {
-          return d.State;
-        }
-      })
 
-      var trendsDataAK = trendsDataFull.filter(function(d){
-        return d.State ==  "AK"
-      })
 
 
       var graphDataSelected = trendsDataFull.filter(function(d) {           
