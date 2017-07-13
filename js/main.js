@@ -245,7 +245,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .attr("class", function(d){ return "state " + d.key })
         .attr("transform", function(d,i){
           //grab the element in statesData corresponding to the correct trendsData state, and position accordingly
-          var tmp = stateData.features.filter(function(o) {  return o.properties.abbr == d.key} )
+          var tmp = stateData.features.filter(function(o) { return o.properties.abbr == d.key} )
           return "translate(" + geoPath.centroid(tmp[0]) + ")"
         })
       map
@@ -264,6 +264,8 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
                 return true;            
               }
           })
+
+
           updateStateLine(clickedState, clickedState)
           updateLineGraph(newCategory, newCategory)
           // console.log(selectedCategory)
@@ -302,23 +304,21 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           }
         })
 
-      console.log(trendsDataNestBlank)
+      // console.log(trendsDataNestBlank)
 
-      //draw greyed out blank states for HI and DC
+      // //draw greyed out blank states for HI and DC
       var blank = mapSvg
         .selectAll(".blank")
         .data(trendsDataNestBlank)
         .enter()
         .append("g")
         .attr("class","blank")
-        .attr("transform", function(d,i){ 
-          var tmp = stateData.features.filter(function(o) {
-          // console.log( d.key); return o.properties.abbr == d.key} )
+        .attr("transform", function(d,i){
+          //grab the element in statesData corresponding to the correct trendsData state, and position accordingly
+          var tmp = stateData.features.filter(function(o) { return o.properties.abbr == d.key} )
           return "translate(" + geoPath.centroid(tmp[0]) + ")"
         })
-      // .attr("transform", function(d,i){
-      //   return "translate(" + geoPath.centroid(d) + ")"
-      // })
+
 
       //blank sate background
       blank.append("rect")
@@ -374,7 +374,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .x(function(d) { return mapX(d.Year); })
         .y(function(d) { return mapY2(d[firstKey]); });
 
-      //A white line at y=1. This is just a placeholder. In the final feature, we want some sort of distinction of y=1 for the ratio graphs, but not the level graphs. Will likely be two rects (above and below y=1) instead of a line, but TBD
+     // A white line at y=1. This is just a placeholder. In the final feature, we want some sort of distinction of y=1 for the ratio graphs, but not the level graphs. Will likely be two rects (above and below y=1) instead of a line, but TBD
       //DRAWING THE RATIO LINE FOR ALL STATES BUT AK
       d3.selectAll(".state:not(.AK)").append("line")
         .attr("x1",chartMargin)
@@ -409,7 +409,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         })
 
 
-      //see drawBackMapCurtain for explanation--draw a "curtain" on top of the line, which can be animated away to simulate the line animating left to right
+    //  see drawBackMapCurtain for explanation--draw a "curtain" on top of the line, which can be animated away to simulate the line animating left to right
       map.append("rect")
         .attr("class","mapCurtain")
         .attr("width",0)
@@ -455,7 +455,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
 
 
 
-    /*SWITCHING BETWEEN TABS*/
+    // /*SWITCHING BETWEEN TABS*/
 
 
     d3.selectAll(".top-tab")
@@ -549,10 +549,15 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .attr("class", "state-item item-" + state);
       stateItem.append("div")
         .attr("class", "close-sign close-sign-" + state)
-        .on('click', function(d) {
+        // .on('click', function(d) {
+        //   removeStateList(d)
+        // })
+        .on("click", function(d) { 
           removeStateList(d)
+          adjusted = (d3.select('#adjusted-checkbox').property('checked') == true) ? "adj_" : ""
+          var newCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
+          updateLineGraph(newCategory, newCategory)
         })
-
     }
 
     function removeStateList(state) {
@@ -571,7 +576,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
     }
 
 
-    function updateScales(variable, oldVariable){
+    function updateScales(variable, oldVariable){ console.log('update scales')
       var domainController;
       if(variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_"){
         domainController = variable;
@@ -678,7 +683,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
 
       drawVoronoi(graphDataNest, variable, graphY)
 
-    }
+   }
     function updateMapLine(variable, oldVariable){
       var domainController = (variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_") ? variable : oldVariable;
 
