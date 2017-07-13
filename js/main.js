@@ -161,7 +161,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       usaLabel.append("text")
         .append("textPath")
         .attr("xlink:href", "#usa-line")
-        .text("USA")
+        .text("US")
         
       graphSvg.append("g")
         .attr("transform", "translate(0," + graphHeight + ")")

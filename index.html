@@ -1,21 +1,71 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="css/main.css"/>
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="">
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  <title>Feature title</title>
+  <link rel="stylesheet" type="text/css" href="css/main.css"/>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" type="text/css" href="css/urban-header.css">
 
 </head>
 <body>
 
-<div class="main-content">
-  <div class="headline">
-    How has education funding changed over time? 
-  </div>
 
-  <div class="main-text">
-    <p>Elementary and secondary education is funded through a complex mix of federal, state, and local dollars. How that funding has changed over time depends on local economies, legislative decisions, and in many cases court orders. This tool examines where education funding has—and has not—changed the most.</p>
-    <p>To understand how school funding has changed we look both at the level of funding over time and at the changes in <a href="http://apps.urban.org/features/school-funding-do-poor-kids-get-fair-share/" target="_blank">funding progressivity</a>, or how much more is spent on educating low-income students relative to nonpoor students. (Our default is to compare states using cost-adjusted dollars based on the salaries of college graduates in each district, but you can turn that adjustment off using the checkbox below.) Though education funding has generally increased and become more progressive, states vary widely in how much money they spend on education and how they distribute that money. </p>
-    <p>Below, you can explore how local, state, and federal funding has changed over the past two decades. The chart to the left shows the national average, and clicking a state will add its trend line to the chart so you can compare. If you want to look only at one type of funding—state-level, for example, you can turn the different funding sources on or off. </p>
+  <div id="header-pinned" class="no-touch">   
+    <a target="_blank" href="http://www.urban.org" title="Home" rel="home" class="site-logo"></a>
+    <div class="title"><span class="feature-link"><a href="http://www.urban.org/features" class="title-linkback linkback-home" alt="Urban Institute logo"></a> <span>: :</span> </span><a href="index.html" class="title-linkback linkback-title"></a>
+    </div>
+    <div class="share-icons english">
+        <div class="shareThisP">
+            <span onclick="toggle_visibility('shareBox');">
+                <div class="shareThisB"></div>
+            </span>
+            <div class="shareThisW" id="shareBox">
+              <div class="addthis_toolbox addthis_default_style  "addthis:title="" addthis:url="">
+                <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A//urbn.is/cjdata" target="_blank" class="addthis_button_facebook at300b" title="Facebook" onclick="toggle_visibility('shareBox');"><span class="at4-icon aticon-facebook" style="background-color: rgb(48, 88, 145);"><span class="at_a11y">Share on facebook</span></span></a>
+
+                <a href="http://twitter.com/intent/tweet?text=From%20%40urbaninstitute%3A%20The%20alarming%20lack%20of%20data%20on%20Latinos%20in%20the%20criminal%20justice%20system%20http%3A%2F%2Furbn.is%2Fcjdata" target="_blank" class="addthis_button_twitter at300b" title="Tweet" onclick="toggle_visibility('shareBox')><span class="at4-icon aticon-twitter" ><span class="at_a11y">Share on twitter</span></span></a>
+                <a href="mailto:%20?Subject=New interactive from the Urban Institute &amp;Body=Hi! I thought you'd be interested in this new interactive from the Urban Institute: “The Alarming Lack of Data on Latinos in the Criminal Justice System” http://urbn.is/cjdata " target="_blank" class="addthis_button_email at300b" target="_blank" title="Email" onclick="toggle_visibility('shareBox');"><span class="at4-icon aticon-email" style="background-color: rgb(115, 138, 141);"><span class="at_a11y">Share on email</span></span></a>
+                <div class="atclear">
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+    <div class="share-icons spanish">
+        <div class="shareThisP">
+            <span onclick="toggle_visibility('shareBoxSpanish');">
+                <div class="shareThisB"></div>
+            </span>
+            <div class="shareThisW" id="shareBoxSpanish">
+              <div class="addthis_toolbox addthis_default_style  "addthis:title="" addthis:url="">
+                <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A//urbn.is/cjdataesp" target="_blank" class="addthis_button_facebook at300b" title="Facebook" onclick="toggle_visibility('shareBox');"><span class="at4-icon aticon-facebook" style="background-color: rgb(48, 88, 145);"><span class="at_a11y">Compartir en facebook</span></span></a> <a href="http://twitter.com/intent/tweet?text=De%20%40urbaninstitute%3A%20La%20alarmante%20falta%20de%20informaci%C3%B3n%20sobre%20latinos%20en%20el%20sistema%20de%20justicia%20penal%20http%3A%2F%2Furbn.is%2Fcjdataesp" target="_blank" class="addthis_button_twitter at300b" title="Tweet" onclick="toggle_visibility('shareBox')><span class="at4-icon aticon-twitter" ><span class="at_a11y">Compartir en Twitter</span></span></a>
+                <a href="mailto:%20?Subject=Nueva información interactiva del Urban Institute &amp;Body=¡Hola! Pensé que podría interesarle esta nueva información interactiva del Urban Institute: “La alarmante falta de información sobre latinos en el sistema de justicia penal” http://urbn.is/cjdata " target="_blank" class="addthis_button_email at300b" target="_blank" title="Correo electrónico" onclick="toggle_visibility('shareBox');"><span class="at4-icon aticon-email" style="background-color: rgb(115, 138, 141);"><span class="at_a11y">Compartir por correo electrónico</span></span></a>
+                <div class="atclear"></div>
+              </div>
+            </div>
+        </div>
+    </div>
+  </div>
+  <div class="headerimage" id="main-image">
+    <div class="wrapper headerwrapper">
+          <h1 class="div-title-block"> <!--TEXT --></h1>
+    </div>
+  </div>
+<div class="main-content">
+  <div class="wrapper">
+    <div class="headline">
+      How has education funding changed over time? 
+    </div>
+
+    <div class="main-text">
+      <p>Elementary and secondary education is funded through a complex mix of federal, state, and local dollars. How that funding has changed over time depends on local economies, legislative decisions, and in many cases court orders. This tool examines where education funding has—and has not—changed the most.</p>
+      <p>To understand how school funding has changed we look both at the level of funding over time and at the changes in <a href="http://apps.urban.org/features/school-funding-do-poor-kids-get-fair-share/" target="_blank">funding progressivity</a>, or how much more is spent on educating low-income students relative to nonpoor students. (Our default is to compare states using cost-adjusted dollars based on the salaries of college graduates in each district, but you can turn that adjustment off using the checkbox below.) Though education funding has generally increased and become more progressive, states vary widely in how much money they spend on education and how they distribute that money. </p>
+      <p>Below, you can explore how local, state, and federal funding has changed over the past two decades. The chart to the left shows the national average, and clicking a state will add its trend line to the chart so you can compare. If you want to look only at one type of funding—state-level, for example, you can turn the different funding sources on or off. </p>
+    </div>
   </div>
 </div>
 <div class="tabs">  
@@ -112,6 +162,7 @@
 </div>
   <script src="js/vendor/jquery-1.12.4.min.js"></script>
   <script src="js/vendor/jquery-ui.min.js"></script>
+  <script src="js/header.js"></script>    
   <script src="js/vendor/d3.v4.js"></script>
   <script src="data/stateData.js"></script>
   <script src = "js/main.js"></script>
