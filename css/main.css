@@ -29,10 +29,12 @@ ul#state-list li {
   text-indent: 10px;
 }
 
-.state-item {
-
-}
-
+/*.nonblank-rect.selected-state {
+  fill: #353535 !important;
+}*/
+/*.nonblank-rect.hovered-state {
+  fill: #353535 !important;
+}*/
 /**large line graph**/
 
 .y.graphAxis path {
@@ -119,7 +121,7 @@ div.close-sign {
 
 .tab .top-tab {
   background: #eee; 
-  padding: 20px 50px 18px 50px; 
+  padding: 20px 50px 20px 50px; 
   border: 1px solid #ccc; 
   margin-left: -1px; 
   position: relative;
@@ -156,6 +158,14 @@ div.close-sign {
 [type=radio]:checked ~ label ~ .content {
   z-index: 1;
 }
+
+
+
+input[type="checkbox" i] {
+      background: url('../img/empty-checkbox.png') no-repeat !important;
+      
+}
+
 
 
 .checkbox-label {
@@ -321,20 +331,11 @@ div.close-sign {
 
 }
 
-.state path.line.hovered-state {
-  stroke: #ec008b;
-  fill: none;
-  stroke-width: 2.5;
-}
 
 .line-hover {
   stroke: #000;
 }
-.state path.line.selected-state {
-  stroke: #ec008b;
-  fill: none;
-  stroke-width: 2.5;
-}
+
 
 .header-row {
   width: 100%;
@@ -421,16 +422,13 @@ div.close-sign {
 
 
 
-text.mapLabel.standard{
-  font-size: 12.24px;
-  fill: #353535;
-  /*fill: red !important;*/
-}
+
 text.mapLabel.blank{
   font-size: 12.24px;
   fill: #666666;
 }
 
+<<<<<<< HEAD
 #ak-disclaimer{
   position: absolute;
   top: 24px;
@@ -438,6 +436,18 @@ text.mapLabel.blank{
   font-size: 14px;  
   width: 240px;
 }
+=======
+text.mapLabel.standard {
+  font-size: 12px;
+}
+
+/*text.mapLabel.standard.hovered-text {
+  fill: #fff;
+}
+text.mapLabel.standard.selected-text {
+  fill: #fff;
+}*/
+>>>>>>> e7fbd7bb43385773b5d14165bf586a14c2b910cd
 
 
 /*SWITCH BUTTONS SECTION*/
