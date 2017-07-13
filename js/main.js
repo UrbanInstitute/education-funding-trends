@@ -183,6 +183,12 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .ticks(5)
         .tickFormat(d3.format('.2f')))
 
+      graphSvg.append("text")
+        .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+        .text("Progressivity Ratio")
+        .attr("transform", "translate("+ (graphWidth*.07) +","+(graphHeight/12)+")")  // centre below axis
+        .attr("class", "y-label")
+
 
       drawVoronoi(trendsDataNest, selectedCategory, graphY);
 
@@ -793,6 +799,14 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       var domainController = (variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_") ? variable : oldVariable;
 
       //reshape the data
+      graphSvg.select(".y-label")
+        .text(function() {
+          if (d3.select("#revpp_").classed("current") == true) {
+          return "Funding Levels"
+          } else {
+            return "Progressivity Ratio"
+          }
+        })
 
       var trendsData = d3.select("#vis").datum()
       var trendsDataNest = d3.nest()
