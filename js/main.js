@@ -35,7 +35,7 @@ graphWidth =  graphSizes[pageSize]["width"]- graphMargin.left - graphMargin.righ
 graphHeight = graphSizes[pageSize]["height"] - graphMargin.top - graphMargin.bottom;
 
 var graphX = d3.scaleTime().range([0, graphWidth]);
-var graphY = d3.scaleLinear().range([graphHeight, 0]);
+var graphY = d3.scaleLinear().range([graphHeight, 0]).nice();
 
 var graphLine = d3.line()
   .x(function(d) { return graphX(d.Year); })
@@ -150,13 +150,19 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       graphSvg.append("path")
         .data([trendsDataNest])
         .attr("class", "line-USA")
+        .attr("id", "usa-line")
         // .attr("d", graphLine);
         .attr("d", function(d) { d.graphLine = this;
-        // console.log(graphLine(d[0].values))
+         console.log(graphLine(d[0].values))
           return (graphLine(d[0].values));
         });
-
-
+      var usaLabel = graphSvg.append("g")
+        .attr("id", "usaLabel")
+      usaLabel.append("text")
+        .append("textPath")
+        .attr("xlink:href", "#usa-line")
+        .text("USA")
+        
       graphSvg.append("g")
         .attr("transform", "translate(0," + graphHeight + ")")
         .attr("class", "x graphAxis")
@@ -431,9 +437,9 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         })
 
       //set up scales for charts. THe code here assumes all states are on the same x/y scale. Alaska and the US avg will prob need to have special scales written for them, since they will be on a separate scale (I think). Also note currently there is no US average chart/tile.
-      var mapX = d3.scaleLinear().range([chartMargin, chartWidth-chartMargin]);
-      var mapY = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin]);
-      var mapY2 = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin]);
+      var mapX = d3.scaleLinear().range([chartMargin, chartWidth-chartMargin]).nice();
+      var mapY = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin]).nice();
+      var mapY2 = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin]).nice();
 
 
       //this is just for the file uploader, setting the key onload to whatever column is first in the data file, other than State/Year. In the real feature, firstKey will just be a constant
@@ -726,8 +732,8 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .select("g")
         .data(trendsDataFiltered)
 
-      var graphY = d3.scaleLinear().range([graphHeight, 0]);
-      var graphY2 = d3.scaleLinear().range([graphHeight, 0]);
+      var graphY = d3.scaleLinear().range([graphHeight, 0]).nice();
+      var graphY2 = d3.scaleLinear().range([graphHeight, 0]).nice();
 
       var max = d3.max(trendsDataMinMax, function(d) { return d[domainController]; })
       var min = (domainController.search("ratio") != -1) ? d3.min(trendsDataMinMax, function(d) {return d[domainController]; }) : 0;
@@ -855,8 +861,8 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       //update scales
       var mapX = d3.scaleLinear().range([chartMargin, chartWidth-chartMargin]);
 
-      var mapY = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin]);
-      var mapY2 = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin]);
+      var mapY = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin]).nice();
+      var mapY2 = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin]).nice();
 
       mapX.domain([startYear,endYear]);
 
@@ -885,8 +891,6 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           .duration(1200)
           .style("opacity",1)
       }
-      console.log(min, max)
-      console.log(min2, max2)
 
       mapY.domain([min, max]); 
       mapY2.domain([min2, max2]);      
