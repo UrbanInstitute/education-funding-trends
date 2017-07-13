@@ -519,7 +519,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
     function checkAdjusted() {
       adjusted = (d3.select('#adjusted-checkbox').property('checked') == true) ? "adj_" : ""
       var newCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
-      updateLineGraph(newCategory, selectedCategory, "click", null)
+      updateLineGraph(newCategory, selectedCategory, "toggle", null)
       updateMapLine(newCategory, selectedCategory)
     }
 
@@ -738,12 +738,13 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
 
     }
 
+
     //ADJUSTS LINE GRAPH TO ACCOMMODATE CHANGING Y-AXIS DUE TO ADDITION OR REMOVAL OF STATE LINES
     function updateLineGraph(variable, oldVariable, action, state) {
       var scales = updateScales(variable, oldVariable)
-      var graphY = (state == "AK" && action != "remove") ? scales.graphY2 : scales.graphY;
-      var graphLine = (state == "AK" && action != "remove") ? scales.graphLine2 : scales.graphLine
-      var graphDataNest = (state == "AK" && action != "remove") ? scales.akNest : scales.graphDataNest
+      var graphY = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state")) ? scales.graphY2 : scales.graphY;
+      var graphLine = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state")) ? scales.graphLine2 : scales.graphLine
+      var graphDataNest = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state")) ? scales.akNest : scales.graphDataNest
       //IF ALL TOGGLES WERE TURNED OFF BEFORE, THIS ENSURES THAT OPACITY IS RESET TO 1
       if (d3.selectAll(".line-USA, .line-state").attr("opacity") == 0) {
         // console.log('zero')
@@ -759,9 +760,11 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .ticks(5)
         .tickFormat(d3.format('.2f')));
 
+
+      var duration = (action == "toggle" || state == "AK") ? 1200 : 0
       d3.selectAll(".line-USA, .line-state")
         .transition()
-        .duration(1200)
+        .duration(duration)
         // .attr("d", graphLine)
         .attr("d", function(d) {
         // console.log(graphLine(d[0].values))
