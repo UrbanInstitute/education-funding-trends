@@ -12,7 +12,7 @@ hr.title{
 }
 
 hr.after-toggle{
-  width: 95%;
+  width: 100%;
   border: 1px solid #d1d1d1;
 }
 
@@ -21,6 +21,8 @@ ul#state-list{
   padding-left: 0px;
 
 }
+
+
 
 a {
   text-decoration: none;
@@ -51,9 +53,9 @@ ul#state-list li {
 }
 
 .wrapper {
-  width: 850px;
-  margin-top: -125px;
-  background-color: #fff;
+  width: 700px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .wrapper2 {
@@ -127,16 +129,20 @@ div.close-sign {
 
 
 .main-content {
-  width: 700px;
-  margin-bottom: 200px;
-  margin-top: 50px;
+  width: 850px;
+  margin-bottom: 90px;
+  margin-top: -85px;
   margin-left: auto;
   margin-right: auto;
+  background-color: #fff;
 }
 .main-text {
   font-size: 18px;
   line-height: 1.5;
   color: #5c595a;
+  width: 700px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .headline {
   font-size: 30px;
@@ -406,6 +412,7 @@ input[type="checkbox" i] {
   width: 100%;
   float: left;
   color: #696969;
+  margin-top: 7px;
 }
 
 .voronoi  {
@@ -558,7 +565,7 @@ text.mapLabel.standard.selected-text {
 
 .switch-div-individual {
   float: left;
-  padding: 0px 15px;
+  padding: 0px 35px 0 0;
   margin-top: 45px;
 
 }
@@ -570,7 +577,7 @@ text.mapLabel.standard.selected-text {
 }
 
 #switch-div {
-  width: 60%;
+  width: 59%;
   margin-left: auto;
   margin-right: auto;
 }
@@ -626,6 +633,7 @@ text.mapLabel.standard.selected-text {
 
 form {
   margin-top: 18px;
+  margin-left: 10px;
 }
 
 #map{
