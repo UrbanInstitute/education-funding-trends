@@ -96,7 +96,9 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
     var trendsData = trendsDataFull.filter(function(d) { 
       return d.State !== "USA"
     })
-
+    var trendsDataUSA = trendsDataFull.filter(function(d) { 
+      return d.State == "USA"
+    })
     var trendsDataFiltered = trendsDataFull.filter(function(d) { 
       if (selectedCategory.includes("revratio")) {
         return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
@@ -558,7 +560,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       updateLineGraph(newCategory, selectedCategory, "toggle", null)
       updateMapLine(newCategory, selectedCategory)
       d3.select(".switch-main-text")
-        .text(function() { 
+        .html(function() { 
           return toggleText[0][adjusted + d3.select(".current").attr("id") + selectedToggles];
         })
     }
@@ -577,7 +579,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         d3.select(this).classed('current', true)
         var currentTab = d3.select(this).attr("id")
         d3.select(".switch-main-text")
-          .text(function() { console.log(adjusted)
+          .html(function() { console.log(adjusted)
             return toggleText[0][adjusted + d3.select(".current").attr("id") + selectedToggles];
           })
         checkAdjusted();
@@ -613,7 +615,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           d3.select(this).classed("off", true)
           getCombinedClasses();
           d3.select(".switch-main-text")
-            .text(function() { 
+            .html(function() { 
               return toggleText[0][adjusted + d3.select(".current").attr("id") + selectedToggles];
             })
 
@@ -623,7 +625,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           d3.select(this).classed("off", false)
           getCombinedClasses();
           d3.select(".switch-main-text")
-            .text(function() { 
+            .html(function() { 
               return toggleText[0][adjusted + d3.select(".current").attr("id") + selectedToggles];
             })
         }
@@ -781,6 +783,10 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       var graphY = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state")) ? scales.graphY2 : scales.graphY;
       var graphLine = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state")) ? scales.graphLine2 : scales.graphLine
       var graphDataNest = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state")) ? scales.akNest : scales.graphDataNest
+      var trendsDataNestUSA = d3.nest()
+        .key(function(d) {return d.State;})
+        .entries(trendsDataUSA);
+
       //IF ALL TOGGLES WERE TURNED OFF BEFORE, THIS ENSURES THAT OPACITY IS RESET TO 1
       if (d3.selectAll(".line-USA, .line-state").attr("opacity") == 0) {
         // console.log('zero')
@@ -796,7 +802,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           .ticks(5)
           .tickFormat((d3.select("#revpp_").classed("current") == true) ? d3.format('.0s') : d3.format('.2f'))
         );
-
+console.log((trendsDataNestUSA[0]).values)
 
       var duration = (action == "toggle" || state == "AK") ? 1200 : 0
       d3.selectAll(".line-USA, .line-state")
@@ -807,6 +813,12 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         // console.log(graphLine(d[0].values))
           return (graphLine(d[0].values));
         });
+      graphSvg.select("text.usaLabel")
+        .transition()
+        .duration(duration)
+        .attr("transform", "translate("+(graphWidth+3)+","+graphY((trendsDataNestUSA[0]).values[20][selectedCategory])+")")
+        .attr("dy", ".35em")
+        .attr("text-anchor", "start")
 
       var threshold = d3.select(".threshold")
         .transition()

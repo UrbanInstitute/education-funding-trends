@@ -13,7 +13,7 @@ hr.title{
 
 hr.after-toggle{
   width: 100%;
-  border: 1px solid #d1d1d1;
+  border: 1px solid #d2d2d2
 }
 
 ul#state-list{
@@ -113,7 +113,7 @@ path.domain {
 }
 
 /**checkbox**/
-.checkbox-custom {
+/*.checkbox-custom {
   opacity: 0;
 }
 
@@ -139,7 +139,7 @@ path.domain {
     width: 20px;
     height: 20px;
     background: white;
-  }
+  }*/
 
 
 
@@ -589,6 +589,7 @@ text.mapLabel.standard.selected-text {
   text-align: center;
   height: 30px;
   color: #696969;
+  line-height: 1.5;
 }
 .switch-div-full {
   width: 100%;
@@ -597,8 +598,17 @@ text.mapLabel.standard.selected-text {
 
 .switch-div-individual {
   float: left;
-  padding: 0px 35px 0 0;
+  margin: 0px 30px 0 0;
   margin-top: 45px;
+  display: inline-block;
+
+}
+
+.adjusted-div {
+  float: left;
+  padding: 0;
+  margin-top: 45px;
+  display: inline-block;
 
 }
 
@@ -606,10 +616,11 @@ text.mapLabel.standard.selected-text {
   float: left;
   padding-top: 20px;
   font-size: 16px;
+  color: #353535;
 }
 
 #switch-div {
-  width: 59%;
+  width: 55%;
   margin-left: auto;
   margin-right: auto;
 }
@@ -623,7 +634,7 @@ text.mapLabel.standard.selected-text {
     line-height: 12px;
     text-align: left;
     border-radius: 10px;
-    margin-bottom: 18px;
+    margin-bottom: 32px;
     margin-top: 18px;
 }
 
