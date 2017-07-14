@@ -389,7 +389,9 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           }
           d3.select(".mapLabel.standard." + hoveredState)
             .classed("hovered-text", false)
-          updateLineGraph(newCategory, newCategory, "remove", hoveredState)
+          if(d3.select(".nonblank-rect." + hoveredState).classed("selected-state") == false){
+            updateLineGraph(newCategory, newCategory, "remove", hoveredState)
+          }
         })
 
       // console.log(trendsDataNestBlank)
@@ -629,16 +631,9 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
     //WHEN CLICKING ON CLEAR ALL UNDER SELECTED STATE LIST
     d3.select(".state-clear")
       .on('click', function() {
-        d3.selectAll(".state-item")
-          .remove();
-        d3.selectAll(".lineChart-details, .lineChart-notes-under")
-          .classed("show", false)
-        d3.select(".lineChart-notes-above")
-          .classed("show", true)
-        d3.selectAll(".selected-state")
-          .classed("selected-state", false)
-        d3.selectAll(".line-state")
-          .remove()
+        for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
+          removeStateList(stateLinesArray[i])
+        }
       })
     //WHEN CLICKING ON STATE, ADD TAG TO BOTTOM OF LINE GRAPH
     function addStateList(state, stateName) { 
@@ -655,30 +650,34 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .attr("class", "close-sign close-sign-" + state)
         .on("click", function(d) {
           removeStateList(d)
-          adjusted = (d3.select('#adjusted-checkbox').property('checked') == true) ? "adj_" : ""
-          var newCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
-          updateLineGraph(newCategory, newCategory, "remove", d)
-          d3.select(".nonblank-rect." + d)
-            .classed("selected-state", false)
-            .style("fill", function(){
-              if (d3.select("#revratio_").classed("current") == true){
-                return "#a2d3eb"
-              }else if (d3.select("#revpp_").classed("current") == true){
-                return "#094c6a"
-              }
-            })
-          d3.select(".mapLabel.standard." + d)
-            .style("fill", function(){
-              if (d3.select("#revratio_").classed("current") == true){
-                return "#353535"
-              }else if (d3.select("#revpp_").classed("current") == true){
-                return "#ffffff"
-              }
-            })
         })
     }
 
     function removeStateList(state) {
+      console.log(state)
+
+      adjusted = (d3.select('#adjusted-checkbox').property('checked') == true) ? "adj_" : ""
+      var newCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
+      updateLineGraph(newCategory, newCategory, "remove", state)
+      d3.select(".nonblank-rect." + state)
+        .classed("selected-state", false)
+        .style("fill", function(){
+          if (d3.select("#revratio_").classed("current") == true){
+            return "#a2d3eb"
+          }else if (d3.select("#revpp_").classed("current") == true){
+            return "#094c6a"
+          }
+        })
+      d3.select(".mapLabel.standard." + state)
+        .style("fill", function(){
+          if (d3.select("#revratio_").classed("current") == true){
+            return "#353535"
+          }else if (d3.select("#revpp_").classed("current") == true){
+            return "#ffffff"
+          }
+        })
+
+
       d3.select(".item-" + state)
         .remove();
       d3.select(".line-state.line-" + state)
@@ -690,6 +689,12 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           .classed("show", false)
         d3.select(".lineChart-notes-above")
           .classed("show", true)
+      }
+
+      for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
+        if (stateLinesArray[i] === state) { 
+          stateLinesArray.splice(i, 1);
+        }
       }
     }
 
@@ -821,10 +826,16 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .call(make_y_gridlines()
             .tickSize(-graphWidth)
             .tickFormat(""))
-
-      if(action == "click"){
+      if(action == "remove"){
+        graphDataNest = graphDataNest.filter(function(d){ return d.key != state})
+      }
+      else if(action == "removeAll"){
+       graphDataNest = graphDataNest.filter(function(d){ return d.key == "USA"}) 
+      }
+      if(typeof(graphDataNest) != "undefined"){
         drawVoronoi(graphDataNest, variable, graphY)
       }
+
     }
 
     function updateMapLine(variable, oldVariable){
