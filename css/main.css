@@ -36,6 +36,14 @@ ul#state-list li {
   text-indent: 10px;
 }
 
+#revratio_ {
+  cursor: pointer;
+}
+
+#revpp_{
+  cursor: pointer;
+}
+
 
 #main-image {
     background-image: url(../img/banner.jpg);
@@ -113,33 +121,11 @@ path.domain {
 }
 
 /**checkbox**/
-/*.checkbox-custom {
-  opacity: 0;
-}
-
-& + .checkbox-custom-label {
+.checkbox-custom, .checkbox-label{
   cursor: pointer;
 }
 
-  & + label {
-    position: relative;
-    cursor: pointer;
-    padding: 0;
-  }
 
-
-.checkbox-custom:checked + label:before {
-  background: #1896d2;
-}
-  .checkbox-custom + label:before {
-    content: '';
-    margin-right: 10px;
-    display: inline-block;
-    vertical-align: text-top;
-    width: 20px;
-    height: 20px;
-    background: white;
-  }*/
 
 
 
@@ -189,7 +175,8 @@ div.close-sign {
 #bottom-content {
   float: left;
   width: 100%;
-  margin-top: 80px;
+  margin-top: 88px;
+  margin-bottom: 25px;
 }
 
 .bottom-section {
@@ -203,6 +190,10 @@ div.close-sign {
 }
 
 #about {
+}
+
+.bottom-text p {
+  margin-bottom: 30px;
 }
 .about-text {
   font-size: 14px;
@@ -222,7 +213,7 @@ div.close-sign {
 
 .credit-names {
   margin-bottom: 20px;
-  margin-top: 3px;
+  margin-top: 5px;
 }
 .bottom-text {
   line-height: 20px;
@@ -333,7 +324,7 @@ div.close-sign {
 }
 .viz-content {
   width: 100%;
-  margin-top: 40px;
+  margin-top: 78px;
 }
 #extra-space {
   height: 300px;
@@ -381,6 +372,8 @@ div.close-sign {
   fill: none;
   stroke: #11719f;
   stroke-width: 4;
+  pointer-events: all;
+  cursor: pointer;
 }
 
 .usaLabel {
@@ -397,6 +390,8 @@ div.close-sign {
   fill: none;
   stroke: #1896d2;
   stroke-width: 2;
+  pointer-events: all;
+  cursor: pointer;
 }
 
 #lineChart{
@@ -563,7 +558,7 @@ text.mapLabel.blank{
 
 #ak-disclaimer{
   position: absolute;
-  top: 24px;
+  top: 50px;
   left: 160px;
   font-size: 14px;  
   width: 240px;

@@ -23,7 +23,7 @@ mapHeight = mapSizes[pageSize]["height"] - mapMargin.top - mapMargin.bottom;
 /*LINE GRAPH VARIABLES*/
 
 var graphSizes = {
-  "full": { "width": 330, "height": 330, "translate": [720,180]},
+  "full": { "width": 350, "height": 330, "translate": [720,180]},
   "large": { "width": 750, "height": 600, "translate": [300,200]},
   "medium": { "width": 900, "height": 1270, "translate": [380,220]},
   "small": { "width": 900, "height": 1270, "translate": [380,220]}
@@ -46,7 +46,7 @@ var graphSvg = d3.select("#lineChart")
   .attr("width", graphWidth + graphMargin.left + graphMargin.right)
   .attr("height", graphHeight + graphMargin.top + graphMargin.bottom)
   .append("g")
-  .attr("transform", "translate(" + graphMargin.left + ")");
+  .attr("transform", "translate(" + graphMargin.left + ", "+ -10 + ")");
 
 var voronoi = d3.voronoi()
   .x(function(d) { return graphX(d.Year); })
@@ -244,7 +244,9 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
 
 
     function mouseover(d) {
-      d3.select(".line-" + d.data.State).classed("line-hover", true);
+      d3.select(".line-" + d.data.State)
+        .classed("line-hover", true)
+        .style("cursor", "pointer")
     }
 
     function mouseout(d) {
@@ -262,7 +264,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .attr("width", mapWidth + mapMargin.left + mapMargin.right)
         .attr("height", mapHeight + mapMargin.top + mapMargin.bottom)
         .append("g")
-        .attr("transform", "translate(" + -330 + "," + mapMargin.top + ")");
+        .attr("transform", "translate(" + -330 + "," + mapMargin.top *2+ ")");
 
 
       //reshape data, nesting by State 
@@ -794,7 +796,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .entries(trendsDataUSA);
 
       //IF ALL TOGGLES WERE TURNED OFF BEFORE, THIS ENSURES THAT OPACITY IS RESET TO 1
-      if (d3.selectAll(".line-USA, .line-state").attr("opacity") == 0) {
+      if (d3.selectAll(".line-USA, .line-state, .usaLabel").attr("opacity") == 0) {
         // console.log('zero')
         graphSvg.selectAll(".line-USA, .line-state, .threshold")
         // .transition()
@@ -806,7 +808,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .transition().duration(1200).ease(d3.easeSinInOut)
         .call(d3.axisLeft(graphY)
           .ticks(5)
-          .tickFormat((d3.select("#revpp_").classed("current") == true) ? d3.format('.0s') : d3.format('.2f'))
+          .tickFormat((d3.select("#revpp_").classed("current") == true) ? d3.format('.2s') : d3.format('.2f'))
         );
 
       var duration = (action == "toggle" || state == "AK") ? 1200 : 0
@@ -1102,6 +1104,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .delay( 200)
         .duration(1200)
         .attr("opacity", 0)
+
     }
 
     //ADDS NEW STATE LINE AND UPDATES STATE ARRAY
