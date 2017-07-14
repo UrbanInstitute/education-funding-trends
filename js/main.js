@@ -5,7 +5,7 @@ var stateLinesArray = [];
 /*MAP VARIABLES*/
 var pageSize = "full"
 var mapSizes = {
-  "full": { "width": 800, "height": 555, "scale": 3150, "translate": [710,180], "chartWidth": 74, "chartMargin": 13},
+  "full": { "width": 700, "height": 555, "scale": 3150, "translate": [710,180], "chartWidth": 74, "chartMargin": 13},
   "large": { "width": 750, "height": 600, "scale": 3100, "translate": [300,200], "chartWidth": 62, "chartMargin": 5},
   "medium": { "width": 900, "height": 1270, "scale": 3800, "translate": [380,220], "chartWidth": 76, "chartMargin": 8},
   "small": { "width": 900, "height": 1270, "scale": 3800, "translate": [380,220], "chartWidth": 76, "chartMargin": 8}
@@ -23,14 +23,14 @@ mapHeight = mapSizes[pageSize]["height"] - mapMargin.top - mapMargin.bottom;
 /*LINE GRAPH VARIABLES*/
 
 var graphSizes = {
-  "full": { "width": 400, "height": 300, "translate": [720,180]},
+  "full": { "width": 330, "height": 330, "translate": [720,180]},
   "large": { "width": 750, "height": 600, "translate": [300,200]},
   "medium": { "width": 900, "height": 1270, "translate": [380,220]},
   "small": { "width": 900, "height": 1270, "translate": [380,220]}
 }
 
 var selectedCategory = "adj_revratio_all";
-var graphMargin = {top: 30, right: 20, bottom: 30, left: 50},
+var graphMargin = {top: 30, right: 30, bottom: 30, left: 35},
 graphWidth =  graphSizes[pageSize]["width"]- graphMargin.left - graphMargin.right,
 graphHeight = graphSizes[pageSize]["height"] - graphMargin.top - graphMargin.bottom;
 
@@ -194,8 +194,8 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
 
       graphSvg.append("text")
         .attr("text-anchor", "middle") 
-        .text("Progressivity Ratio")
-        .attr("transform", "translate("+ (graphWidth*.07) +","+(graphHeight/12)+")") 
+        .text("Progressivity")
+        .attr("transform", "translate("+ (graphWidth*.02) +","+(graphHeight/12)+")") 
         .attr("class", "y-label")
 
 
@@ -839,16 +839,16 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       graphSvg.select(".y-label")
         .text(function() {
           if (d3.select("#revpp_").classed("current") == true) {
-          return "Progressivity Levels"
+          return "Funding Levels"
           } else {
-            return "Progressivity Ratio"
+            return "Progressivity"
           }
         })
         .attr("transform", function() {
           if (d3.select("#revpp_").classed("current") == true) {
             return "translate("+ (graphWidth*.04) +","+(graphHeight/12)+")"
           } else {
-            return "translate("+ (graphWidth*.07) +","+(graphHeight/12)+")"
+            return "translate("+ (graphWidth*.02) +","+(graphHeight/12)+")"
           }
         })  
 

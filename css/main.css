@@ -48,7 +48,7 @@ ul#state-list li {
     position: relative;
     overflow: hidden;
     width: 100%;
-    height: 550px;
+    height: 500px;
     z-index: -1;
 }
 
@@ -66,8 +66,8 @@ ul#state-list li {
 /*.nonblank-rect.selected-state {
   fill: #353535 !important;
 }*/
-/*.nonblank-rect.hovered-state {
-  fill: #353535 !important;
+/*.nonblank-rect.selected-state.hovered-state {
+  opacity: .8
 }*/
 /**large line graph**/
 path.domain {
@@ -175,7 +175,7 @@ div.close-sign {
   font-size: 30px;
   font-weight: 700;
   margin-bottom: 50px;
-  color: #231f20;
+  color: #000;
   text-align: center;
   padding-top: 40px;
 }
@@ -385,6 +385,7 @@ div.close-sign {
 
 .usaLabel {
   font-size: 14px;
+  font-weight: 700;
 }
 
 .threshold {
