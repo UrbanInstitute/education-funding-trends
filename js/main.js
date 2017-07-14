@@ -654,7 +654,6 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
     }
 
     function removeStateList(state) {
-      console.log(state)
 
       adjusted = (d3.select('#adjusted-checkbox').property('checked') == true) ? "adj_" : ""
       var newCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
@@ -690,7 +689,9 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         d3.select(".lineChart-notes-above")
           .classed("show", true)
       }
-
+      d3.select(".mapLabel.standard." + state)
+        .classed("selected-text", false)
+        
       for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
         if (stateLinesArray[i] === state) { 
           stateLinesArray.splice(i, 1);
