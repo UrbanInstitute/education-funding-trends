@@ -12,7 +12,7 @@ hr.title{
 }
 
 hr.after-toggle{
-  width: 76%;
+  width: 100%;
   border: 1px solid #d2d2d2
 }
 
@@ -27,6 +27,11 @@ ul#state-list{
 a {
   text-decoration: none;
   color: #1896d2;
+}
+
+#lineChart {
+  cursor: pointer;
+  pointer-events: all;
 }
 
 ul#state-list li {
@@ -585,6 +590,7 @@ text.mapLabel.standard.selected-text {
   text-align: center;
   color: #696969;
   line-height: 1.5;
+  width: 754px;
 }
 .switch-div-full {
   width: 100%;
@@ -598,6 +604,7 @@ text.mapLabel.standard.selected-text {
   display: inline-block;
 
 }
+
 
 .adjusted-div {
   float: left;
@@ -615,7 +622,7 @@ text.mapLabel.standard.selected-text {
 }
 
 #switch-div {
-  width: 75%;
+  width: 58.5%;
   margin-left: auto;
   margin-right: auto;
 }
