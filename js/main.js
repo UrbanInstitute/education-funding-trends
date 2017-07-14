@@ -711,14 +711,14 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
 
     function updateScales(variable, oldVariable){ 
       var domainController;
-      if(variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_"){
+      if(variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_"){ console.log('1')
         domainController = variable;
         selectedCategory = variable;
-      }else{
+      }else{ console.log('2')
         if(variable != oldVariable){
           //blank variable, from changing toggles
           domainController = oldVariable;
-        }else{
+        }else{ console.log('3')
           //blank variable, from clicking on state
           domainController = selectedCategory;
         }
@@ -795,14 +795,20 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .key(function(d) {return d.State;})
         .entries(trendsDataUSA);
 
+      if(variable == "adj_revratio_" || variable == "revratio_" || variable == "revpp_" || variable == "adj_revpp_"){ console.log('hi')
+        d3.select(".usaLabel").attr("opacity", 0)
+       }
+
       //IF ALL TOGGLES WERE TURNED OFF BEFORE, THIS ENSURES THAT OPACITY IS RESET TO 1
-      if (d3.selectAll(".line-USA, .line-state, .usaLabel").attr("opacity") == 0) {
-        // console.log('zero')
-        graphSvg.selectAll(".line-USA, .line-state, .threshold")
-        // .transition()
-        // .duration(1200)
-        .attr("opacity", 1)
-      }
+      // if (d3.selectAll(".line-USA, .line-state, .usaLabel").attr("opacity") == 0) {
+      //   // console.log('zero')
+      //   graphSvg.selectAll(".line-USA, .line-state, .threshold")
+      //   // .transition()
+      //   // .duration(1200)
+      //   .attr("opacity", 1)
+      //   d3.select(".usaLabel")
+      //     .attr("opacity", 1)
+      // }
 
       d3.selectAll("#lineChart .y.graphAxis")
         .transition().duration(1200).ease(d3.easeSinInOut)
