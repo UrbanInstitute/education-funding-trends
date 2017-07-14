@@ -152,16 +152,21 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .attr("class", "line-USA")
         .attr("id", "usa-line")
         // .attr("d", graphLine);
-        .attr("d", function(d) { d.graphLine = this;
-         console.log(graphLine(d[0].values))
+        .attr("d", function(d) {d.graphLine = this; console.log((trendsDataNest[0]).values[20][selectedCategory]); 
           return (graphLine(d[0].values));
         });
-      var usaLabel = graphSvg.append("g")
-        .attr("id", "usaLabel")
-      usaLabel.append("text")
-        .append("textPath")
-        .attr("xlink:href", "#usa-line")
+      graphSvg.append("text")
+        .attr("transform", "translate("+(graphWidth+3)+","+graphY((trendsDataNest[0]).values[20][selectedCategory])+")")
+        .attr("dy", ".35em")
+        .attr("text-anchor", "start")
         .text("US")
+        .attr("class", "usaLabel")
+      // var usaLabel = graphSvg.append("g")
+      //   .attr("id", "usaLabel")
+      // usaLabel.append("text")
+      //   .append("textPath")
+      //   .attr("xlink:href", "#usa-line")
+      //   .text("US")
         
       graphSvg.append("g")
         .attr("transform", "translate(0," + graphHeight + ")")

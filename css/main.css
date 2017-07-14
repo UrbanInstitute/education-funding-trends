@@ -113,6 +113,33 @@ path.domain {
 }
 
 /**checkbox**/
+.checkbox-custom {
+  opacity: 0;
+}
+
+& + .checkbox-custom-label {
+  cursor: pointer;
+}
+
+  & + label {
+    position: relative;
+    cursor: pointer;
+    padding: 0;
+  }
+
+
+.checkbox-custom:checked + label:before {
+  background: #1896d2;
+}
+  .checkbox-custom + label:before {
+    content: '';
+    margin-right: 10px;
+    display: inline-block;
+    vertical-align: text-top;
+    width: 20px;
+    height: 20px;
+    background: white;
+  }
 
 
 
@@ -260,10 +287,10 @@ div.close-sign {
 
 
 
-input[type="checkbox" i] {
+/*input[type="checkbox" i] {
       background: url('../img/empty-checkbox.png') no-repeat !important;
       
-}
+}*/
 
 
 
@@ -354,6 +381,10 @@ input[type="checkbox" i] {
   fill: none;
   stroke: #11719f;
   stroke-width: 4;
+}
+
+.usaLabel {
+  font-size: 14px;
 }
 
 .threshold {
