@@ -32,7 +32,7 @@ a {
 ul#state-list li {
   line-height: 36px;
   background-color: #ececec;
-  border-bottom: 2px solid #fff;
+  border-bottom: 5px solid #fff;
   text-indent: 10px;
 }
 
@@ -333,7 +333,7 @@ div.close-sign {
 }
 .viz-content {
   width: 100%;
-  margin-top: 100px;
+  margin-top: 40px;
 }
 #extra-space {
   height: 300px;
@@ -412,12 +412,13 @@ div.close-sign {
 .lineChart-details {
   bottom: 20px;
   z-index: 1;
-  margin-left: 35px;  
+  margin-left: 50px;  
   width: 400px;
   background: transparent;
   height: 0px;
   left: 0px;
   display: none;
+  margin-top: 35px;
 
 }
 
@@ -429,7 +430,7 @@ div.close-sign {
   display: block;
   font-style: italic;
   font-size: 13px;
-  margin-left: 35px;
+  margin-left: 50px;
   display: none;
   color: #696969;
 
@@ -439,7 +440,7 @@ div.close-sign {
   display: none;
   font-style: italic;
   font-size: 13px;
-  margin-left: 35px;
+  margin-left: 50px;
   display: none;
   width: 100%;
   float: left;
@@ -474,7 +475,7 @@ div.close-sign {
 }
 .state-title {
   text-transform: uppercase;
-  margin-bottom:5px;
+  margin-bottom:15px;
   float: left;
 }
 
@@ -587,7 +588,6 @@ text.mapLabel.standard.selected-text {
   font-style: italic;
   padding-top: 10px;
   text-align: center;
-  height: 30px;
   color: #696969;
   line-height: 1.5;
 }

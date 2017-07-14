@@ -618,18 +618,12 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
             .html(function() { 
               return toggleText[0][adjusted + d3.select(".current").attr("id") + selectedToggles];
             })
-
         }else {
           checkAdjusted();
           d3.select(this).classed("on", true)
           d3.select(this).classed("off", false)
           getCombinedClasses();
-          d3.select(".switch-main-text")
-            .html(function() { 
-              return toggleText[0][adjusted + d3.select(".current").attr("id") + selectedToggles];
-            })
         }
-
       }) 
 
 
@@ -802,7 +796,6 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           .ticks(5)
           .tickFormat((d3.select("#revpp_").classed("current") == true) ? d3.format('.0s') : d3.format('.2f'))
         );
-console.log((trendsDataNestUSA[0]).values)
 
       var duration = (action == "toggle" || state == "AK") ? 1200 : 0
       d3.selectAll(".line-USA, .line-state")
