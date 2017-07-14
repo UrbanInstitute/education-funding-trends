@@ -22,6 +22,11 @@ ul#state-list{
 
 }
 
+a {
+  text-decoration: none;
+  color: #1896d2;
+}
+
 ul#state-list li {
   line-height: 36px;
   background-color: #ececec;
@@ -50,6 +55,12 @@ ul#state-list li {
   margin-top: -125px;
   background-color: #fff;
 }
+
+.wrapper2 {
+  margin: 0 50px;
+}
+
+
 /*.nonblank-rect.selected-state {
   fill: #353535 !important;
 }*/
@@ -139,6 +150,49 @@ div.close-sign {
 .tab-content {
   margin-left: auto;
   margin-right: auto;
+  float: left;
+}
+
+#bottom-content {
+  float: left;
+  width: 100%;
+  margin-top: 80px;
+}
+
+.bottom-section {
+  float: left;
+  width: 50%;
+}
+
+.bottom-header {
+  font-size: 34px;
+  color: #231f20;
+}
+
+#about {
+}
+.about-text {
+  font-size: 14px;
+  color: #231f20;
+  margin-right: 50px;
+}
+
+.credit-text {
+  font-size: 13px;
+  font-style: italic;
+  color: #808285;
+}
+
+.credit-list {
+  font-size: 14px;
+}
+
+.credit-names {
+  margin-bottom: 20px;
+  margin-top: 3px;
+}
+.bottom-text {
+  line-height: 20px;
 }
 
 /*TABS*/

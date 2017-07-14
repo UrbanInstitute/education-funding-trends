@@ -55,111 +55,161 @@
           <h1 class="div-title-block"> <!--TEXT --></h1>
     </div>
   </div>
-<div class="main-content">
-  <div class="wrapper">
-    <div class="headline">
-      How has education funding changed over time? 
-    </div>
+  <div class="main-content">
+    <div class="wrapper">
+      <div class="headline">
+        How has education funding changed over time? 
+      </div>
 
-    <div class="main-text">
-      <p>Elementary and secondary education is funded through a complex mix of federal, state, and local dollars. How that funding has changed over time depends on local economies, legislative decisions, and in many cases court orders. This tool examines where education funding has—and has not—changed the most.</p>
-      <p>To understand how school funding has changed we look both at the level of funding over time and at the changes in <a href="http://apps.urban.org/features/school-funding-do-poor-kids-get-fair-share/" target="_blank">funding progressivity</a>, or how much more is spent on educating low-income students relative to nonpoor students. (Our default is to compare states using cost-adjusted dollars based on the salaries of college graduates in each district, but you can turn that adjustment off using the checkbox below.) Though education funding has generally increased and become more progressive, states vary widely in how much money they spend on education and how they distribute that money. </p>
-      <p>Below, you can explore how local, state, and federal funding has changed over the past two decades. The chart to the left shows the national average, and clicking a state will add its trend line to the chart so you can compare. If you want to look only at one type of funding—state-level, for example, you can turn the different funding sources on or off. </p>
+      <div class="main-text">
+        <p>Elementary and secondary education is funded through a complex mix of federal, state, and local dollars. How that funding has changed over time depends on local economies, legislative decisions, and in many cases court orders. This tool examines where education funding has—and has not—changed the most.</p>
+        <p>To understand how school funding has changed we look both at the level of funding over time and at the changes in <a href="http://apps.urban.org/features/school-funding-do-poor-kids-get-fair-share/" target="_blank">funding progressivity</a>, or how much more is spent on educating low-income students relative to nonpoor students. (Our default is to compare states using cost-adjusted dollars based on the salaries of college graduates in each district, but you can turn that adjustment off using the checkbox below.) Though education funding has generally increased and become more progressive, states vary widely in how much money they spend on education and how they distribute that money. </p>
+        <p>Below, you can explore how local, state, and federal funding has changed over the past two decades. The chart to the left shows the national average, and clicking a state will add its trend line to the chart so you can compare. If you want to look only at one type of funding—state-level, for example, you can turn the different funding sources on or off. </p>
+      </div>
     </div>
   </div>
-</div>
-<div class="tabs">  
-
-<!--BEGIN TABS--> 
-  <div class="tab">
-    <input type="radio" id="tab-1" name="tab-group-1" checked>
-    <label id = "revratio_" class="top-tab current" for="tab-1">Progressivity Ratio</label>
-    <div class="content">
-    </div> 
-  </div>
-    
-  <div class="tab">
-    <input type="radio" id="tab-2" name="tab-group-1">
-    <label id="revpp_" class="top-tab" for="tab-2">Progressivity Levels</label>       
-    <div class="content">
-    </div> 
-  </div>
-</div>
-<!--END TABS-->
-  <!--TAB CONTENT GOES HERE: -->
-  <div class="tab-content">
+  <div class="wrapper2">
+    <div class="tabs">  
+    <!--BEGIN TABS--> 
+      <div class="tab">
+        <input type="radio" id="tab-1" name="tab-group-1" checked>
+        <label id = "revratio_" class="top-tab current" for="tab-1">Progressivity Ratio</label>
+        <div class="content">
+        </div> 
+      </div>
+        
+      <div class="tab">
+        <input type="radio" id="tab-2" name="tab-group-1">
+        <label id="revpp_" class="top-tab" for="tab-2">Progressivity Levels</label>       
+        <div class="content">
+        </div> 
+      </div>
+    </div>
+  <!--END TABS-->
+    <!--TAB CONTENT GOES HERE: -->
+    <div class="tab-content">
       <div class="switch-div-full">
-      <div id="switch-div">
-        <div class="switch-div-individual">
-          <div class="switch-div-text">
-            Local
-          </div>
-          <div class="urban-switch blue large">
-            <div class="lo button_toggle switch large on" id="lo">
+        <div id="switch-div">
+          <div class="switch-div-individual">
+            <div class="switch-div-text">
+              Local
+            </div>
+            <div class="urban-switch blue large">
+              <div class="lo button_toggle switch large on" id="lo">
+              </div>
             </div>
           </div>
-        </div>
-        <div class="switch-div-individual">
-          <div class="switch-div-text">
-            State
-          </div>
-          <div class="urban-switch blue large">
-            <div class="st button_toggle switch large on" id="st">
+          <div class="switch-div-individual">
+            <div class="switch-div-text">
+              State
+            </div>
+            <div class="urban-switch blue large">
+              <div class="st button_toggle switch large on" id="st">
+              </div>
             </div>
           </div>
-        </div>
-        <div class="switch-div-individual">
-          <div class="switch-div-text">
-            Federal
-          </div>
-          <div class="urban-switch blue large">
-            <div class="fe button_toggle switch large on" id="fe">
+          <div class="switch-div-individual">
+            <div class="switch-div-text">
+              Federal
+            </div>
+            <div class="urban-switch blue large">
+              <div class="fe button_toggle switch large on" id="fe">
+              </div>
             </div>
           </div>
+          <div class="switch-div-individual">
+            <form>
+              <div>
+                <input type="checkbox" id="adjusted-checkbox" checked>
+                <label class="checkbox-label" for="adjusted-checkbox">adjusted</label>
+              </div>
+            </form>
+          </div>
+        <hr class="after-toggle" />
+        <div class="switch-main-text">
+          Overall school funding is about as progressive today, on average, as it was in 1995. In that time, six states increased in progressivity by at least 5 percentage points, while only two states became regressive. 
         </div>
-        <div class="switch-div-individual">
-          <form>
-            <div>
-              <input type="checkbox" id="adjusted-checkbox" checked>
-              <label class="checkbox-label" for="adjusted-checkbox">adjusted</label>
-            </div>
-          </form>
         </div>
-      <hr class="after-toggle" />
-      <div class="switch-main-text">
-        Overall school funding is about as progressive today, on average, as it was in 1995. In that time, six states increased in progressivity by at least 5 percentage points, while only two states became regressive. 
       </div>
-      </div>
-    </div>
 
-    <div class="viz-content">
-    <div class="lineChart-div">
-      <div id="lineChart">
-      </div>
-      <div class="lineChart-notes-above show">
-      We measured the progressivity of school funding as a ratio. A ratio of 1.0 means funding is equal for poor and non-poor students; a number above one means funding is progressive; a number below one means funding is regressive. An estimate of 1.1, for example, would imply that on average poor students attend districts that receive 10 percent more in per-student funding than the districts nonpoor students attend.
-      </div>
-      <div class="lineChart-details">
-      <div class="header-row">
-        <div class="state-title">SELECTED STATES</div>
-        <div class="state-clear">clear all</div>
-      </div>
-        <div class="state-name">
-          <ul id="state-list">
-          </ul>
+      <div class="viz-content">
+        <div class="lineChart-div">
+          <div id="lineChart">
+          </div>
+          <div class="lineChart-notes-above show">
+          We measured the progressivity of school funding as a ratio. A ratio of 1.0 means funding is equal for poor and non-poor students; a number above one means funding is progressive; a number below one means funding is regressive. An estimate of 1.1, for example, would imply that on average poor students attend districts that receive 10 percent more in per-student funding than the districts nonpoor students attend.
+          </div>
+          <div class="lineChart-details">
+          <div class="header-row">
+            <div class="state-title">SELECTED STATES</div>
+            <div class="state-clear">clear all</div>
+          </div>
+            <div class="state-name">
+              <ul id="state-list">
+              </ul>
+            </div>
+          </div>
+          <div class="lineChart-notes-under">
+          We measured the progressivity of school funding as a ratio. A ratio of 1.0 means funding is equal for poor and non-poor students; a number above one means funding is progressive; a number below one means funding is regressive. An estimate of 1.1, for example, would imply that on average poor students attend districts that receive 10 percent more in per-student funding than the districts nonpoor students attend.
+          </div>
+        </div>
+        <div id = "vis">
+        </div>
+        <div class="notes">
+        <!--ADD NOTE ABOUT DC AND HAWAII ONLY HAVING ONE SCHOOL DISTRICT SO NOT ON MAP-->
         </div>
       </div>
-      <div class="lineChart-notes-under">
-      We measured the progressivity of school funding as a ratio. A ratio of 1.0 means funding is equal for poor and non-poor students; a number above one means funding is progressive; a number below one means funding is regressive. An estimate of 1.1, for example, would imply that on average poor students attend districts that receive 10 percent more in per-student funding than the districts nonpoor students attend.
+    </div>
+    <!--PROJECT CREDITS AND ABOUT SECTION-->
+    <div id="bottom-content">
+      <div class="bottom-section" id="about">
+        <div class="bottom-header">
+          ABOUT THE DATA
+        </div>
+        <div class="about-text bottom-text">
+          <p>We measured the progressivity of school funding as the ratio of two weighted averages of each district’s per-student revenue: (1) weights are the number of poor students; and (2) weights are the number of nonpoor students. For example, an estimate of 1.1 would imply that, on average, poor students attend districts that receive 10 percent more in per-student funding than the districts nonpoor students attend.</p>
+          <p>Both progressivity and funding levels are calculated using data on regular public school districts that are based on geography (i.e. we exclude districts that only contain charter schools and education service agencies). We calculated these measures using data on federal, state, and local revenues from the US Department of Education’s Common Core of Data Local Education Agency Finance Survey (F-33) for 1994-95 through 2013-14 and the US Census Annual Survey of School System Finances for 2014-15. We merged the finance data with district-level poverty data from the Census Bureau’s Model-based Small Area Income and Poverty Estimates. We adjusted districts’ funding amounts for differences in the costs they face using a measure of the salaries of college graduates who are not teachers in the district’s labor market.</p>
+          <p>The details of the data and methodology are provided in the appendix.</p>
+        </div>
       </div>
-    </div>
-    <div id = "vis">
-    </div>
-    <div class="notes">
-    <!--ADD NOTE ABOUT DC AND HAWAII ONLY HAVING ONE SCHOOL DISTRICT SO NOT ON MAP-->
+      <div class="bottom-section" id="credits">
+        <div class="bottom-header">
+          PROJECT CREDITS
+        </div>
+        <div class="credit-text bottom-text">
+          <p>This feature was funded by the Laura and John Arnold Foundation. We are grateful to them and to all our funders, who make it possible for Urban to advance its mission. The views expressed are those of the authors and should not be attributed to the Urban Institute, its trustees, or its funders. Funders do not determine our research findings or the insights and recommendations of our experts. More information on our funding principles is available here. Read our terms of service here.</p>
+        </div>
+        <div class="credit-list">
+          <div class="credit-header">
+            RESEARCH
+          </div>
+          <div class="credit-names">
+            <a href="http://www.urban.org/author/matthew-chingos" target="_blank">Matthew Chingos</a> and <a href="http://www.urban.org/author/kristin-blagg" target="_blank">Kristin Blagg</a>
+          </div>
+          <div class="credit-header">
+            DESIGN
+          </div>
+          <div class="credit-names">
+            <a href="http://www.urban.org/author/christina-baird" target="_blank">Christina Baird</a>
+          </div>
+          <div class="credit-header">
+            DEVELOPMENT
+          </div>
+          <div class="credit-names">
+            <a href="http://www.urban.org/author/benjamin-chartoff" target="_blank">Ben Chartoff</a> and <a href="http://www.urban.org/author/vivian-hou" target="_blank">Vivian Hou</a>
+          </div>
+          <div class="credit-header">
+            EDITORIAL
+          </div>
+          <div class="credit-names">
+            <a href="http://www.urban.org/author/alexandra-tilsley" target="_blank">Alexandra Tilsley</a> and <a href="http://www.urban.org/author/elizabeth-forney" target="_blank">Elizabeth Forney</a>
+          </div>
+          <p>Copyright © Urban Institute 2017. View this project on Github.</p>
+        </div>
+      </div>
     </div>
   </div>
-</div>
+
   <script src="js/vendor/jquery-1.12.4.min.js"></script>
   <script src="js/vendor/jquery-ui.min.js"></script>
   <script src="js/header.js"></script>    
