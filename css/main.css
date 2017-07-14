@@ -53,9 +53,9 @@ ul#state-list li {
 }
 
 .wrapper {
-  width: 850px;
-  margin-top: -125px;
-  background-color: #fff;
+  width: 700px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .wrapper2 {
@@ -129,11 +129,12 @@ div.close-sign {
 
 
 .main-content {
-  width: 700px;
-  margin-bottom: 200px;
-  margin-top: 50px;
+  width: 850px;
+  margin-bottom: 90px;
+  margin-top: -85px;
   margin-left: auto;
   margin-right: auto;
+  background-color: #fff;
 }
 .main-text {
   font-size: 18px;
