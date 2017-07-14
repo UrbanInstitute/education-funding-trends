@@ -551,12 +551,12 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
 
     function checkAdjusted() {
       adjusted = (d3.select('#adjusted-checkbox').property('checked') == true) ? "adj_" : ""
-      var newCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
+      var newCategory = adjusted + d3.select(".current").attr("id") + getCombinedClasses();
       updateLineGraph(newCategory, selectedCategory, "toggle", null)
       updateMapLine(newCategory, selectedCategory)
       d3.select(".switch-main-text")
         .text(function() { 
-          return toggleText[0][adjusted + d3.select(".current").attr("id") + selectedToggles];
+          return toggleText[0][adjusted + d3.select(".current").attr("id") + getCombinedClasses()];
         })
     }
 
@@ -592,23 +592,23 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       d3.selectAll(".button_toggle.on")
         .each(function(d, i) { //get class of each toggle that is still turned on and add it to the combinedClasses array
       var toggleClass = d3.select(this).attr('class').split(" ")[0];
-      // console.log(combinedClassesArray)
         combinedClassesArray.push(toggleClass);
       })
       var initialSelectedToggles = combinedClassesArray.join('')
       initialSelectedToggles == "lostfe" ? selectedToggles = "all" : selectedToggles = initialSelectedToggles
       var selectedText = combinedClassesArray.join('')
-      // console.log(selectedToggles)
+      if(selectedText == "lostfe") { selectedText = "all"}
+      return selectedText;
     }
 
     // WHEN CLICKING ON EACH TOGGLE:
     d3.selectAll(".button_toggle")
       .on('click', function() {
-        checkAdjusted();
+        // checkAdjusted();
         if(d3.select(this).classed("on")){ 
           d3.select(this).classed("on", false)
           d3.select(this).classed("off", true)
-          getCombinedClasses();
+          // getCombinedClasses();
           d3.select(".switch-main-text")
             .text(function() { 
               return toggleText[0][adjusted + d3.select(".current").attr("id") + selectedToggles];
@@ -618,12 +618,13 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           checkAdjusted();
           d3.select(this).classed("on", true)
           d3.select(this).classed("off", false)
-          getCombinedClasses();
+          // getCombinedClasses();
           d3.select(".switch-main-text")
             .text(function() { 
               return toggleText[0][adjusted + d3.select(".current").attr("id") + selectedToggles];
             })
         }
+        checkAdjusted();
 
       }) 
 
