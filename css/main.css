@@ -13,7 +13,7 @@ hr.title{
 
 hr.after-toggle{
   width: 100%;
-  border: 1px solid #d1d1d1;
+  border: 1px solid #d2d2d2
 }
 
 ul#state-list{
@@ -38,7 +38,7 @@ ul#state-list li {
 
 
 #main-image {
-    background-image: url(../img/banner.png);
+    background-image: url(../img/banner.jpg);
     background-size: cover;
     background-repeat: no-repeat;
     width: 100%;
@@ -48,7 +48,7 @@ ul#state-list li {
     position: relative;
     overflow: hidden;
     width: 100%;
-    height: 550px;
+    height: 500px;
     z-index: -1;
 }
 
@@ -66,8 +66,8 @@ ul#state-list li {
 /*.nonblank-rect.selected-state {
   fill: #353535 !important;
 }*/
-/*.nonblank-rect.hovered-state {
-  fill: #353535 !important;
+/*.nonblank-rect.selected-state.hovered-state {
+  opacity: .8
 }*/
 /**large line graph**/
 path.domain {
@@ -113,6 +113,33 @@ path.domain {
 }
 
 /**checkbox**/
+/*.checkbox-custom {
+  opacity: 0;
+}
+
+& + .checkbox-custom-label {
+  cursor: pointer;
+}
+
+  & + label {
+    position: relative;
+    cursor: pointer;
+    padding: 0;
+  }
+
+
+.checkbox-custom:checked + label:before {
+  background: #1896d2;
+}
+  .checkbox-custom + label:before {
+    content: '';
+    margin-right: 10px;
+    display: inline-block;
+    vertical-align: text-top;
+    width: 20px;
+    height: 20px;
+    background: white;
+  }*/
 
 
 
@@ -148,7 +175,7 @@ div.close-sign {
   font-size: 30px;
   font-weight: 700;
   margin-bottom: 50px;
-  color: #231f20;
+  color: #000;
   text-align: center;
   padding-top: 40px;
 }
@@ -260,10 +287,10 @@ div.close-sign {
 
 
 
-input[type="checkbox" i] {
+/*input[type="checkbox" i] {
       background: url('../img/empty-checkbox.png') no-repeat !important;
       
-}
+}*/
 
 
 
@@ -354,6 +381,11 @@ input[type="checkbox" i] {
   fill: none;
   stroke: #11719f;
   stroke-width: 4;
+}
+
+.usaLabel {
+  font-size: 14px;
+  font-weight: 700;
 }
 
 .threshold {
@@ -557,6 +589,7 @@ text.mapLabel.standard.selected-text {
   text-align: center;
   height: 30px;
   color: #696969;
+  line-height: 1.5;
 }
 .switch-div-full {
   width: 100%;
@@ -565,8 +598,17 @@ text.mapLabel.standard.selected-text {
 
 .switch-div-individual {
   float: left;
-  padding: 0px 35px 0 0;
+  margin: 0px 30px 0 0;
   margin-top: 45px;
+  display: inline-block;
+
+}
+
+.adjusted-div {
+  float: left;
+  padding: 0;
+  margin-top: 45px;
+  display: inline-block;
 
 }
 
@@ -574,10 +616,11 @@ text.mapLabel.standard.selected-text {
   float: left;
   padding-top: 20px;
   font-size: 16px;
+  color: #353535;
 }
 
 #switch-div {
-  width: 59%;
+  width: 55%;
   margin-left: auto;
   margin-right: auto;
 }
@@ -591,7 +634,7 @@ text.mapLabel.standard.selected-text {
     line-height: 12px;
     text-align: left;
     border-radius: 10px;
-    margin-bottom: 18px;
+    margin-bottom: 32px;
     margin-top: 18px;
 }
 

@@ -5,7 +5,7 @@ var stateLinesArray = [];
 /*MAP VARIABLES*/
 var pageSize = "full"
 var mapSizes = {
-  "full": { "width": 800, "height": 555, "scale": 3150, "translate": [710,180], "chartWidth": 74, "chartMargin": 13},
+  "full": { "width": 700, "height": 555, "scale": 3150, "translate": [710,180], "chartWidth": 74, "chartMargin": 13},
   "large": { "width": 750, "height": 600, "scale": 3100, "translate": [300,200], "chartWidth": 62, "chartMargin": 5},
   "medium": { "width": 900, "height": 1270, "scale": 3800, "translate": [380,220], "chartWidth": 76, "chartMargin": 8},
   "small": { "width": 900, "height": 1270, "scale": 3800, "translate": [380,220], "chartWidth": 76, "chartMargin": 8}
@@ -23,14 +23,14 @@ mapHeight = mapSizes[pageSize]["height"] - mapMargin.top - mapMargin.bottom;
 /*LINE GRAPH VARIABLES*/
 
 var graphSizes = {
-  "full": { "width": 400, "height": 300, "translate": [720,180]},
+  "full": { "width": 330, "height": 330, "translate": [720,180]},
   "large": { "width": 750, "height": 600, "translate": [300,200]},
   "medium": { "width": 900, "height": 1270, "translate": [380,220]},
   "small": { "width": 900, "height": 1270, "translate": [380,220]}
 }
 
 var selectedCategory = "adj_revratio_all";
-var graphMargin = {top: 30, right: 20, bottom: 30, left: 50},
+var graphMargin = {top: 30, right: 30, bottom: 30, left: 35},
 graphWidth =  graphSizes[pageSize]["width"]- graphMargin.left - graphMargin.right,
 graphHeight = graphSizes[pageSize]["height"] - graphMargin.top - graphMargin.bottom;
 
@@ -96,7 +96,9 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
     var trendsData = trendsDataFull.filter(function(d) { 
       return d.State !== "USA"
     })
-
+    var trendsDataUSA = trendsDataFull.filter(function(d) { 
+      return d.State == "USA"
+    })
     var trendsDataFiltered = trendsDataFull.filter(function(d) { 
       if (selectedCategory.includes("revratio")) {
         return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
@@ -152,16 +154,21 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .attr("class", "line-USA")
         .attr("id", "usa-line")
         // .attr("d", graphLine);
-        .attr("d", function(d) { d.graphLine = this;
-         console.log(graphLine(d[0].values))
+        .attr("d", function(d) {d.graphLine = this; console.log((trendsDataNest[0]).values[20][selectedCategory]); 
           return (graphLine(d[0].values));
         });
-      var usaLabel = graphSvg.append("g")
-        .attr("id", "usaLabel")
-      usaLabel.append("text")
-        .append("textPath")
-        .attr("xlink:href", "#usa-line")
+      graphSvg.append("text")
+        .attr("transform", "translate("+(graphWidth+3)+","+graphY((trendsDataNest[0]).values[20][selectedCategory])+")")
+        .attr("dy", ".35em")
+        .attr("text-anchor", "start")
         .text("US")
+        .attr("class", "usaLabel")
+      // var usaLabel = graphSvg.append("g")
+      //   .attr("id", "usaLabel")
+      // usaLabel.append("text")
+      //   .append("textPath")
+      //   .attr("xlink:href", "#usa-line")
+      //   .text("US")
         
       graphSvg.append("g")
         .attr("transform", "translate(0," + graphHeight + ")")
@@ -189,8 +196,8 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
 
       graphSvg.append("text")
         .attr("text-anchor", "middle") 
-        .text("Progressivity Ratio")
-        .attr("transform", "translate("+ (graphWidth*.07) +","+(graphHeight/12)+")") 
+        .text("Progressivity")
+        .attr("transform", "translate("+ (graphWidth*.02) +","+(graphHeight/12)+")") 
         .attr("class", "y-label")
 
 
@@ -555,7 +562,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       updateLineGraph(newCategory, selectedCategory, "toggle", null)
       updateMapLine(newCategory, selectedCategory)
       d3.select(".switch-main-text")
-        .text(function() { 
+        .html(function() { 
           return toggleText[0][adjusted + d3.select(".current").attr("id") + getCombinedClasses()];
         })
     }
@@ -574,7 +581,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         d3.select(this).classed('current', true)
         var currentTab = d3.select(this).attr("id")
         d3.select(".switch-main-text")
-          .text(function() { console.log(adjusted)
+          .html(function() { console.log(adjusted)
             return toggleText[0][adjusted + d3.select(".current").attr("id") + selectedToggles];
           })
         checkAdjusted();
@@ -610,7 +617,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           d3.select(this).classed("off", true)
           // getCombinedClasses();
           d3.select(".switch-main-text")
-            .text(function() { 
+            .html(function() { 
               return toggleText[0][adjusted + d3.select(".current").attr("id") + selectedToggles];
             })
 
@@ -620,7 +627,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           d3.select(this).classed("off", false)
           // getCombinedClasses();
           d3.select(".switch-main-text")
-            .text(function() { 
+            .html(function() { 
               return toggleText[0][adjusted + d3.select(".current").attr("id") + selectedToggles];
             })
         }
@@ -783,6 +790,10 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       var graphY = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state")) ? scales.graphY2 : scales.graphY;
       var graphLine = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state")) ? scales.graphLine2 : scales.graphLine
       var graphDataNest = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state")) ? scales.akNest : scales.graphDataNest
+      var trendsDataNestUSA = d3.nest()
+        .key(function(d) {return d.State;})
+        .entries(trendsDataUSA);
+
       //IF ALL TOGGLES WERE TURNED OFF BEFORE, THIS ENSURES THAT OPACITY IS RESET TO 1
       if (d3.selectAll(".line-USA, .line-state").attr("opacity") == 0) {
         // console.log('zero')
@@ -798,7 +809,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           .ticks(5)
           .tickFormat((d3.select("#revpp_").classed("current") == true) ? d3.format('.0s') : d3.format('.2f'))
         );
-
+console.log((trendsDataNestUSA[0]).values)
 
       var duration = (action == "toggle" || state == "AK") ? 1200 : 0
       d3.selectAll(".line-USA, .line-state")
@@ -809,6 +820,12 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         // console.log(graphLine(d[0].values))
           return (graphLine(d[0].values));
         });
+      graphSvg.select("text.usaLabel")
+        .transition()
+        .duration(duration)
+        .attr("transform", "translate("+(graphWidth+3)+","+graphY((trendsDataNestUSA[0]).values[20][selectedCategory])+")")
+        .attr("dy", ".35em")
+        .attr("text-anchor", "start")
 
       var threshold = d3.select(".threshold")
         .transition()
@@ -847,16 +864,16 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       graphSvg.select(".y-label")
         .text(function() {
           if (d3.select("#revpp_").classed("current") == true) {
-          return "Progressivity Levels"
+          return "Funding Levels"
           } else {
-            return "Progressivity Ratio"
+            return "Progressivity"
           }
         })
         .attr("transform", function() {
           if (d3.select("#revpp_").classed("current") == true) {
             return "translate("+ (graphWidth*.04) +","+(graphHeight/12)+")"
           } else {
-            return "translate("+ (graphWidth*.07) +","+(graphHeight/12)+")"
+            return "translate("+ (graphWidth*.02) +","+(graphHeight/12)+")"
           }
         })  
 
