@@ -711,14 +711,14 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
 
     function updateScales(variable, oldVariable){ 
       var domainController;
-      if(variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_"){ console.log('1')
+      if(variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_"){ 
         domainController = variable;
         selectedCategory = variable;
-      }else{ console.log('2')
+      }else{ 
         if(variable != oldVariable){
           //blank variable, from changing toggles
           domainController = oldVariable;
-        }else{ console.log('3')
+        }else{ 
           //blank variable, from clicking on state
           domainController = selectedCategory;
         }
@@ -795,8 +795,10 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .key(function(d) {return d.State;})
         .entries(trendsDataUSA);
 
-      if(variable == "adj_revratio_" || variable == "revratio_" || variable == "revpp_" || variable == "adj_revpp_"){ console.log('hi')
+      if(variable == "adj_revratio_" || variable == "revratio_" || variable == "revpp_" || variable == "adj_revpp_"){
         d3.select(".usaLabel").attr("opacity", 0)
+       } else {
+        d3.select(".usaLabel").attr("opacity", 1)
        }
 
       //IF ALL TOGGLES WERE TURNED OFF BEFORE, THIS ENSURES THAT OPACITY IS RESET TO 1
