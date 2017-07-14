@@ -552,6 +552,10 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       var newCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
       updateLineGraph(newCategory, selectedCategory, "toggle", null)
       updateMapLine(newCategory, selectedCategory)
+      d3.select(".switch-main-text")
+        .text(function() { 
+          return toggleText[0][adjusted + d3.select(".current").attr("id") + selectedToggles];
+        })
     }
 
 
@@ -568,8 +572,8 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         d3.select(this).classed('current', true)
         var currentTab = d3.select(this).attr("id")
         d3.select(".switch-main-text")
-          .text(function() { 
-            return toggleText[0][d3.select(".current").attr("id") + selectedToggles];
+          .text(function() { console.log(adjusted)
+            return toggleText[0][adjusted + d3.select(".current").attr("id") + selectedToggles];
           })
         checkAdjusted();
         drawBackMapCurtain(0, currentTab)
@@ -598,27 +602,25 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
     // WHEN CLICKING ON EACH TOGGLE:
     d3.selectAll(".button_toggle")
       .on('click', function() {
-        //FOR ADJUSTED VALUES
+        checkAdjusted();
         if(d3.select(this).classed("on")){ 
           d3.select(this).classed("on", false)
           d3.select(this).classed("off", true)
           getCombinedClasses();
           d3.select(".switch-main-text")
             .text(function() { 
-              return toggleText[0][d3.select(".current").attr("id") + selectedToggles];
+              return toggleText[0][adjusted + d3.select(".current").attr("id") + selectedToggles];
             })
-          checkAdjusted();
 
         }else {
-           // console.log('hi')
+          checkAdjusted();
           d3.select(this).classed("on", true)
           d3.select(this).classed("off", false)
           getCombinedClasses();
           d3.select(".switch-main-text")
             .text(function() { 
-              return toggleText[0][d3.select(".current").attr("id") + selectedToggles];
+              return toggleText[0][adjusted + d3.select(".current").attr("id") + selectedToggles];
             })
-          checkAdjusted();
         }
 
       }) 
