@@ -126,10 +126,43 @@ path.domain {
 }
 
 /**checkbox**/
-.checkbox-custom, .checkbox-label{
-  cursor: pointer;
+.checkbox-label{
+  float: left;
+  font-size: 16px;
+  color: #353535;
+}
+.checkbox-custom {
+  opacity: 0;
+  width: 0px;
+  height: 0px;
 }
 
+.checkbox-div {
+  float: left;
+}
+.checkbox-image {
+  margin-left: 15px;
+  width: 17.04px;
+  height: 15.36px;
+  display: none;
+}
+
+.checked {
+  display: block !important;
+}
+
+.empty-checkbox-image {
+  margin-left: 15px;
+  width: 17.04px;
+  height: 15.36px;
+  display: none;
+}
+
+.checkbox-div {
+  pointer-events: all;
+  cursor: pointer;
+  margin-top: 3px;
+}
 
 
 
@@ -282,18 +315,6 @@ div.close-sign {
 }
 
 
-
-/*input[type="checkbox" i] {
-      background: url('../img/empty-checkbox.png') no-repeat !important;
-      
-}*/
-
-
-
-.checkbox-label {
-  font-size: 16px;
-  color: #353535;
-}
 
 
 #graphic {
@@ -607,9 +628,10 @@ text.mapLabel.standard.selected-text {
 
 
 .adjusted-div {
+  margin-left: 6px;
   float: left;
   padding: 0;
-  margin-top: 45px;
+  margin-top: 48px;
   display: inline-block;
 
 }

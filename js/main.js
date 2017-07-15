@@ -125,6 +125,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         return d3.axisLeft(graphY)
             .ticks(5)
     }
+    
     //CREATE INITIAL LINE GRAPH ON LOAD
     function renderGraph() {
 
@@ -154,7 +155,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .attr("class", "line-USA")
         .attr("id", "usa-line")
         // .attr("d", graphLine);
-        .attr("d", function(d) {d.graphLine = this; console.log((trendsDataNest[0]).values[20][selectedCategory]); 
+        .attr("d", function(d) {d.graphLine = this; 
           return (graphLine(d[0].values));
         });
       graphSvg.append("text")
@@ -312,7 +313,8 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         })
       map
         .on("click", function(d) { 
-          adjusted = (d3.select('#adjusted-checkbox').property('checked') == true) ? "adj_" : ""
+       //   adjusted = (d3.select('#adjusted-checkbox').property('checked') == true) ? "adj_" : ""
+          adjusted = (d3.select('.checkbox-image').classed('checked') == true) ? "adj_" : ""
           var newCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
           var stateName = d.values[0]["state_full"]
           var clickedState = d3.select(this).attr("class").split(" ")[1]
@@ -555,11 +557,30 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
 
     }
 
+    d3.select(".checkbox-div")
+      .on("click", function() {
+        if (d3.select(".checkbox-image").classed('checked') == true){
+        d3.select(".checkbox-image")
+          .classed("checked", false)
+        d3.select(".empty-checkbox-image")
+          .classed("checked", true)
+        checkAdjusted()
+        }else {
+          d3.select(".empty-checkbox-image")
+            .classed("checked", false)
+          d3.select(".checkbox-image")
+            .classed("checked", true)
+          checkAdjusted();
+        }
+      })
+
     /*IF ADJUSTED IS CHECKED*/
     var adjusted = "adj_"
 
     function checkAdjusted() {
-      adjusted = (d3.select('#adjusted-checkbox').property('checked') == true) ? "adj_" : ""
+      // adjusted = (d3.select('#adjusted-checkbox').property('checked') == true) ? "adj_" : ""
+      adjusted = (d3.select('.checkbox-image').classed('checked') == true) ? "adj_" : ""
+      console.log(adjusted)
       var newCategory = adjusted + d3.select(".current").attr("id") + getCombinedClasses();
       updateLineGraph(newCategory, selectedCategory, "toggle", null)
       updateMapLine(newCategory, selectedCategory)
@@ -664,7 +685,8 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
 
     function removeStateList(state) {
 
-      adjusted = (d3.select('#adjusted-checkbox').property('checked') == true) ? "adj_" : ""
+//      adjusted = (d3.select('#adjusted-checkbox').property('checked') == true) ? "adj_" : ""
+      adjusted = (d3.select('.checkbox-image').classed('checked') == true) ? "adj_" : ""
       var newCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
       updateLineGraph(newCategory, newCategory, "remove", state)
       d3.select(".nonblank-rect." + state)
@@ -1141,7 +1163,8 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
             } return "#ffffff"
           }
         })
-      var adjusted = (d3.select('#adjusted-checkbox').property('checked') == true) ? "adj_" : ""
+      //var adjusted = (d3.select('#adjusted-checkbox').property('checked') == true) ? "adj_" : ""
+      var adjusted = (d3.select('.checkbox-image').classed('checked') == true) ? "adj_" : ""
       var newCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
 
       var scales = updateScales(newCategory, newCategory)
