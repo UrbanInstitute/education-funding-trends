@@ -574,6 +574,25 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           checkAdjusted();
         }
       })
+    var div = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
+    d3.select(".checkbox-label")
+      .on("mouseover", function() { console.log('hi')
+        div.transition()
+          .duration(200)
+          .style("opacity", .85);
+        div.html("Cost-adjusted is defined as ...")
+          .style("left", (d3.event.pageX) + "px")
+          .style("top", (d3.event.pageY) + 10 + "px");
+      })
+      .on("mouseout", function(d) {
+        div
+          .transition()
+          .duration(500)
+          .style("opacity", 0);
+      });
 
     /*IF ADJUSTED IS CHECKED*/
     var adjusted = "adj_"

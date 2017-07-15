@@ -41,6 +41,20 @@ ul#state-list li {
   text-indent: 10px;
 }
 
+div.tooltip {
+  position: absolute;
+  text-align: left;
+  width: 80px;
+  height: 60px;
+  padding: 5px;
+  font: 12px sans-serif;
+  border: 0px;
+  pointer-events: none;
+  background-color: #696969;
+  color: #fff;
+  font-size: 13px;
+}
+
 #revratio_ {
   cursor: pointer;
 }
@@ -130,6 +144,8 @@ path.domain {
   float: left;
   font-size: 16px;
   color: #353535;
+  pointer-events: all;
+  cursor: pointer;
 }
 .checkbox-custom {
   opacity: 0;
