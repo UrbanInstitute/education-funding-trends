@@ -36,7 +36,7 @@ graphHeight = graphSizes[pageSize]["height"] - graphMargin.top - graphMargin.bot
 
 var graphX = d3.scaleTime().range([0, graphWidth]);
 var graphY = d3.scaleLinear().range([graphHeight, 0]).nice();
-
+console.log(graphHeight)
 var graphLine = d3.line()
   .x(function(d) { return graphX(d.Year); })
   .y(function(d) { return graphY(d[selectedCategory]); });
@@ -46,7 +46,7 @@ var graphSvg = d3.select("#lineChart")
   .attr("width", graphWidth + graphMargin.left + graphMargin.right)
   .attr("height", graphHeight + graphMargin.top + graphMargin.bottom)
   .append("g")
-  .attr("transform", "translate(" + graphMargin.left + ", "+ -10 + ")");
+  .attr("transform", "translate(" + graphMargin.left +", "+ 10+")");
 
 var voronoi = d3.voronoi()
   .x(function(d) { return graphX(d.Year); })
@@ -120,11 +120,6 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         return d.State == "HI" || d.State == "DC"
       }
     })
-
-    function make_y_gridlines() {   
-        return d3.axisLeft(graphY)
-            .ticks(5)
-    }
     
     //CREATE INITIAL LINE GRAPH ON LOAD
     function renderGraph() {
@@ -142,28 +137,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
 
       graphX.domain(d3.extent(trendsDataFiltered, function(d) { return d.Year; }));
       graphY.domain([d3.min(trendsDataFiltered, function(d) {return d[selectedCategory]; }), d3.max(trendsDataFiltered, function(d) {return d[selectedCategory]; })]);
-      //ADD GRIDLINES
-      graphSvg.append("g")     
-        .attr("class", "grid")
-        .call(make_y_gridlines()
-            .tickSize(-graphWidth)
-            .tickFormat("")
-        )
 
-      graphSvg.append("path")
-        .data([trendsDataNest])
-        .attr("class", "line-USA")
-        .attr("id", "usa-line")
-        // .attr("d", graphLine);
-        .attr("d", function(d) {d.graphLine = this; 
-          return (graphLine(d[0].values));
-        });
-      graphSvg.append("text")
-        .attr("transform", "translate("+(graphWidth+3)+","+graphY((trendsDataNest[0]).values[20][selectedCategory])+")")
-        .attr("dy", ".35em")
-        .attr("text-anchor", "start")
-        .text("US")
-        .attr("class", "usaLabel")
       // var usaLabel = graphSvg.append("g")
       //   .attr("id", "usaLabel")
       // usaLabel.append("text")
@@ -193,14 +167,33 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .attr("class", "y graphAxis")
         .call(d3.axisLeft(graphY)
         .ticks(5)
+        .tickSize(-graphWidth)
         .tickFormat(d3.format('.2f')))
+      // d3.select(".y.graphAxis").selectAll('g.tick')
+      //   .attr("class", function(d, i) {
+      //     return "tick_" + i
+      //   })
 
       graphSvg.append("text")
         .attr("text-anchor", "middle") 
         .text("Progressivity")
-        .attr("transform", "translate("+ (graphWidth*.02) +","+(graphHeight/12)+")") 
+        .attr("transform", "translate("+ (graphWidth*.02) +")") 
         .attr("class", "y-label")
 
+      graphSvg.append("path")
+        .data([trendsDataNest])
+        .attr("class", "line-USA")
+        .attr("id", "usa-line")
+        // .attr("d", graphLine);
+        .attr("d", function(d) {d.graphLine = this; 
+          return (graphLine(d[0].values));
+        });
+      graphSvg.append("text")
+        .attr("transform", "translate("+(graphWidth+3)+","+graphY((trendsDataNest[0]).values[20][selectedCategory])+")")
+        .attr("dy", ".35em")
+        .attr("text-anchor", "start")
+        .text("US")
+        .attr("class", "usaLabel")
 
       drawVoronoi(trendsDataNest, selectedCategory, graphY);
 
@@ -793,7 +786,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
 
       var graphY = d3.scaleLinear().range([graphHeight, 0]).nice();
       var graphY2 = d3.scaleLinear().range([graphHeight, 0]).nice();
-
+console.log(graphHeight)
       var max = d3.max(trendsDataMinMax, function(d) { return d[domainController]; })
       var min = (domainController.search("ratio") != -1) ? d3.min(trendsDataMinMax, function(d) {return d[domainController]; }) : 0;
 
@@ -843,6 +836,8 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         d3.select(".usaLabel").attr("opacity", 1)
        }
 
+
+
       //IF ALL TOGGLES WERE TURNED OFF BEFORE, THIS ENSURES THAT OPACITY IS RESET TO 1
       // if (d3.selectAll(".line-USA, .line-state, .usaLabel").attr("opacity") == 0) {
       //   // console.log('zero')
@@ -858,6 +853,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .transition().duration(1200).ease(d3.easeSinInOut)
         .call(d3.axisLeft(graphY)
           .ticks(5)
+          .tickSize(-graphWidth)
           .tickFormat((d3.select("#revpp_").classed("current") == true) ? d3.format('.2s') : d3.format('.2f'))
         );
 
@@ -885,16 +881,9 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .style("opacity", function() {
           return (d3.select("#revpp_").classed("current") == true) ? 0 : 1
         })
-      function make_y_gridlines() {   
-          return d3.axisLeft(graphY)
-              .ticks(5)
-      }
+
       threshold.node().parentNode.appendChild(threshold.node())
-     // d3.selectAll(".grid").node().parentNode.appendChild(d3.selectAll(".grid").node())
-      graphSvg.selectAll(".grid")
-        .call(make_y_gridlines()
-            .tickSize(-graphWidth)
-            .tickFormat(""))
+
       if(action == "remove"){
         graphDataNest = graphDataNest.filter(function(d){ return d.key != state})
       }
@@ -921,9 +910,9 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         })
         .attr("transform", function() {
           if (d3.select("#revpp_").classed("current") == true) {
-            return "translate("+ (graphWidth*.04) +","+(graphHeight/12)+")"
+            return "translate("+ (graphWidth*.04) +")"
           } else {
-            return "translate("+ (graphWidth*.02) +","+(graphHeight/12)+")"
+            return "translate("+ (graphWidth*.02) +")"
           }
         })  
 

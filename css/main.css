@@ -117,7 +117,8 @@ path.domain {
 }
 
 .y.graphAxis line {
-  stroke: #ffffff;
+  stroke: #dedddd;
+  stroke-width: 1px;
 }
 
 .tick > line {
@@ -132,12 +133,6 @@ path.domain {
     opacity: 0;
 }
 
-
-.grid line {
-  stroke: #dedddd;
-  stroke-width: 1px;
-  shape-rendering: crispEdges;
-}
 
 /**checkbox**/
 .checkbox-label{
