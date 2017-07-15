@@ -1,7 +1,7 @@
 
 //Prob easiest to have a few set sizes for the map, which change at broswer size breakpoints. So `pageSize` will be determined by some function which tests browser size (e.g. IS_MOBILE() functions in past projects). I don't think it's as straightforward to have a continuously resizing graphic. Note that these values are just placeholders, they'll need to be tested/updated, and potentially more or fewer sizes are needed
 var stateLinesArray = [];
-
+var blankNote = "*Note: District of Columbia and Hawaii are included in national average calculations, however, national averages are for regular school districts only."
 /*MAP VARIABLES*/
 var pageSize = "full"
 var mapSizes = {
@@ -404,9 +404,6 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
             updateLineGraph(newCategory, newCategory, "remove", hoveredState)
           }
         })
-
-      // console.log(trendsDataNestBlank)
-
       // //draw greyed out blank states for HI and DC
       var blank = mapSvg
         .selectAll(".blank")
@@ -554,6 +551,10 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .append("div")
         .attr("id", "ak-disclaimer")
         .html("Alaska data are displayed on a separate y axis scale (from <span id =\"ak-min\">" + RATIO_FORMAT(min2)+ "</span> to <span id =\"ak-max\">" + RATIO_FORMAT(max2) + "</span>) from the other 49 states.")
+     d3.select("#vis")
+        .append("div")
+        .attr("id", "note-blank")
+        .html(blankNote)
 
     }
 
@@ -952,6 +953,14 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           .transition()
           .duration(1200)
           .style("opacity",1)
+      }
+
+      if(d3.select("#revratio_").classed("current")==true) { 
+        d3.select("#note-blank")
+          .style("opacity", 1)
+      }else{
+        d3.select("#note-blank")
+          .style("opacity", 0)
       }
 
       mapY.domain([min, max]); 

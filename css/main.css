@@ -590,6 +590,14 @@ text.mapLabel.blank{
   width: 240px;
 }
 
+#note-blank{
+  position: absolute;
+  top: 575px;
+  left: 73px;
+  font-size: 14px;  
+  width: 500px;
+}
+
 text.mapLabel.standard {
   font-size: 12px;
 }
