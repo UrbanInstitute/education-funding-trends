@@ -168,10 +168,10 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .ticks(5)
         .tickSize(-graphWidth)
         .tickFormat(d3.format('.2f')))
-      // d3.select(".y.graphAxis").selectAll('g.tick')
-      //   .attr("class", function(d, i) {
-      //     return "tick_" + i
-      //   })
+      d3.select(".y.graphAxis").selectAll('g.tick')
+        .attr("class", function(d, i) {
+          return "tick tickY tick_" + i
+        })
 
       graphSvg.append("text")
         .attr("text-anchor", "middle") 
