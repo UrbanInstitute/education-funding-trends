@@ -66,6 +66,22 @@ function getTickValues(y, variable){
   }
 }
 
+function getCurrentCategory(){
+  var adjusted = (d3.select('.checkbox-image').classed('checked') == true) ? "adj_" : ""
+
+
+  var combinedClassesArray = []
+  d3.selectAll(".button_toggle.on")
+    .each(function(d, i) { //get class of each toggle that is still turned on and add it to the combinedClasses array
+      var toggleClass = d3.select(this).attr('class').split(" ")[0];
+      combinedClassesArray.push(toggleClass);
+    })
+  var initialSelectedToggles = combinedClassesArray.join('')
+  var selectedText = combinedClassesArray.join('')
+  if(selectedText == "lostfe") { selectedText = "all"}
+  
+  return adjusted + d3.select(".current").attr("id") + selectedText;
+}
 d3.csv("data/toggle_text.csv", function(error, toggleText) {
   d3.csv("data/data.csv", function(error, trendsDataFull) {
 
@@ -248,6 +264,9 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
 
 
     function mouseover(d) {
+      var newCategory = getCurrentCategory();
+      console.log(selectedToggles)
+      console.log(d.data, newCategory)
       hoverState(d.data.State)
     }
 
@@ -314,9 +333,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         })
       map
         .on("click", function(d) { 
-       //   adjusted = (d3.select('#adjusted-checkbox').property('checked') == true) ? "adj_" : ""
-          adjusted = (d3.select('.checkbox-image').classed('checked') == true) ? "adj_" : ""
-          var newCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
+          var newCategory = getCurrentCategory();
           var stateName = d.values[0]["state_full"]
           var clickedState = d3.select(this).attr("class").split(" ")[1]
           d3.select(".nonblank-rect." + clickedState)
@@ -344,7 +361,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           // console.log(selectedCategory)
         })
         .on("mouseover", function() {
-          var newCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
+          var newCategory = getCurrentCategory();
           var hoveredState = d3.select(this).attr("class").split(" ")[1]
           var hoveredStateName = trendsDataFull.filter(function(d) { 
             return d.State == hoveredState
@@ -359,7 +376,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
 
         })
         .on("mouseout", function() {
-          var newCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
+          var newCategory = getCurrentCategory();
           var hoveredState = d3.select(this).attr("class").split(" ")[1]
           d3.select(".nonblank-rect." + hoveredState)
             .classed("hovered-state", false)
@@ -602,13 +619,12 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
 
     function checkAdjusted() {
       // adjusted = (d3.select('#adjusted-checkbox').property('checked') == true) ? "adj_" : ""
-      adjusted = (d3.select('.checkbox-image').classed('checked') == true) ? "adj_" : ""
-      var newCategory = adjusted + d3.select(".current").attr("id") + getCombinedClasses();
+      var newCategory = getCurrentCategory();
       updateLineGraph(newCategory, selectedCategory, "toggle", null)
       updateMapLine(newCategory, selectedCategory)
       d3.select(".switch-main-text")
         .html(function() { 
-          return toggleText[0][adjusted + d3.select(".current").attr("id") + getCombinedClasses()];
+          return toggleText[0][getCurrentCategory()];
         })
     }
 
@@ -627,7 +643,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         var currentTab = d3.select(this).attr("id")
         d3.select(".switch-main-text")
           .html(function() { 
-            return toggleText[0][adjusted + d3.select(".current").attr("id") + selectedToggles];
+            return toggleText[0][getCurrentCategory()];
           })
         checkAdjusted();
         drawBackMapCurtain(0, currentTab)
@@ -636,22 +652,9 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
     /*TOGGLE BUTTONS*/
     var selectedToggles = "all";
 
-    var combinedClassesArray = []
+  
 
-    //ADD CLASS OF EACH TOGGLE THAT IS ON TO COMBINEDCLASSESARRAY ABOVE
-    function getCombinedClasses() {
-      combinedClassesArray.length = 0;
-      d3.selectAll(".button_toggle.on")
-        .each(function(d, i) { //get class of each toggle that is still turned on and add it to the combinedClasses array
-      var toggleClass = d3.select(this).attr('class').split(" ")[0];
-        combinedClassesArray.push(toggleClass);
-      })
-      var initialSelectedToggles = combinedClassesArray.join('')
-      initialSelectedToggles == "lostfe" ? selectedToggles = "all" : selectedToggles = initialSelectedToggles
-      var selectedText = combinedClassesArray.join('')
-      if(selectedText == "lostfe") { selectedText = "all"}
-      return selectedText;
-    }
+
 
     // WHEN CLICKING ON EACH TOGGLE:
     d3.selectAll(".button_toggle")
@@ -660,19 +663,17 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         if(d3.select(this).classed("on")){ 
           d3.select(this).classed("on", false)
           d3.select(this).classed("off", true)
-          // getCombinedClasses();
           d3.select(".switch-main-text")
             .html(function() { 
-              return toggleText[0][adjusted + d3.select(".current").attr("id") + selectedToggles];
+              return toggleText[0][getCurrentCategory()];
             })
         }else {
           checkAdjusted();
           d3.select(this).classed("on", true)
           d3.select(this).classed("off", false)
-          // getCombinedClasses();
           d3.select(".switch-main-text")
             .html(function() { 
-              return toggleText[0][adjusted + d3.select(".current").attr("id") + selectedToggles];
+              return toggleText[0][getCurrentCategory()];
             })
         }
         checkAdjusted();
@@ -710,10 +711,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
     }
 
     function removeStateList(state) {
-
-//      adjusted = (d3.select('#adjusted-checkbox').property('checked') == true) ? "adj_" : ""
-      adjusted = (d3.select('.checkbox-image').classed('checked') == true) ? "adj_" : ""
-      var newCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
+      var newCategory = getCurrentCategory();
       updateLineGraph(newCategory, newCategory, "remove", state)
       d3.select(".nonblank-rect." + state)
         .classed("selected-state", false)
@@ -1234,9 +1232,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
             } return "#ffffff"
           }
         })
-      //var adjusted = (d3.select('#adjusted-checkbox').property('checked') == true) ? "adj_" : ""
-      var adjusted = (d3.select('.checkbox-image').classed('checked') == true) ? "adj_" : ""
-      var newCategory = adjusted + d3.select(".current").attr("id") + selectedToggles;
+      var newCategory = getCurrentCategory();
 
       var scales = updateScales(newCategory, newCategory)
       var graphLine = scales.graphLine
