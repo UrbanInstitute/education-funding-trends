@@ -36,7 +36,6 @@ graphHeight = graphSizes[pageSize]["height"] - graphMargin.top - graphMargin.bot
 
 var graphX = d3.scaleTime().range([0, graphWidth]);
 var graphY = d3.scaleLinear().range([graphHeight, 0]).nice();
-console.log(graphHeight)
 var graphLine = d3.line()
   .x(function(d) { return graphX(d.Year); })
   .y(function(d) { return graphY(d[selectedCategory]); });
@@ -80,7 +79,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           // console.log('no AK')
           return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
         }
-      }else {
+      }else { console.log('2')
         return d.State;
       }
     })
@@ -183,11 +182,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           .tickFormat(d3.format('.2f'))
           .tickValues(getTickValues(graphY, selectedCategory))
         )
-        
-      // d3.select(".y.graphAxis").selectAll('g.tick')
-      //   .attr("class", function(d, i) {
-      //     return "tick_" + i
-      //   })
+
 
       graphSvg.append("text")
         .attr("text-anchor", "middle") 
@@ -589,7 +584,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
     .style("opacity", 0);
 
     d3.select(".checkbox-label")
-      .on("mouseover", function() { console.log('hi')
+      .on("mouseover", function() { 
         div.transition()
           .duration(200)
           .style("opacity", .85);
@@ -610,7 +605,6 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
     function checkAdjusted() {
       // adjusted = (d3.select('#adjusted-checkbox').property('checked') == true) ? "adj_" : ""
       adjusted = (d3.select('.checkbox-image').classed('checked') == true) ? "adj_" : ""
-      console.log(adjusted)
       var newCategory = adjusted + d3.select(".current").attr("id") + getCombinedClasses();
       updateLineGraph(newCategory, selectedCategory, "toggle", null)
       updateMapLine(newCategory, selectedCategory)
@@ -634,7 +628,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         d3.select(this).classed('current', true)
         var currentTab = d3.select(this).attr("id")
         d3.select(".switch-main-text")
-          .html(function() { console.log(adjusted)
+          .html(function() { 
             return toggleText[0][adjusted + d3.select(".current").attr("id") + selectedToggles];
           })
         checkAdjusted();
@@ -768,22 +762,28 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         selectedCategory = variable;
       }else{ 
         if(variable != oldVariable){
+          if (d3.select("#revpp_").classed("current")) {
+            //blank variable, from changing tabs
+            domainController = "adj_revpp_lo";
+            selectedCategory = "adj_revpp_lo"
           //blank variable, from changing toggles
-          domainController = oldVariable;
-        }else{ 
+          } else if (d3.select("#revratio_").classed("current")) {
+            //blank variable, from changing tabs
+            domainController = "adj_revratio_lo";
+            selectedCategory = "adj_revratio_lo"
+          //blank variable, from changing toggles
+          }
+        }else{          
           //blank variable, from clicking on state
           domainController = selectedCategory;
         }
       }
-
-
 
       var graphDataSelected = trendsDataFull.filter(function(d) {           
         if ((stateLinesArray.includes(d.State)) || (d.State == "USA")) {         
           return d;              
         }         
       })
-
 
       var graphDataNest = d3.nest()
         .key(function(d) {return d.State;})
@@ -805,8 +805,6 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       var graphY2 = d3.scaleLinear().range([graphHeight, 0]).nice();
       var max = d3.max(trendsDataMinMax, function(d) { return d[domainController]; })
       var min = (domainController.search("ratio") != -1) ? d3.min(trendsDataMinMax, function(d) {return d[domainController]; }) : 0;
-
-
       var max2 = d3.max(trendsDataAK, function(d) { return d[domainController]; })
       var min2 = (domainController.search("ratio") != -1) ? d3.min([1, d3.min(trendsDataAK, function(d) {return d[domainController]; })]) : 0;
 
@@ -839,31 +837,17 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
     //ADJUSTS LINE GRAPH TO ACCOMMODATE CHANGING Y-AXIS DUE TO ADDITION OR REMOVAL OF STATE LINES
     function updateLineGraph(variable, oldVariable, action, state) {
       var scales = updateScales(variable, oldVariable)
-      var graphY = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state")) ? scales.graphY2 : scales.graphY;
+      var graphY = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state") || variable.includes("revpp_fe")) ? scales.graphY2 : scales.graphY;
       var graphLine = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state")) ? scales.graphLine2 : scales.graphLine
       var graphDataNest = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state")) ? scales.akNest : scales.graphDataNest
       var trendsDataNestUSA = d3.nest()
         .key(function(d) {return d.State;})
         .entries(trendsDataUSA);
-
       if(variable == "adj_revratio_" || variable == "revratio_" || variable == "revpp_" || variable == "adj_revpp_"){
         d3.select(".usaLabel").attr("opacity", 0)
        } else {
         d3.select(".usaLabel").attr("opacity", 1)
        }
-
-
-
-      //IF ALL TOGGLES WERE TURNED OFF BEFORE, THIS ENSURES THAT OPACITY IS RESET TO 1
-      // if (d3.selectAll(".line-USA, .line-state, .usaLabel").attr("opacity") == 0) {
-      //   // console.log('zero')
-      //   graphSvg.selectAll(".line-USA, .line-state, .threshold")
-      //   // .transition()
-      //   // .duration(1200)
-      //   .attr("opacity", 1)
-      //   d3.select(".usaLabel")
-      //     .attr("opacity", 1)
-      // }
 
       d3.selectAll("#lineChart .y.graphAxis")
         .transition().duration(1200)
@@ -913,7 +897,27 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
     }
 
     function updateMapLine(variable, oldVariable){
-      var domainController = (variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_") ? variable : oldVariable;
+      //var domainController = (variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_") ? variable : oldVariable;
+      if(variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_"){ 
+        domainController = variable;
+      }else{ 
+        if(variable != oldVariable){
+          if (d3.select("#revpp_").classed("current")) {
+            //blank variable, from changing tabs
+            domainController = "adj_revpp_lo";
+            selectedCategory = "adj_revpp_lo";
+          //blank variable, from changing toggles
+          } else if (d3.select("#revratio_").classed("current")) {
+            //blank variable, from changing tabs
+            domainController = "adj_revratio_lo";
+            selectedCategory = "adj_revratio_lo";
+          //blank variable, from changing toggles
+          }
+        }else{          
+          //blank variable, from clicking on state
+          domainController = oldVariable
+        }
+      }
 
       //reshape the data
       graphSvg.select(".y-label")
@@ -961,14 +965,21 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       var max2 = d3.max(trendsDataAK, function(d) { return d[domainController]; })
       var min2 = (domainController.search("ratio") != -1) ? d3.min([1, d3.min(trendsDataAK, function(d) {return d[domainController]; })]) : 0;
 
-      if(max > max2){
+      if(max > max2){ 
         max2 = max;
         min2 = min;
         d3.select("#ak-disclaimer")
           .transition()
           .duration(1200)
           .style("opacity",0)
-      }else{
+      }else if (domainController.includes("revpp_fe")){ 
+        max = max2;
+        min2 = min;
+        d3.select("#ak-disclaimer")
+          .transition()
+          .duration(1200)
+          .style("opacity",0)
+      }else{ 
         d3.select("#ak-min")
           .html(RATIO_FORMAT(min2))
         d3.select("#ak-max")
