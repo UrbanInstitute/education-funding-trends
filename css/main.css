@@ -435,9 +435,7 @@ div.close-sign {
   position: relative;
   z-index: 1;
   margin-left: 50px;  
-  width: 300px;
   background: transparent;
-  height: 300px;
   left: 0px;
 }
 

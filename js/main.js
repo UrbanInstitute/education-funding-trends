@@ -30,7 +30,7 @@ var graphSizes = {
 }
 
 var selectedCategory = "adj_revratio_all";
-var graphMargin = {top: 30, right: 30, bottom: 30, left: 35},
+var graphMargin = {top: 30, right: 30, bottom: 30, left: 28},
 graphWidth =  graphSizes[pageSize]["width"]- graphMargin.left - graphMargin.right,
 graphHeight = graphSizes[pageSize]["height"] - graphMargin.top - graphMargin.bottom;
 
@@ -44,9 +44,9 @@ var graphLine = d3.line()
 var graphSvg = d3.select("#lineChart")
   .append("svg")
   .attr("width", graphWidth + graphMargin.left + graphMargin.right)
-  .attr("height", graphHeight + graphMargin.top + graphMargin.bottom)
+  .attr("height", graphHeight + graphMargin.top + graphMargin.bottom )
   .append("g")
-  .attr("transform", "translate(" + graphMargin.left +", "+ 10+")");
+  .attr("transform", "translate(" + graphMargin.left +", "+ graphMargin.top+")");
 
 var voronoi = d3.voronoi()
   .x(function(d) { return graphX(d.Year); })
@@ -54,6 +54,18 @@ var voronoi = d3.voronoi()
   .extent([[-graphMargin.left, -graphMargin.top], [graphWidth + graphMargin.right, graphHeight + graphMargin.bottom]]);
 
 var RATIO_FORMAT = d3.format(".2f")
+
+function getTickValues(y, variable){
+  // console.log(variable)
+  var domain = y.domain()
+  var step = (domain[1] - domain[0])/4.0
+
+  if(variable.search("ratio") == -1){
+    return [domain[0], domain[0] + step, domain[0] + 2.0*step, domain[0] + 3.0*step, domain[1]]
+  }else{
+    return [domain[0], domain[0] + step, domain[0] + 2.0*step, domain[0] + 3.0*step, domain[1], 1].filter(function(d){ return Math.abs(d-1) > .03 || d == 1})
+  }
+}
 
 d3.csv("data/toggle_text.csv", function(error, toggleText) {
   d3.csv("data/data.csv", function(error, trendsDataFull) {
@@ -166,9 +178,12 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       graphSvg.append("g")
         .attr("class", "y graphAxis")
         .call(d3.axisLeft(graphY)
-        .ticks(5)
-        .tickSize(-graphWidth)
-        .tickFormat(d3.format('.2f')))
+          .ticks(5)
+          .tickSize(-graphWidth)
+          .tickFormat(d3.format('.2f'))
+          .tickValues(getTickValues(graphY, selectedCategory))
+        )
+        
       // d3.select(".y.graphAxis").selectAll('g.tick')
       //   .attr("class", function(d, i) {
       //     return "tick_" + i
@@ -177,7 +192,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       graphSvg.append("text")
         .attr("text-anchor", "middle") 
         .text("Progressivity")
-        .attr("transform", "translate("+ (graphWidth*.02) +")") 
+        .attr("transform", "translate(10, -15)") 
         .attr("class", "y-label")
 
       graphSvg.append("path")
@@ -786,7 +801,6 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
 
       var graphY = d3.scaleLinear().range([graphHeight, 0]).nice();
       var graphY2 = d3.scaleLinear().range([graphHeight, 0]).nice();
-console.log(graphHeight)
       var max = d3.max(trendsDataMinMax, function(d) { return d[domainController]; })
       var min = (domainController.search("ratio") != -1) ? d3.min(trendsDataMinMax, function(d) {return d[domainController]; }) : 0;
 
@@ -850,11 +864,11 @@ console.log(graphHeight)
       // }
 
       d3.selectAll("#lineChart .y.graphAxis")
-        .transition().duration(1200).ease(d3.easeSinInOut)
+        .transition().duration(1200)
         .call(d3.axisLeft(graphY)
-          .ticks(5)
           .tickSize(-graphWidth)
           .tickFormat((d3.select("#revpp_").classed("current") == true) ? d3.format('.2s') : d3.format('.2f'))
+          .tickValues(getTickValues(graphY, variable))
         );
 
       var duration = (action == "toggle" || state == "AK") ? 1200 : 0
@@ -910,9 +924,9 @@ console.log(graphHeight)
         })
         .attr("transform", function() {
           if (d3.select("#revpp_").classed("current") == true) {
-            return "translate("+ (graphWidth*.04) +")"
+            return "translate(18,-18)"
           } else {
-            return "translate("+ (graphWidth*.02) +")"
+            return "translate(10, -15)"
           }
         })  
 
