@@ -955,6 +955,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       var trendsDataNest = d3.nest()
         .key(function(d) {return d.State;})
         .entries(trendsData);
+      console.log(trendsDataNest);
 
       var chartWidth = mapSizes[pageSize]["chartWidth"]
       var chartMargin = mapSizes[pageSize]["chartMargin"]
@@ -1036,7 +1037,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       map.selectAll("#vis svg .line:not(.AK)")
         .transition()
         .duration(1200)
-        .attr("d", function(d){
+        .attr("d", function(d){ 
           return mapline(d.values)
         })
       d3.select(".line.AK")
@@ -1081,11 +1082,20 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .style("opacity", function() {
           return (d3.select("#revpp_").classed("current") == true) ?  1 : 0;
         })
-        .transition()
-        .duration(1200)
-        .attr("y1",mapY(1))
-        .attr("y2",mapY(1))
-
+      if(d3.select("#revpp_").classed('current') == true){
+        d3.selectAll(".blank").each(function() {
+          this.parentNode.insertBefore(this, this.parentNode.firstChild)
+        })
+      }else{
+        d3.selectAll(".blank").each(function() {
+          this.parentNode.appendChild(this)
+        })
+      }
+        //.transition()
+        //.duration(1200)
+        // .attr("y1",mapY(1))
+        // .attr("y2",mapY(1))
+console.log(mapY(1))
 
       var rectWidth = d3.select("rect.nonblank-rect").attr("width")
       var chartWidth = mapSizes[pageSize]["chartWidth"]
