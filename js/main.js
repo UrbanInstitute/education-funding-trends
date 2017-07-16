@@ -330,15 +330,15 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
                 return true;            
               }
             })
-          d3.select(".mapLabel.standard." + clickedState)
-            .classed("selected-text", function(){
-              if (d3.select(".mapLabel.standard." + clickedState).classed("selected-text") == true) {
-                // console.log('hi')
-                return false
-              }else { 
-                return true;            
-              }
-            })
+          // d3.select(".mapLabel.standard." + clickedState)
+          //   .classed("selected-text", function(){
+          //     if (d3.select(this).classed("selected-text") == true) {
+          //       // console.log('hi')
+          //       return false
+          //     }else { 
+          //       return true;            
+          //     }
+          //   })
           updateStateLine(clickedState, clickedState)
           updateLineGraph(newCategory, newCategory, "click", clickedState)
           // console.log(selectedCategory)
@@ -705,6 +705,8 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .on("click", function(d) {
           removeStateList(d)
         })
+      d3.select(".mapLabel.standard." + state)
+        .classed("selected-text", true)
     }
 
     function removeStateList(state) {
@@ -1197,7 +1199,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       d3.select(".state." + state).selectAll("rect").style("opacity", "1")
       d3.select(".state-item.item-" + state)
         .style("background-color","#ececec")
-        .style("color","#000000")
+        .style("color","#353535")
       d3.select(".line-" + state).classed("line-hover", false);
     }
     //ADDS NEW STATE LINE AND UPDATES STATE ARRAY
@@ -1223,7 +1225,9 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           if (d3.select("#revratio_").classed("current") == true){
             if (d3.select(".mapLabel.standard." + state).classed("selected-text") == true || d3.select(".mapLabel.standard." + state).classed("hovered-text") == true)  {
               return "#ffffff"
-            } return "#353535"
+            }else{
+              return "#353535"
+            } 
           }else if (d3.select("#revpp_").classed("current") == true){
             if (d3.select(".mapLabel.standard." + state).classed("selected-text") == true || d3.select(".mapLabel.standard." + state).classed("hovered-text") == true)  {
              return "#353535"
