@@ -133,6 +133,40 @@ path.domain {
     opacity: 0;
 }
 
+#tooltip {
+  position: absolute;
+  display: none;
+  background: #353535;
+  color: #fff;
+  width: 70px;
+  height: 55px;
+  z-index: 100;
+  font-size: 14px;
+  text-align: center;
+  pointer-events: none;
+}
+#tooltip div{
+  display: block;
+  clear: both;
+}
+#tt-year{
+  font-weight: bold;
+  margin-top: 9px;
+  margin-bottom: 2px;
+}
+#tooltip:after {
+  content:'';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -12px;
+  width: 0;
+  height: 0;
+  border-top: solid 12px #353535;
+  border-left: solid 12px transparent;
+  border-right: solid 12px transparent;
+}
+
 
 /**checkbox**/
 .checkbox-label{
@@ -415,8 +449,11 @@ div.close-sign {
 .usaLabel {
   font-size: 14px;
   font-weight: 700;
+  fill: #11719f;
 }
-
+.usaLabel.selected{
+  fill: #353535;
+}
 .threshold {
   stroke: #eb098a;
   stroke-width: 1;
@@ -426,7 +463,7 @@ div.close-sign {
   fill: none;
   stroke: #1896d2;
   stroke-width: 2;
-  pointer-events: all;
+  pointer-events: none;
   cursor: pointer;
 }
 

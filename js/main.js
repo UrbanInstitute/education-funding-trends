@@ -53,6 +53,7 @@ var voronoi = d3.voronoi()
   .extent([[-graphMargin.left, -graphMargin.top], [graphWidth + graphMargin.right, graphHeight + graphMargin.bottom]]);
 
 var RATIO_FORMAT = d3.format(".2f")
+var DOLLAR_FORMAT = d3.format("$,.0f")
 
 function getTickValues(y, variable){
   // console.log(variable)
@@ -236,7 +237,6 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
 
 
     function drawVoronoi(data, variable, yScale) {
-      // console.log('voronoi', variable, data)
       var voronoi = d3.voronoi()
         .x(function(d) { return graphX(d.Year); })
         .y(function(d) { return yScale(d[variable]); })
@@ -258,19 +258,34 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         return d ? "M" + d.join("L") + "Z" : null;
         })
         // .style("fill", "#45b29d")
-        .on("mouseover", mouseover)
+        .on("mouseover", function(d){ mouseover(d, this, yScale)})
         .on("mouseout", mouseout);
     }
 
 
-    function mouseover(d) {
+    function mouseover(d, obj, yScale) {
       var newCategory = getCurrentCategory();
-      console.log(selectedToggles)
-      console.log(d.data, newCategory)
+
+      d3.select("#tooltip")
+        .style("display","block")
+        .style("margin-left", graphX(d.data.Year) - 6 + "px")
+        .style("margin-top", yScale(d.data[newCategory]) - 40 + "px")
+      
+      d3.select("#tt-year").text(d.data.Year)
+      if(newCategory.search("ratio") != -1){
+        d3.select("#tt-val").text(RATIO_FORMAT(d.data[newCategory]))
+      }else{
+        d3.select("#tt-val").text(DOLLAR_FORMAT(d.data[newCategory]))
+      }
       hoverState(d.data.State)
+
     }
 
     function mouseout(d) {
+      d3.select("#tooltip")
+        .style("display","none")
+        .style("margin-left", "0px")
+        .style("margin-top", "0px")
       dehoverState(d.data.State)
     }
 
@@ -1191,7 +1206,13 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .style("color","#ffffff")
       d3.select(".line-" + state)
         .classed("line-hover", true)
-        .style("cursor", "pointer")
+      if( d3.select(".line-" + state).node() != null){
+        d3.select(".line-" + state).node().parentNode.appendChild(d3.select(".line-" + state).node())
+        d3.select(".threshold").node().parentNode.appendChild(d3.select(".threshold").node())
+      }
+      if(state == "USA"){
+        d3.select(".usaLabel").classed("selected", true)
+      }
     }
     function dehoverState(state){
       d3.select(".state." + state).selectAll("rect").style("opacity", "1")
@@ -1199,6 +1220,9 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .style("background-color","#ececec")
         .style("color","#353535")
       d3.select(".line-" + state).classed("line-hover", false);
+      if(state == "USA"){
+        d3.select(".usaLabel").classed("selected", false)
+      }
     }
     //ADDS NEW STATE LINE AND UPDATES STATE ARRAY
     function updateStateLine(state) { 
