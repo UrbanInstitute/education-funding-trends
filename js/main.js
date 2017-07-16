@@ -36,7 +36,6 @@ graphHeight = graphSizes[pageSize]["height"] - graphMargin.top - graphMargin.bot
 
 var graphX = d3.scaleTime().range([0, graphWidth]);
 var graphY = d3.scaleLinear().range([graphHeight, 0]).nice();
-console.log(graphHeight)
 var graphLine = d3.line()
   .x(function(d) { return graphX(d.Year); })
   .y(function(d) { return graphY(d[selectedCategory]); });
@@ -60,7 +59,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
 
 
     var trendsDataMinMax = trendsDataFull.filter(function(d) { 
-      if (selectedCategory.includes("revratio")) { console.log('1')
+      if (selectedCategory.includes("revratio")) {
         if (d3.select(".standard.line.AK.selected-state").node() !== null) { 
           // console.log('AK')
           return d.State !== "HI" && d.State !== "DC"
@@ -572,7 +571,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
     .style("opacity", 0);
 
     d3.select(".checkbox-label")
-      .on("mouseover", function() { console.log('hi')
+      .on("mouseover", function() { 
         div.transition()
           .duration(200)
           .style("opacity", .85);
@@ -616,7 +615,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         d3.select(this).classed('current', true)
         var currentTab = d3.select(this).attr("id")
         d3.select(".switch-main-text")
-          .html(function() { console.log(adjusted)
+          .html(function() { 
             return toggleText[0][adjusted + d3.select(".current").attr("id") + selectedToggles];
           })
         checkAdjusted();
@@ -753,10 +752,12 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           if (d3.select("#revpp_").classed("current")) {
             //blank variable, from changing tabs
             domainController = "adj_revpp_lo";
+            selectedCategory = "adj_revpp_lo"
           //blank variable, from changing toggles
           } else if (d3.select("#revratio_").classed("current")) {
             //blank variable, from changing tabs
             domainController = "adj_revratio_lo";
+            selectedCategory = "adj_revratio_lo"
           //blank variable, from changing toggles
           }
         }else{          
@@ -891,12 +892,12 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           if (d3.select("#revpp_").classed("current")) {
             //blank variable, from changing tabs
             domainController = "adj_revpp_lo";
-            console.log(domainController)
+            selectedCategory = "adj_revpp_lo";
           //blank variable, from changing toggles
           } else if (d3.select("#revratio_").classed("current")) {
             //blank variable, from changing tabs
             domainController = "adj_revratio_lo";
-            console.log(domainController)
+            selectedCategory = "adj_revratio_lo";
           //blank variable, from changing toggles
           }
         }else{          
