@@ -218,7 +218,6 @@ div.close-sign {
 .tab-content {
   margin-left: auto;
   margin-right: auto;
-  float: left;
 }
 
 #bottom-content {
@@ -369,6 +368,7 @@ div.close-sign {
 
 .lineChart-div {
   float: left;
+  margin-left: calc(50% - 569px);
   width: 435px;
 }
 #visTitle{
@@ -400,7 +400,6 @@ div.close-sign {
   /* height: 600px; */
   /* width: 600px; */
   /* background-color: #ddd; */
-  width: 60%;
 }
 
 /*LINE CHART*/
@@ -434,7 +433,6 @@ div.close-sign {
 #lineChart{
   position: relative;
   z-index: 1;
-  margin-left: 50px;  
   background: transparent;
   left: 0px;
 }
@@ -442,7 +440,6 @@ div.close-sign {
 .lineChart-details {
   bottom: 20px;
   z-index: 1;
-  margin-left: 50px;  
   width: 400px;
   background: transparent;
   height: 0px;
@@ -460,7 +457,6 @@ div.close-sign {
   display: block;
   font-style: italic;
   font-size: 13px;
-  margin-left: 50px;
   display: none;
   color: #696969;
 
@@ -470,7 +466,6 @@ div.close-sign {
   display: none;
   font-style: italic;
   font-size: 13px;
-  margin-left: 50px;
   display: none;
   width: 100%;
   float: left;
@@ -629,6 +624,7 @@ text.mapLabel.standard.selected-text {
   color: #696969;
   line-height: 1.5;
   width: 754px;
+  height: 50px;
 }
 .switch-div-full {
   width: 100%;
@@ -661,7 +657,7 @@ text.mapLabel.standard.selected-text {
 }
 
 #switch-div {
-  width: 58.5%;
+  width: 667px;
   margin-left: auto;
   margin-right: auto;
 }

@@ -360,6 +360,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
             .classed("hovered-state", true)
           d3.select(".mapLabel.standard." + hoveredState)
             .classed("hovered-text", true)
+          hoverState(hoveredState, newCategory)
           updateStateLine(hoveredState)
           updateLineGraph(newCategory, newCategory, "hover", hoveredState)
 
@@ -411,6 +412,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           if(d3.select(".nonblank-rect." + hoveredState).classed("selected-state") == false){
             updateLineGraph(newCategory, newCategory, "remove", hoveredState)
           }
+          dehoverState(hoveredState, newCategory)
         })
       // //draw greyed out blank states for HI and DC
       var blank = mapSvg
@@ -1168,6 +1170,23 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
 
     }
 
+
+    function hoverState(state, variable){
+      if(d3.select(".state." + state).select(".selected-state").node() == null){
+
+      }else{
+        d3.select(".state." + state).select(".selected-state").style("opacity", ".8")
+      }
+      d3.select(".state-item.item-" + state)
+        .style("background-color","#353535")
+        .style("color","#ffffff")
+    }
+    function dehoverState(state, variable){
+      d3.select(".state." + state).selectAll("rect").style("opacity", "1")
+      d3.select(".state-item.item-" + state)
+        .style("background-color","#ececec")
+        .style("color","#000000")
+    }
     //ADDS NEW STATE LINE AND UPDATES STATE ARRAY
     function updateStateLine(state) { 
       d3.select(".nonblank-rect." + state)
@@ -1175,11 +1194,15 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           if (d3.select("#revratio_").classed("current") == true){
             if (d3.select(".nonblank-rect." + state).classed("selected-state") == true || d3.select(".nonblank-rect." + state).classed("hovered-state") == true )  {
               return "#353535"
-            } return "#a2d3eb"
+            }else{
+              return "#a2d3eb"
+            }
           }else if (d3.select("#revpp_").classed("current") == true){
             if (d3.select(".nonblank-rect." + state).classed("selected-state") == true || d3.select(".nonblank-rect." + state).classed("hovered-state") == true)  {
              return "#fbbe15"
-            } return "#094c6a"
+            }else{
+              return "#094c6a"
+            }
           }
         })
       d3.select(".mapLabel.standard." + state)
