@@ -60,7 +60,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
 
 
     var trendsDataMinMax = trendsDataFull.filter(function(d) { 
-      if (selectedCategory.includes("revratio")) {
+      if (selectedCategory.includes("revratio")) { console.log('1')
         if (d3.select(".standard.line.AK.selected-state").node() !== null) { 
           // console.log('AK')
           return d.State !== "HI" && d.State !== "DC"
@@ -68,7 +68,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           // console.log('no AK')
           return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
         }
-      }else {
+      }else { console.log('2')
         return d.State;
       }
     })
@@ -593,7 +593,6 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
     function checkAdjusted() {
       // adjusted = (d3.select('#adjusted-checkbox').property('checked') == true) ? "adj_" : ""
       adjusted = (d3.select('.checkbox-image').classed('checked') == true) ? "adj_" : ""
-      console.log(adjusted)
       var newCategory = adjusted + d3.select(".current").attr("id") + getCombinedClasses();
       updateLineGraph(newCategory, selectedCategory, "toggle", null)
       updateMapLine(newCategory, selectedCategory)
@@ -751,15 +750,24 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         selectedCategory = variable;
       }else{ 
         if(variable != oldVariable){
+          if (d3.select("#revpp_").classed("current")) {
+            //blank variable, from changing tabs
+            domainController = "adj_revpp_lo";
+            console.log(domainController)
           //blank variable, from changing toggles
-          domainController = oldVariable;
-        }else{ 
+          } else if (d3.select("#revratio_").classed("current")) {
+            //blank variable, from changing tabs
+            domainController = "adj_revratio_lo";
+            console.log(domainController)
+          //blank variable, from changing toggles
+          }else { 
+            domainController = oldVariable;
+          }
+        }else{          
           //blank variable, from clicking on state
           domainController = selectedCategory;
         }
       }
-
-
 
       var graphDataSelected = trendsDataFull.filter(function(d) {           
         if ((stateLinesArray.includes(d.State)) || (d.State == "USA")) {         
@@ -767,7 +775,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         }         
       })
 
-
+console.log(domainController)
       var graphDataNest = d3.nest()
         .key(function(d) {return d.State;})
         .entries(graphDataSelected);
@@ -786,10 +794,9 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
 
       var graphY = d3.scaleLinear().range([graphHeight, 0]).nice();
       var graphY2 = d3.scaleLinear().range([graphHeight, 0]).nice();
-console.log(graphHeight)
       var max = d3.max(trendsDataMinMax, function(d) { return d[domainController]; })
       var min = (domainController.search("ratio") != -1) ? d3.min(trendsDataMinMax, function(d) {return d[domainController]; }) : 0;
-
+console.log("min :" + min + " max: " + max)
 
       var max2 = d3.max(trendsDataAK, function(d) { return d[domainController]; })
       var min2 = (domainController.search("ratio") != -1) ? d3.min([1, d3.min(trendsDataAK, function(d) {return d[domainController]; })]) : 0;
