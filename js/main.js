@@ -760,8 +760,6 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
             domainController = "adj_revratio_lo";
             console.log(domainController)
           //blank variable, from changing toggles
-          }else { 
-            domainController = oldVariable;
           }
         }else{          
           //blank variable, from clicking on state
@@ -904,7 +902,27 @@ console.log("min :" + min + " max: " + max)
     }
 
     function updateMapLine(variable, oldVariable){
-      var domainController = (variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_") ? variable : oldVariable;
+      //var domainController = (variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_") ? variable : oldVariable;
+      if(variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_"){ 
+        domainController = variable;
+      }else{ 
+        if(variable != oldVariable){
+          if (d3.select("#revpp_").classed("current")) {
+            //blank variable, from changing tabs
+            domainController = "adj_revpp_lo";
+            console.log(domainController)
+          //blank variable, from changing toggles
+          } else if (d3.select("#revratio_").classed("current")) {
+            //blank variable, from changing tabs
+            domainController = "adj_revratio_lo";
+            console.log(domainController)
+          //blank variable, from changing toggles
+          }
+        }else{          
+          //blank variable, from clicking on state
+          domainController = oldVariable
+        }
+      }
 
       //reshape the data
       graphSvg.select(".y-label")
