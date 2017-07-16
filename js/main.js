@@ -248,13 +248,11 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
 
 
     function mouseover(d) {
-      d3.select(".line-" + d.data.State)
-        .classed("line-hover", true)
-        .style("cursor", "pointer")
+      hoverState(d.data.State)
     }
 
     function mouseout(d) {
-      d3.select(".line-" + d.data.State).classed("line-hover", false);
+      dehoverState(d.data.State)
     }
 
     //CREATE INITIAL MAP ON LOAD
@@ -355,7 +353,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
             .classed("hovered-state", true)
           d3.select(".mapLabel.standard." + hoveredState)
             .classed("hovered-text", true)
-          hoverState(hoveredState, newCategory)
+          hoverState(hoveredState)
           updateStateLine(hoveredState)
           updateLineGraph(newCategory, newCategory, "hover", hoveredState)
 
@@ -407,7 +405,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           if(d3.select(".nonblank-rect." + hoveredState).classed("selected-state") == false){
             updateLineGraph(newCategory, newCategory, "remove", hoveredState)
           }
-          dehoverState(hoveredState, newCategory)
+          dehoverState(hoveredState)
         })
       // //draw greyed out blank states for HI and DC
       var blank = mapSvg
@@ -699,7 +697,9 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .datum(state)
         .append("li")
         .html(stateName)
-        .attr("class", "state-item item-" + state);
+        .attr("class", "state-item item-" + state)
+        .on("mouseover", function(){ hoverState(state)})
+        .on("mouseout", function(){ dehoverState(state)})
       stateItem.append("div")
         .attr("class", "close-sign close-sign-" + state)
         .on("click", function(d) {
@@ -1182,21 +1182,23 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
     }
 
 
-    function hoverState(state, variable){
-      if(d3.select(".state." + state).select(".selected-state").node() == null){
-
-      }else{
+    function hoverState(state){
+      if(d3.select(".state." + state).select(".selected-state").node() != null){
         d3.select(".state." + state).select(".selected-state").style("opacity", ".8")
       }
       d3.select(".state-item.item-" + state)
         .style("background-color","#353535")
         .style("color","#ffffff")
+      d3.select(".line-" + state)
+        .classed("line-hover", true)
+        .style("cursor", "pointer")
     }
-    function dehoverState(state, variable){
+    function dehoverState(state){
       d3.select(".state." + state).selectAll("rect").style("opacity", "1")
       d3.select(".state-item.item-" + state)
         .style("background-color","#ececec")
         .style("color","#000000")
+      d3.select(".line-" + state).classed("line-hover", false);
     }
     //ADDS NEW STATE LINE AND UPDATES STATE ARRAY
     function updateStateLine(state) { 
