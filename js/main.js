@@ -1,6 +1,8 @@
 
 //Prob easiest to have a few set sizes for the map, which change at broswer size breakpoints. So `pageSize` will be determined by some function which tests browser size (e.g. IS_MOBILE() functions in past projects). I don't think it's as straightforward to have a continuously resizing graphic. Note that these values are just placeholders, they'll need to be tested/updated, and potentially more or fewer sizes are needed
 var stateLinesArray = [];
+var stepArray = [];
+
 var blankNote = "*Note: District of Columbia and Hawaii are included in national average calculations, however, national averages are for regular school districts only."
 /*MAP VARIABLES*/
 var pageSize = "full"
@@ -55,16 +57,46 @@ var voronoi = d3.voronoi()
 var RATIO_FORMAT = d3.format(".2f")
 var DOLLAR_FORMAT = d3.format("$,.0f")
 
-function getTickValues(y, variable){
-  // console.log(variable)
-  var domain = y.domain()
-  var step = (domain[1] - domain[0])/4.0
+function roundUp(value, step) {
+    step || (step = 1.0);
+    var inv = 1.0 / step;
+    return Math.ceil(value * inv) / inv;
+}
 
+
+function round(value, step) {
+    step || (step = 1.0);
+    var inv = 1.0 / step; console.log(Math.round(value * inv) / inv.toFixed(2))
+    return Math.round(value * inv) / inv.toFixed(2);
+}
+
+function roundDown(value, step) {
+    step || (step = 1.0);
+    var inv = 1.0 / step;
+    return Math.floor(value * inv) / inv;
+}
+
+function getTickValues(y, variable){
+  var domain = y.domain()
+  var lastStep = roundUp(domain[1], .05)
+  var firstStep = roundUp(domain[0], .05)
+  var step = (lastStep - firstStep) < .35 ? .05 : .1
+  var numberOfSteps = ((lastStep-firstStep) / step) + 1
+  stepArray.length = 0;
+    for (var i=0; i<numberOfSteps; i++) {
+      var newStep = roundUp(domain[0] + (i*step), step); 
+      stepArray.push(newStep);
+    }
+  //return stepArray;
+  //stepArray.splice(numberOfSteps, 0, lastStep);
   if(variable.search("ratio") == -1){
-    return [domain[0], domain[0] + step, domain[0] + 2.0*step, domain[0] + 3.0*step, domain[1]]
+    return stepArray;
+   // return [domain[0], domain[0] + step, domain[0] + 2.0*step, domain[0] + 3.0*step, domain[1]]
   }else{
-    return [domain[0], domain[0] + step, domain[0] + 2.0*step, domain[0] + 3.0*step, domain[1], 1].filter(function(d){ return Math.abs(d-1) > .03 || d == 1})
+   return stepArray;
+   // return [domain[0], domain[0] + step, domain[0] + 2.0*step, domain[0] + 3.0*step, domain[1], 1].filter(function(d){ return Math.abs(d-1) > .03 || d == 1})
   }
+
 }
 
 function getCurrentCategory(){
@@ -194,12 +226,20 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       graphSvg.append("g")
         .attr("class", "y graphAxis")
         .call(d3.axisLeft(graphY)
-          .ticks(5)
+        //  .ticks(6)
           .tickSize(-graphWidth)
           .tickFormat(d3.format('.2f'))
           .tickValues(getTickValues(graphY, selectedCategory))
         )
 
+      graphSvg.append("text")
+        .text("PROGRESSIVE")
+        .attr("class", "largeChartLabel progressiveLabel")
+        .attr("transform", "translate("+ graphWidth/3.8 +", "+ graphY(1.05)+")") 
+      graphSvg.append("text")
+        .text("REGRESSIVE")
+        .attr("class", "largeChartLabel regressiveLabel")
+        .attr("transform", "translate("+ graphWidth/3.8 +", "+ graphY(.95)+")") 
 
       graphSvg.append("text")
         .attr("text-anchor", "middle") 
@@ -863,6 +903,16 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
        } else {
         d3.select(".usaLabel").attr("opacity", 1)
        }
+      graphSvg.select(".progressiveLabel")
+        .transition().duration(1200)
+        .attr("transform", "translate("+ graphWidth/3.8 +", "+ graphY(1.05)+")") 
+      graphSvg.select(".regressiveLabel")
+        .transition().duration(1200)
+        .attr("transform", "translate("+ graphWidth/3.8 +", "+ graphY(.95)+")") 
+      graphSvg.selectAll(".largeChartLabel")
+        .style("opacity", function() {
+          return (d3.select("#revpp_").classed("current") == true) ? 0 : 1
+        })
 
       d3.selectAll("#lineChart .y.graphAxis")
         .transition().duration(1200)
@@ -945,16 +995,16 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       graphSvg.select(".y-label")
         .text(function() {
           if (d3.select("#revpp_").classed("current") == true) {
-          return "Funding Levels"
+          return "Funding Levels per student"
           } else {
             return "Progressivity"
           }
         })
         .attr("transform", function() {
           if (d3.select("#revpp_").classed("current") == true) {
-            return "translate(18,-18)"
+            return "translate(52,-18)"
           } else {
-            return "translate(10, -15)"
+            return "translate(10, -18)"
           }
         })  
 

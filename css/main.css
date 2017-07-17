@@ -400,6 +400,12 @@ div.close-sign {
   height: 300px;
 }
 
+.largeChartLabel {
+  font-weight: bold;
+  letter-spacing: 4px;
+  fill: #9d9d9d;
+  font-size: 14px;
+}
 .lineChart-div {
   float: left;
   margin-left: calc(50% - 569px);
