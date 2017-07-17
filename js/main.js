@@ -912,6 +912,13 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
     }
 
     function updateMapLine(variable, oldVariable){
+      var trendsDataFiltered = trendsDataFull.filter(function(d) { 
+        if (selectedCategory.includes("revratio")) {
+          return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
+        }else {
+          return d.State;
+        }
+      })
       //var domainController = (variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_") ? variable : oldVariable;
       if(variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_"){ 
         domainController = variable;
@@ -955,7 +962,6 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       var trendsDataNest = d3.nest()
         .key(function(d) {return d.State;})
         .entries(trendsData);
-      console.log(trendsDataNest);
 
       var chartWidth = mapSizes[pageSize]["chartWidth"]
       var chartMargin = mapSizes[pageSize]["chartMargin"]
@@ -972,7 +978,6 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       var mapY2 = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin]).nice();
 
       mapX.domain([startYear,endYear]);
-
 
       //min and max value for scales determined by min/max values in all data (so they're the same for all states)
       var max = d3.max(trendsDataFiltered, function(d) { return d[domainController]; })
@@ -1095,7 +1100,6 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         //.duration(1200)
         // .attr("y1",mapY(1))
         // .attr("y2",mapY(1))
-console.log(mapY(1))
 
       var rectWidth = d3.select("rect.nonblank-rect").attr("width")
       var chartWidth = mapSizes[pageSize]["chartWidth"]
