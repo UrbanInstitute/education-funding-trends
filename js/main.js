@@ -618,7 +618,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         div.transition()
           .duration(200)
           .style("opacity", .85);
-        div.html("Cost-adjusted is defined as ...")
+        div.html("Cost-adjusted numbers account for cost differences among districts.")
           .style("left", (d3.event.pageX) + "px")
           .style("top", (d3.event.pageY) + 10 + "px");
       })
