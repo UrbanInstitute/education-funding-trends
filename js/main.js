@@ -1,12 +1,15 @@
 
 //Prob easiest to have a few set sizes for the map, which change at broswer size breakpoints. So `pageSize` will be determined by some function which tests browser size (e.g. IS_MOBILE() functions in past projects). I don't think it's as straightforward to have a continuously resizing graphic. Note that these values are just placeholders, they'll need to be tested/updated, and potentially more or fewer sizes are needed
 var stateLinesArray = [];
-var blankNote = "*Note: District of Columbia and Hawaii are included in national average calculations, however, national averages are for regular school districts only."
+var blankNote = "*Note: Washington, DC, and Hawaii are included in the national average calculations, however, we cannot calculate progressivity at the state level for either because both are single districts. National averages exclude charter-only districts and other districts not tied to geography.";
+var IS_MOBILE = d3.select("#isMobile").style("display") == "block";
+var IS_PHONE = d3.select("#isPhone").style("display") == "block";
 /*MAP VARIABLES*/
-var pageSize = "full"
+var pageSize =  (IS_MOBILE) ? "full" : "large";
+console.log(pageSize)
 var mapSizes = {
-  "full": { "width": 700, "height": 555, "scale": 3150, "translate": [710,180], "chartWidth": 74, "chartMargin": 13},
-  "large": { "width": 750, "height": 600, "scale": 3100, "translate": [300,200], "chartWidth": 62, "chartMargin": 5},
+  "full": { "width": 900, "height": 600, "scale": 3650, "translate": [760,180], "chartWidth": 82, "chartMargin": 13},
+  "large": { "width": 700, "height": 555, "scale": 3150, "translate": [710,180], "chartWidth": 74, "chartMargin": 13},
   "medium": { "width": 900, "height": 1270, "scale": 3800, "translate": [380,220], "chartWidth": 76, "chartMargin": 8},
   "small": { "width": 900, "height": 1270, "scale": 3800, "translate": [380,220], "chartWidth": 76, "chartMargin": 8}
 }
@@ -21,10 +24,11 @@ mapWidth = mapSizes[pageSize]["width"] - mapMargin.left - mapMargin.right,
 mapHeight = mapSizes[pageSize]["height"] - mapMargin.top - mapMargin.bottom;
 
 /*LINE GRAPH VARIABLES*/
+var graphSize =  (IS_MOBILE) ? "full" : "large";
 
 var graphSizes = {
-  "full": { "width": 350, "height": 330, "translate": [720,180]},
-  "large": { "width": 750, "height": 600, "translate": [300,200]},
+  "full": { "width": 400, "height": 600, "translate": [300,200]},
+  "large": { "width": 350, "height": 330, "translate": [720,180]},
   "medium": { "width": 900, "height": 1270, "translate": [380,220]},
   "small": { "width": 900, "height": 1270, "translate": [380,220]}
 }
@@ -451,7 +455,6 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           var tmp = stateData.features.filter(function(o) { return o.properties.abbr == d.key} )
           return "translate(" + geoPath.centroid(tmp[0]) + ")"
         })
-
 
       //blank sate background
       blank.append("rect")

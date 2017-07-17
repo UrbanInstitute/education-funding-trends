@@ -784,17 +784,41 @@ form {
   background-color: rgba(255,255,255,0)
 }
 
-@media (max-width: 1200px) {
+#isPhone, #isMobile {
+    display: none;
+    width: 0;
+    height: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
 
+@media (max-width: 900px) {
+  #isMobile {
+  display: block;
+  }
+
+  #vis {
+    margin-left: calc(-57%);
+    margin-top: -50px;
+    
+  }
+
+  .lineChart-div {
+    margin-left: 30px;
+    margin-top: 700px;
+  }
+
+  #note-blank {
+    top: 635px;
+  }
 }
 @media (max-width: 1170px){
   .container{
     margin-left: auto;
     width: 100%;
   }
-  #isMobile{
-    display: block;
-  }
+
   #sections{
     display: inherit;
     width: 400px;
