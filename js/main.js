@@ -28,7 +28,7 @@ var vizContent = function() {
   var mapSizes = {
     /*screen width 1200*/"large": { "width": vizWidth/1.55, "height": 555, "scale": vizWidth*2.625, "translate": [710,180], "chartWidth": vizWidth*.06166, "chartMargin": vizWidth*.01083, "mapTranslateX": -vizWidth*.3},
      /*screen width 900*/"full": { "width": vizWidth/1.1, "height": 600, "scale":vizWidth*4.055, "translate": [760,180], "chartWidth": vizWidth*.0911, "chartMargin": vizWidth*.0144,  "mapTranslateX": -vizWidth*.45},
-    /*screen width 768*/"medium": { "width": vizWidth*.92, "height": 600, "scale":vizWidth*4.15, "translate": [710,180], "chartWidth": vizWidth*.104, "chartMargin": vizWidth*.022,  "mapTranslateX": -vizWidth*.52},
+    /*screen width 768*/"medium": { "width": vizWidth*.92, "height": 600, "scale":vizWidth*4.15, "translate": [710,180], "chartWidth": vizWidth*.104, "chartMargin": vizWidth*.022,  "mapTranslateX": -vizWidth*.54},
     "small": { "width": 900, "height": 1270, "scale": 3800, "translate": [380,220], "chartWidth": 76, "chartMargin": 8}
   }
 
@@ -541,8 +541,20 @@ var vizContent = function() {
             return "mapLabel standard " + d.key
           })
           .attr("text-anchor", "end")
-          .attr("x",chartWidth+chartMargin - 25)
-          .attr("y",chartWidth+chartMargin - 25)
+          .attr("x", function() {
+            if (IS_MOBILE_768) {
+                return chartWidth+chartMargin - 31
+            }else{
+              return chartWidth+chartMargin - 25
+            }
+          })
+          .attr("y", function() {
+            if (IS_MOBILE_768) {
+                return chartWidth+chartMargin - 31
+            }else{
+              return chartWidth+chartMargin - 25
+            }
+          })
 
         //chart background
         map
