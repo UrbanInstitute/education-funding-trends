@@ -409,7 +409,7 @@ div.close-sign {
 .lineChart-div {
   float: left;
   margin-left: calc(50% - 569px);
-  width: 435px;
+  width: 335px;
 }
 #visTitle{
   position: fixed;

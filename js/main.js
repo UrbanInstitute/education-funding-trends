@@ -7,8 +7,8 @@ var blankNote = "*Note: District of Columbia and Hawaii are included in national
 /*MAP VARIABLES*/
 var pageSize = "full"
 var mapSizes = {
-  "full": { "width": 700, "height": 555, "scale": 3150, "translate": [710,180], "chartWidth": 74, "chartMargin": 13},
-  "large": { "width": 750, "height": 600, "scale": 3100, "translate": [300,200], "chartWidth": 62, "chartMargin": 5},
+  "full": { "width": 770, "height": 555, "scale": 3150, "translate": [710,180], "chartWidth": 74, "chartMargin": 13},
+  "large": { "width": 770, "height": 600, "scale": 3100, "translate": [300,200], "chartWidth": 62, "chartMargin": 5},
   "medium": { "width": 900, "height": 1270, "scale": 3800, "translate": [380,220], "chartWidth": 76, "chartMargin": 8},
   "small": { "width": 900, "height": 1270, "scale": 3800, "translate": [380,220], "chartWidth": 76, "chartMargin": 8}
 }
