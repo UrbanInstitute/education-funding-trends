@@ -759,7 +759,7 @@ var vizContent = function() {
 
 
       //WHEN CLICKING ON CLEAR ALL UNDER SELECTED STATE LIST
-      d3.select(".state-clear")
+      d3.selectAll(".state-clear")
         .on('click', function() {
           for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
             removeStateList(stateLinesArray[i])
@@ -775,7 +775,9 @@ var vizContent = function() {
           .datum(state)
           .append("li")
           .html(stateName)
-          .attr("class", "state-item item-" + state)
+          .attr("class", function() {
+            return (IS_MOBILE) ? "state-item item-" + state + " state-mobile" :  "state-item item-" + state + " state-nonmobile";
+          })
           .on("mouseover", function(){ hoverState(state)})
           .on("mouseout", function(){ dehoverState(state)})
         stateItem.append("div")
@@ -809,7 +811,7 @@ var vizContent = function() {
           })
 
 
-        d3.select(".item-" + state)
+        d3.selectAll(".item-" + state)
           .remove();
         d3.select(".line-state.line-" + state)
           .remove()

@@ -34,13 +34,32 @@ a {
   pointer-events: all;
 }
 
-ul.state-list li {
+li.state-nonmobile {
   line-height: 36px;
   background-color: #ececec;
   border-bottom: 5px solid #fff;
   text-indent: 10px;
 }
 
+li.state-mobile {
+  line-height: 36px;
+  background-color: #ececec;
+  border-bottom: 5px solid #fff;
+  text-indent: 10px;
+  float: left;
+  display: inline;
+}
+#double {
+  width: 100%;
+}
+#double li {
+  width: 46%;
+  margin-right: 15px;
+}
+
+.lineChart-div-mobile > .lineChart-details > .header-row > .state-clear {
+  margin-right: 15px;
+}
 div.tooltip {
   position: absolute;
   text-align: left;
@@ -258,7 +277,7 @@ div.close-sign {
 #bottom-content {
   float: left;
   width: 100%;
-  margin-top: 88px;
+  margin-top: 100px;
   margin-bottom: 25px;
 }
 
@@ -524,6 +543,10 @@ div.close-sign {
   float: left;
   color: #696969;
   margin-top: 7px;
+}
+
+.lineChart-div-mobile > .lineChart-notes-under {
+  margin-right: 15px;
 }
 
 .voronoi  {
@@ -809,11 +832,47 @@ form {
     left: 0;
 }
 
+@media (max-width: 1170px){
+  .container{
+    margin-left: auto;
+    width: 100%;
+  }
+
+  #sections{
+    display: inherit;
+    width: 400px;
+    margin: 0 auto;
+    pointer-events: none;
+  }
+  .step {
+    margin-bottom: 1000px;
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: rgb(136, 136, 136) 4px 4px 16px;
+    padding: 30px;
+    z-index: 2;
+  }
+}
+
+@media (max-width: 1000px){
+
+  .tab:nth-child(1) {
+    margin-left: 29%;
+  }
+}
+
+
 @media (max-width: 900px) {
   #isMobile {
   display: block;
   }
 
+  .tab:nth-child(1) {
+    margin-left: 26%;
+  }
+  .main-content {
+    width: 89% !important;
+  }
   #vis {
     margin-left: calc(-26.5%);
     margin-top: -50px;
@@ -841,32 +900,22 @@ form {
   }
 
 }
-@media (max-width: 1170px){
-  .container{
-    margin-left: auto;
-    width: 100%;
-  }
 
-  #sections{
-    display: inherit;
-    width: 400px;
-    margin: 0 auto;
-    pointer-events: none;
-  }
-  .step {
-    margin-bottom: 1000px;
-    opacity: 1;
-    background: rgba(255, 255, 255, 0.9);
-    box-shadow: rgb(136, 136, 136) 4px 4px 16px;
-    padding: 30px;
-    z-index: 2;
+@media (max-width: 800px){
+  .tab:nth-child(1) {
+    margin-left: 23%;
   }
 }
+
+
 @media (max-width: 768px){
-  .step {
-    margin-bottom: 1200px;
+
+  .main-content {
+    width: 91.15% !important;
   }
 }
+
+
 @media (max-width: 350px){
   #sections{
     /*width: 300px;*/
