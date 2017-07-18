@@ -60,7 +60,7 @@ var DOLLAR_FORMAT = d3.format("$,.0f")
 function roundUp(value, step) {
     step || (step = 1.0);
     var inv = 1.0 / step;
-    return Math.ceil(value * inv) / inv;
+    return Math.ceil(value * inv) / inv.toFixed(2);
 }
 
 
@@ -73,29 +73,49 @@ function round(value, step) {
 function roundDown(value, step) {
     step || (step = 1.0);
     var inv = 1.0 / step;
-    return Math.floor(value * inv) / inv;
+    return Math.floor(value * inv) / inv.toFixed(2);
 }
 
 function getTickValues(y, variable){
-  var domain = y.domain()
-  var lastStep = roundUp(domain[1], .05)
-  var firstStep = roundUp(domain[0], .05)
-  var step = (lastStep - firstStep) < .35 ? .05 : .1
-  var numberOfSteps = ((lastStep-firstStep) / step) + 1
+  var domain = y.domain() 
+  var step = (domain[1] - domain[0]) < .35 ? .05 : .1
+  var numberOfSteps = ((domain[1] - domain[0]) / step)
   stepArray.length = 0;
     for (var i=0; i<numberOfSteps; i++) {
-      var newStep = roundUp(domain[0] + (i*step), step); 
+      var newStep = domain[0] + (i*step), step; 
       stepArray.push(newStep);
     }
   //return stepArray;
-  //stepArray.splice(numberOfSteps, 0, lastStep);
+  stepArray.splice(numberOfSteps + 1, 0, domain[1]);
   if(variable.search("ratio") == -1){
     return stepArray;
    // return [domain[0], domain[0] + step, domain[0] + 2.0*step, domain[0] + 3.0*step, domain[1]]
-  }else{
+  }else{ 
    return stepArray;
    // return [domain[0], domain[0] + step, domain[0] + 2.0*step, domain[0] + 3.0*step, domain[1], 1].filter(function(d){ return Math.abs(d-1) > .03 || d == 1})
   }
+
+}
+
+function getMaxY(variable, data){
+
+  var maxY = d3.max(data, function(d) {return d[variable]; })
+  var minY = d3.min(data, function(d) {return d[variable]; })
+  var maxYRounded = roundUp(maxY, .05)
+  var minYRounded = roundDown(minY, .05)
+  var step = (maxYRounded - minYRounded) < .35 ? .05 : .1
+  var numberOfSteps = ((maxYRounded-minYRounded) / step)
+  return roundUp(minYRounded + step*numberOfSteps, step);
+}
+
+function getMinY(variable, data){
+
+  var maxY = d3.max(data, function(d) {return d[variable]; })
+  var minY = d3.min(data, function(d) {return d[variable]; })
+  var maxYRounded = roundUp(maxY, .05)
+  var minYRounded = roundDown(minY, .05)
+  var step = (maxYRounded - minYRounded) < .35 ? .05 : .1
+  return roundDown(minYRounded, step)
 
 }
 
@@ -196,14 +216,7 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
         .entries(graphDataSelected);
 
       graphX.domain(d3.extent(trendsDataFiltered, function(d) { return d.Year; }));
-      graphY.domain([d3.min(trendsDataFiltered, function(d) {return d[selectedCategory]; }), d3.max(trendsDataFiltered, function(d) {return d[selectedCategory]; })]);
-
-      // var usaLabel = graphSvg.append("g")
-      //   .attr("id", "usaLabel")
-      // usaLabel.append("text")
-      //   .append("textPath")
-      //   .attr("xlink:href", "#usa-line")
-      //   .text("US")
+      graphY.domain([ getMinY(selectedCategory, trendsDataFiltered), getMaxY(selectedCategory, trendsDataFiltered)]);
         
       graphSvg.append("g")
         .attr("transform", "translate(0," + graphHeight + ")")
@@ -858,8 +871,10 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
 
       var graphY = d3.scaleLinear().range([graphHeight, 0]).nice();
       var graphY2 = d3.scaleLinear().range([graphHeight, 0]).nice();
-      var max = d3.max(trendsDataMinMax, function(d) { return d[domainController]; })
-      var min = (domainController.search("ratio") != -1) ? d3.min(trendsDataMinMax, function(d) {return d[domainController]; }) : 0;
+
+     // var max = d3.max(trendsDataMinMax, function(d) { return d[domainController]; })
+      var max = getMaxY(domainController, trendsDataMinMax)
+      var min = (domainController.search("ratio") != -1) ? getMinY(domainController, trendsDataMinMax) : 0;
       var max2 = d3.max(trendsDataAK, function(d) { return d[domainController]; })
       var min2 = (domainController.search("ratio") != -1) ? d3.min([1, d3.min(trendsDataAK, function(d) {return d[domainController]; })]) : 0;
 
@@ -909,11 +924,15 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
       graphSvg.select(".regressiveLabel")
         .transition().duration(1200)
         .attr("transform", "translate("+ graphWidth/3.8 +", "+ graphY(.95)+")") 
+        .style("opacity", function() { 
+         var domain = graphY.domain() 
+          return (domain[0] >= .9) ? 0 : 1
+        })
+
       graphSvg.selectAll(".largeChartLabel")
         .style("opacity", function() {
           return (d3.select("#revpp_").classed("current") == true) ? 0 : 1
         })
-
       d3.selectAll("#lineChart .y.graphAxis")
         .transition().duration(1200)
         .call(d3.axisLeft(graphY)
