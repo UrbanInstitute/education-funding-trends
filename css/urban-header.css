@@ -316,17 +316,13 @@ ul{
 
 
 @media(max-width:767px) {
-.header-links ul li {
-        width:28%;
-        font:400 13px/24px Lato, sans-serif
-    }
    
     .tt-name, .tt-title {
        font-size: 16px !important;
     }
-    .feature-link{
+/*    .feature-link{
         display: none !important;
-    }
+    }*/
     #header-pinned .title{
         font-size: 15px !important;
         margin-left: 55px !important;

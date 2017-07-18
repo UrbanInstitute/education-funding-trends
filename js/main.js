@@ -5,17 +5,30 @@ var vizContent = function() {
   var stateLinesArray = [];
   var stepArray = [];
   var blankNote = "*Note: Washington, DC, and Hawaii are included in the national average calculations, however, we cannot calculate progressivity at the state level for either because both are single districts. National averages exclude charter-only districts and other districts not tied to geography.";
-  var IS_MOBILE = d3.select("#isMobile").style("display") == "block";
+  var IS_MOBILE_900 = d3.select("#isMobile900").style("display") == "block";
+  var IS_MOBILE_768 = d3.select("#isMobile768").style("display") == "block";
   var IS_PHONE = d3.select("#isPhone").style("display") == "block";
   /*MAP VARIABLES*/
-  var pageSize =  (IS_MOBILE) ? "full" : "large";
+  var pageSizeFunction =  function() {
+      if (IS_MOBILE_768){
+      return "medium"
+    } else {
+      if (IS_MOBILE_900) {
+        return "full"
+      } else {
+        return "large"
+      }
+    }
+  }
+  var pageSize = pageSizeFunction();
+
   console.log(pageSize)
   var vizWidth = $(".viz-content").width();
 
   var mapSizes = {
     /*screen width 1200*/"large": { "width": vizWidth/1.55, "height": 555, "scale": vizWidth*2.625, "translate": [710,180], "chartWidth": vizWidth*.06166, "chartMargin": vizWidth*.01083, "mapTranslateX": -vizWidth*.3},
      /*screen width 900*/"full": { "width": vizWidth/1.1, "height": 600, "scale":vizWidth*4.055, "translate": [760,180], "chartWidth": vizWidth*.0911, "chartMargin": vizWidth*.0144,  "mapTranslateX": -vizWidth*.45},
-    "medium": { "width": 900, "height": 1270, "scale": 3800, "translate": [380,220], "chartWidth": 76, "chartMargin": 8},
+    /*screen width 768*/"medium": { "width": vizWidth*.92, "height": 600, "scale":vizWidth*4.15, "translate": [710,180], "chartWidth": vizWidth*.104, "chartMargin": vizWidth*.022,  "mapTranslateX": -vizWidth*.52},
     "small": { "width": 900, "height": 1270, "scale": 3800, "translate": [380,220], "chartWidth": 76, "chartMargin": 8}
   }
 
@@ -30,12 +43,12 @@ var vizContent = function() {
   mapTranslateX = mapSizes[pageSize]["mapTranslateX"];
   console.log(mapTranslateX)
   /*LINE GRAPH VARIABLES*/
-  var graphSize =  (IS_MOBILE) ? "full" : "large";
+  var graphSize =  (IS_MOBILE_768) || (IS_MOBILE_900) ? "full" : "large";
 
   var graphSizes = {
    /*screen width 1200*/ "large": { "width": vizWidth/3.42, "height": 330, "translate": [720,180]},
    /*screen width 900*/ "full": { "width": vizWidth/2.4, "height": vizWidth/2.4, "translate": [300,200]},
-    "medium": { "width": 900, "height": 1270, "translate": [380,220]},
+  /*screen width 768*/"medium": { "width": vizWidth/2.3, "height": vizWidth/2.4, "translate": [300,200]},
     "small": { "width": 900, "height": 1270, "translate": [380,220]}
   }
 
@@ -629,9 +642,20 @@ var vizContent = function() {
             return "mapLabel standard " + d.key
           })        
           .attr("text-anchor", "end")
-          .attr("x",chartWidth+chartMargin - 25)
-          .attr("y",chartWidth+chartMargin - 25)
-
+          .attr("x", function() {
+            if (IS_MOBILE_768) {
+                return chartWidth+chartMargin - 31
+            }else{
+              return chartWidth+chartMargin - 25
+            }
+          })
+          .attr("y", function() {
+            if (IS_MOBILE_768) {
+                return chartWidth+chartMargin - 32
+            }else{
+              return chartWidth+chartMargin - 25
+            }
+          })
         //add the X axis 
         map.append("g")
           .attr("class", "x axis")
@@ -776,7 +800,7 @@ var vizContent = function() {
           .append("li")
           .html(stateName)
           .attr("class", function() {
-            return (IS_MOBILE) ? "state-item item-" + state + " state-mobile" :  "state-item item-" + state + " state-nonmobile";
+            return (IS_MOBILE_768) || (IS_MOBILE_900) ? "state-item item-" + state + " state-mobile" :  "state-item item-" + state + " state-nonmobile";
           })
           .on("mouseover", function(){ hoverState(state)})
           .on("mouseout", function(){ dehoverState(state)})

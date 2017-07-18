@@ -821,7 +821,7 @@ form {
   background-color: rgba(255,255,255,0)
 }
 
-#isPhone, #isMobile {
+#isPhone, #isMobile768, #isMobile900 {
     display: none;
     width: 0;
     height: 0;
@@ -861,7 +861,7 @@ form {
 
 
 @media (max-width: 900px) {
-  #isMobile {
+  #isMobile900 {
   display: block;
   }
 
@@ -914,6 +914,13 @@ form {
 
 @media (max-width: 768px){
 
+  #isMobile768 {
+    display: block;
+  }
+
+  #vis {
+    margin-left: calc(-25% - 30px);
+  }
   .main-content {
     width: 91.15% !important;
     margin-bottom: 95px;
