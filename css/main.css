@@ -16,7 +16,7 @@ hr.after-toggle{
   border: 1px solid #d2d2d2
 }
 
-ul#state-list{
+ul.state-list{
   list-style-type: none;
   padding-left: 0px;
 
@@ -34,7 +34,7 @@ a {
   pointer-events: all;
 }
 
-ul#state-list li {
+ul.state-list li {
   line-height: 36px;
   background-color: #ececec;
   border-bottom: 5px solid #fff;
@@ -409,8 +409,19 @@ div.close-sign {
 }
 .lineChart-div {
   float: left;
-  margin-left: calc(50% - 569px);
-  width: 335px;
+  position: relative;
+  margin-left: 50px;
+  width: 29.2%;
+  display: block;
+}
+
+.lineChart-div-mobile {
+  float: right;
+  position: relative;
+  margin-top: 146px;
+  padding: 0 50px;
+  display: none;
+  width: 44%;
 }
 #visTitle{
   position: fixed;
@@ -484,7 +495,6 @@ div.close-sign {
 .lineChart-details {
   bottom: 20px;
   z-index: 1;
-  width: 400px;
   background: transparent;
   height: 0px;
   left: 0px;
@@ -511,7 +521,6 @@ div.close-sign {
   font-style: italic;
   font-size: 13px;
   display: none;
-  width: 100%;
   float: left;
   color: #696969;
   margin-top: 7px;
@@ -806,7 +815,7 @@ form {
   }
 
   #vis {
-    margin-left: calc(-57%);
+    margin-left: calc(-26.5%);
     margin-top: -50px;
     
   }
@@ -814,11 +823,23 @@ form {
   .lineChart-div {
     margin-left: 30px;
     margin-top: 700px;
+    width: none;
   }
 
   #note-blank {
     top: 635px;
   }
+
+  .lineChart-div-mobile {
+    display: block;
+    float: right;
+    margin-top: 145px;
+  }
+
+  .nonmobile {
+    display: none !important;
+  }
+
 }
 @media (max-width: 1170px){
   .container{

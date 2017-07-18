@@ -1,988 +1,194 @@
 
 //Prob easiest to have a few set sizes for the map, which change at broswer size breakpoints. So `pageSize` will be determined by some function which tests browser size (e.g. IS_MOBILE() functions in past projects). I don't think it's as straightforward to have a continuously resizing graphic. Note that these values are just placeholders, they'll need to be tested/updated, and potentially more or fewer sizes are needed
-var stateLinesArray = [];
-var stepArray = [];
-var blankNote = "*Note: Washington, DC, and Hawaii are included in the national average calculations, however, we cannot calculate progressivity at the state level for either because both are single districts. National averages exclude charter-only districts and other districts not tied to geography.";
-var IS_MOBILE = d3.select("#isMobile").style("display") == "block";
-var IS_PHONE = d3.select("#isPhone").style("display") == "block";
-/*MAP VARIABLES*/
-var pageSize =  (IS_MOBILE) ? "full" : "large";
-console.log(pageSize)
-var mapSizes = {
-  "full": { "width": 900, "height": 600, "scale": 3650, "translate": [760,180], "chartWidth": 82, "chartMargin": 13},
-  "large": { "width": 770, "height": 555, "scale": 3150, "translate": [710,180], "chartWidth": 74, "chartMargin": 13},
-  "medium": { "width": 900, "height": 1270, "scale": 3800, "translate": [380,220], "chartWidth": 76, "chartMargin": 8},
-  "small": { "width": 900, "height": 1270, "scale": 3800, "translate": [380,220], "chartWidth": 76, "chartMargin": 8}
-}
+var vizContent = function() {
 
+  var stateLinesArray = [];
+  var stepArray = [];
+  var blankNote = "*Note: Washington, DC, and Hawaii are included in the national average calculations, however, we cannot calculate progressivity at the state level for either because both are single districts. National averages exclude charter-only districts and other districts not tied to geography.";
+  var IS_MOBILE = d3.select("#isMobile").style("display") == "block";
+  var IS_PHONE = d3.select("#isPhone").style("display") == "block";
+  /*MAP VARIABLES*/
+  var pageSize =  (IS_MOBILE) ? "full" : "large";
+  console.log(pageSize)
+  var vizWidth = $(".viz-content").width();
 
-var category = "revratio";
-var startYear = 1995;
-var endYear = 2015;
-
-var mapMargin = {top: 30, right: 20, bottom: 30, left: 50},
-mapWidth = mapSizes[pageSize]["width"] - mapMargin.left - mapMargin.right,
-mapHeight = mapSizes[pageSize]["height"] - mapMargin.top - mapMargin.bottom;
-
-/*LINE GRAPH VARIABLES*/
-var graphSize =  (IS_MOBILE) ? "full" : "large";
-
-var graphSizes = {
-  "full": { "width": 400, "height": 600, "translate": [300,200]},
-  "large": { "width": 350, "height": 330, "translate": [720,180]},
-  "medium": { "width": 900, "height": 1270, "translate": [380,220]},
-  "small": { "width": 900, "height": 1270, "translate": [380,220]}
-}
-
-var selectedCategory = "adj_revratio_all";
-var graphMargin = {top: 30, right: 30, bottom: 30, left: 28},
-graphWidth =  graphSizes[pageSize]["width"]- graphMargin.left - graphMargin.right,
-graphHeight = graphSizes[pageSize]["height"] - graphMargin.top - graphMargin.bottom;
-
-var graphX = d3.scaleTime().range([0, graphWidth]);
-var graphY = d3.scaleLinear().range([graphHeight, 0]).nice();
-var graphLine = d3.line()
-  .x(function(d) { return graphX(d.Year); })
-  .y(function(d) { return graphY(d[selectedCategory]); });
-
-var graphSvg = d3.select("#lineChart")
-  .append("svg")
-  .attr("width", graphWidth + graphMargin.left + graphMargin.right)
-  .attr("height", graphHeight + graphMargin.top + graphMargin.bottom )
-  .append("g")
-  .attr("transform", "translate(" + graphMargin.left +", "+ graphMargin.top+")");
-
-var voronoi = d3.voronoi()
-  .x(function(d) { return graphX(d.Year); })
-  .y(function(d) { return graphY(d[selectedCategory]); })
-  .extent([[-graphMargin.left, -graphMargin.top], [graphWidth + graphMargin.right, graphHeight + graphMargin.bottom]]);
-
-var RATIO_FORMAT = d3.format(".2f")
-var DOLLAR_FORMAT = d3.format("$,.0f")
-
-function roundUp(value, step) {
-    step || (step = 1.0);
-    var inv = 1.0 / step;
-    return Math.ceil(value * inv) / inv.toFixed(2);
-}
-
-
-function round(value, step) {
-    step || (step = 1.0);
-    var inv = 1.0 / step; console.log(Math.round(value * inv) / inv.toFixed(2))
-    return Math.round(value * inv) / inv.toFixed(2);
-}
-
-function roundDown(value, step) {
-    step || (step = 1.0);
-    var inv = 1.0 / step;
-    return Math.floor(value * inv) / inv.toFixed(2);
-}
-
-function getTickValues(y, variable){
-  var domain = y.domain() 
-  var step = (domain[1] - domain[0]) < .35 ? .05 : .1
-  var numberOfSteps = ((domain[1] - domain[0]) / step)
-  stepArray.length = 0;
-    for (var i=0; i<numberOfSteps; i++) {
-      var newStep = domain[0] + (i*step), step; 
-      stepArray.push(newStep);
-    }
-  //return stepArray;
-  stepArray.splice(numberOfSteps + 1, 0, domain[1]);
-  if(variable.search("ratio") == -1){
-    return stepArray;
-   // return [domain[0], domain[0] + step, domain[0] + 2.0*step, domain[0] + 3.0*step, domain[1]]
-  }else{ 
-   return stepArray;
-   // return [domain[0], domain[0] + step, domain[0] + 2.0*step, domain[0] + 3.0*step, domain[1], 1].filter(function(d){ return Math.abs(d-1) > .03 || d == 1})
+  var mapSizes = {
+    /*screen width 1200*/"large": { "width": vizWidth/1.55, "height": 555, "scale": vizWidth*2.625, "translate": [710,180], "chartWidth": vizWidth*.06166, "chartMargin": vizWidth*.01083, "mapTranslateX": -vizWidth*.3},
+     /*screen width 900*/"full": { "width": vizWidth/1.1, "height": 600, "scale":vizWidth*4.055, "translate": [760,180], "chartWidth": vizWidth*.0911, "chartMargin": vizWidth*.0144,  "mapTranslateX": -vizWidth*.45},
+    "medium": { "width": 900, "height": 1270, "scale": 3800, "translate": [380,220], "chartWidth": 76, "chartMargin": 8},
+    "small": { "width": 900, "height": 1270, "scale": 3800, "translate": [380,220], "chartWidth": 76, "chartMargin": 8}
   }
 
-}
 
-function getMaxY(variable, data){
+  var category = "revratio";
+  var startYear = 1995;
+  var endYear = 2015;
 
-  var maxY = d3.max(data, function(d) {return d[variable]; })
-  var minY = d3.min(data, function(d) {return d[variable]; })
-  var maxYRounded = roundUp(maxY, .05)
-  var minYRounded = roundDown(minY, .05)
-  var step = (maxYRounded - minYRounded) < .35 ? .05 : .1
-  var numberOfSteps = ((maxYRounded-minYRounded) / step)
-  return roundUp(minYRounded + step*numberOfSteps, step);
-}
+  var mapMargin = {top: 30, right: 20, bottom: 30, left: 50},
+  mapWidth = mapSizes[pageSize]["width"] - mapMargin.left - mapMargin.right,
+  mapHeight = mapSizes[pageSize]["height"] - mapMargin.top - mapMargin.bottom,
+  mapTranslateX = mapSizes[pageSize]["mapTranslateX"];
+  console.log(mapTranslateX)
+  /*LINE GRAPH VARIABLES*/
+  var graphSize =  (IS_MOBILE) ? "full" : "large";
 
-function getMinY(variable, data){
+  var graphSizes = {
+   /*screen width 1200*/ "large": { "width": vizWidth/3.42, "height": 330, "translate": [720,180]},
+   /*screen width 900*/ "full": { "width": vizWidth/2.4, "height": vizWidth/2.4, "translate": [300,200]},
+    "medium": { "width": 900, "height": 1270, "translate": [380,220]},
+    "small": { "width": 900, "height": 1270, "translate": [380,220]}
+  }
 
-  var maxY = d3.max(data, function(d) {return d[variable]; })
-  var minY = d3.min(data, function(d) {return d[variable]; })
-  var maxYRounded = roundUp(maxY, .05)
-  var minYRounded = roundDown(minY, .05)
-  var step = (maxYRounded - minYRounded) < .35 ? .05 : .1
-  return roundDown(minYRounded, step)
-
-}
-
-function getCurrentCategory(){
-  var adjusted = (d3.select('.checkbox-image').classed('checked') == true) ? "adj_" : ""
-
-
-  var combinedClassesArray = []
-  d3.selectAll(".button_toggle.on")
-    .each(function(d, i) { //get class of each toggle that is still turned on and add it to the combinedClasses array
-      var toggleClass = d3.select(this).attr('class').split(" ")[0];
-      combinedClassesArray.push(toggleClass);
-    })
-  var initialSelectedToggles = combinedClassesArray.join('')
-  var selectedText = combinedClassesArray.join('')
-  if(selectedText == "lostfe") { selectedText = "all"}
+  var selectedCategory = "adj_revratio_all";
+  var graphMargin = {top: 30, right: 30, bottom: 30, left: 28},
+  graphWidth =  graphSizes[pageSize]["width"]- graphMargin.left - graphMargin.right,
+  graphHeight = graphSizes[pageSize]["height"] - graphMargin.top - graphMargin.bottom;
+  console.log(graphWidth)
+  var graphX = d3.scaleTime().range([0, graphWidth]);
+  var graphY = d3.scaleLinear().range([graphHeight, 0]).nice();
+  var graphLine = d3.line()
+    .x(function(d) { return graphX(d.Year); })
+    .y(function(d) { return graphY(d[selectedCategory]); });
   
-  return adjusted + d3.select(".current").attr("id") + selectedText;
-}
-d3.csv("data/toggle_text.csv", function(error, toggleText) {
-  d3.csv("data/data.csv", function(error, trendsDataFull) {
+
+  $("#lineChart").empty();
+  var graphSvg = d3.select("#lineChart")
+    .append("svg")
+    .attr("width", graphWidth + graphMargin.left + graphMargin.right)
+    .attr("height", graphHeight + graphMargin.top + graphMargin.bottom )
+    .append("g")
+    .attr("transform", "translate(" + graphMargin.left +", "+ graphMargin.top+")");
+
+  var voronoi = d3.voronoi()
+    .x(function(d) { return graphX(d.Year); })
+    .y(function(d) { return graphY(d[selectedCategory]); })
+    .extent([[-graphMargin.left, -graphMargin.top], [graphWidth + graphMargin.right, graphHeight + graphMargin.bottom]]);
+
+  var RATIO_FORMAT = d3.format(".2f")
+  var DOLLAR_FORMAT = d3.format("$,.0f")
+
+  function roundUp(value, step) {
+      step || (step = 1.0);
+      var inv = 1.0 / step;
+      return Math.ceil(value * inv) / inv.toFixed(2);
+  }
 
 
-    var trendsDataMinMax = trendsDataFull.filter(function(d) { 
-      if (selectedCategory.includes("revratio")) {
-        if (d3.select(".standard.line.AK.selected-state").node() !== null) { 
-          // console.log('AK')
-          return d.State !== "HI" && d.State !== "DC"
-        }else{
-          // console.log('no AK')
-          return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
-        }
-      }else { console.log('2')
-        return d.State;
+  function round(value, step) {
+      step || (step = 1.0);
+      var inv = 1.0 / step; console.log(Math.round(value * inv) / inv.toFixed(2))
+      return Math.round(value * inv) / inv.toFixed(2);
+  }
+
+  function roundDown(value, step) {
+      step || (step = 1.0);
+      var inv = 1.0 / step;
+      return Math.floor(value * inv) / inv.toFixed(2);
+  }
+
+  function getTickValues(y, variable){
+    var domain = y.domain() 
+    var step = (domain[1] - domain[0]) < .35 ? .05 : .1
+    var numberOfSteps = ((domain[1] - domain[0]) / step)
+    stepArray.length = 0;
+      for (var i=0; i<numberOfSteps; i++) {
+        var newStep = domain[0] + (i*step), step; 
+        stepArray.push(newStep);
       }
-    })
+    //return stepArray;
+    stepArray.splice(numberOfSteps + 1, 0, domain[1]);
+    if(variable.search("ratio") == -1){
+      return stepArray;
+     // return [domain[0], domain[0] + step, domain[0] + 2.0*step, domain[0] + 3.0*step, domain[1]]
+    }else{ 
+     return stepArray;
+     // return [domain[0], domain[0] + step, domain[0] + 2.0*step, domain[0] + 3.0*step, domain[1], 1].filter(function(d){ return Math.abs(d-1) > .03 || d == 1})
+    }
 
-    var trendsDataAK = trendsDataFull.filter(function(d){
-      return d.State ==  "AK"
-    })
+  }
+
+  function getMaxY(variable, data){
+
+    var maxY = d3.max(data, function(d) {return d[variable]; })
+    var minY = d3.min(data, function(d) {return d[variable]; })
+    var maxYRounded = roundUp(maxY, .05)
+    var minYRounded = roundDown(minY, .05)
+    var step = (maxYRounded - minYRounded) < .35 ? .05 : .1
+    var numberOfSteps = ((maxYRounded-minYRounded) / step)
+    return roundUp(minYRounded + step*numberOfSteps, step);
+  }
+
+  function getMinY(variable, data){
+
+    var maxY = d3.max(data, function(d) {return d[variable]; })
+    var minY = d3.min(data, function(d) {return d[variable]; })
+    var maxYRounded = roundUp(maxY, .05)
+    var minYRounded = roundDown(minY, .05)
+    var step = (maxYRounded - minYRounded) < .35 ? .05 : .1
+    return roundDown(minYRounded, step)
+
+  }
+
+  function getCurrentCategory(){
+    var adjusted = (d3.select('.checkbox-image').classed('checked') == true) ? "adj_" : ""
+
+
+    var combinedClassesArray = []
+    d3.selectAll(".button_toggle.on")
+      .each(function(d, i) { //get class of each toggle that is still turned on and add it to the combinedClasses array
+        var toggleClass = d3.select(this).attr('class').split(" ")[0];
+        combinedClassesArray.push(toggleClass);
+      })
+    var initialSelectedToggles = combinedClassesArray.join('')
+    var selectedText = combinedClassesArray.join('')
+    if(selectedText == "lostfe") { selectedText = "all"}
     
-    trendsDataFull.forEach(function(d) {
-      keys = Object.keys(d);
-      for(var i = 0; i<keys.length; i++){
-        var key = keys[i]
-        if(key == "State" || key == "Year" || key == "state_full"){
-          continue;
-        }else{
-          d[key] = +d[key]
+    return adjusted + d3.select(".current").attr("id") + selectedText;
+  }
+  d3.csv("data/toggle_text.csv", function(error, toggleText) {
+    d3.csv("data/data.csv", function(error, trendsDataFull) {
+
+
+      var trendsDataMinMax = trendsDataFull.filter(function(d) { 
+        if (selectedCategory.includes("revratio")) {
+          if (d3.select(".standard.line.AK.selected-state").node() !== null) { 
+            // console.log('AK')
+            return d.State !== "HI" && d.State !== "DC"
+          }else{
+            // console.log('no AK')
+            return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
+          }
+        }else { console.log('2')
+          return d.State;
         }
-      }
-      d.adj_revratio_ = 1;
-      d.revratio_ = 1;
-      d.adj_revpp_ = 0;
-      d.revpp_ = 0;
-    });
-    //FILTERING DATA FOR MAP TO NOT INCLUDE USA
-    var trendsData = trendsDataFull.filter(function(d) { 
-      return d.State !== "USA"
-    })
-    var trendsDataUSA = trendsDataFull.filter(function(d) { 
-      return d.State == "USA"
-    })
-    var trendsDataFiltered = trendsDataFull.filter(function(d) { 
-      if (selectedCategory.includes("revratio")) {
-        return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
-      }else {
-        return d.State;
-      }
-    })
-
-    var trendsDataAK = trendsDataFull.filter(function(d) { 
-      if (selectedCategory.includes("revratio")) {
-        return d.State == "AK"
-      }else {
-        return d.State;
-      }
-    })
-    //FILTERING DATA TO HI AND DC TO DRAW BOXES OVER TILES
-    var blankStateData = trendsDataFull.filter(function(d) { 
-      if (selectedCategory.includes("revratio")) {
-        return d.State == "HI" || d.State == "DC"
-      }
-    })
-    
-    //CREATE INITIAL LINE GRAPH ON LOAD
-    function renderGraph() {
-
-
-      var graphDataSelected = trendsDataFull.filter(function(d) {           
-        if ((stateLinesArray.includes(d.State)) || (d.State == "USA")) {         
-          return d;              
-        }         
       })
 
-      var trendsDataNest = d3.nest()
-        .key(function(d) {return d.State })
-        .entries(graphDataSelected);
-
-      graphX.domain(d3.extent(trendsDataFiltered, function(d) { return d.Year; }));
-      graphY.domain([ getMinY(selectedCategory, trendsDataFiltered), getMaxY(selectedCategory, trendsDataFiltered)]);
-        
-      graphSvg.append("g")
-        .attr("transform", "translate(0," + graphHeight + ")")
-        .attr("class", "x graphAxis")
-        .call(d3.axisBottom(graphX)
-        .ticks(20)
-        //.ticks(5)
-        .tickFormat(d3.format('')))
-      //ADD MAJOR AND MINOR TICKS ON X-AXIS
-      d3.selectAll('.x.graphAxis .tick').each(function(d, i) {  
-         // every 4th is 'major' without .minor class
-         d3.select(this).classed('minor', (i % 5 !== 0));
-      });
-      d3.selectAll('.x.graphAxis .tick.minor text').each(function(d, i) {  
-         // every 4th is 'major' without .minor class
-         d3.select(this).classed('minor', (i % 5 !== 0));
-      });
-
-      // Add the Y Axis
-      graphSvg.append("g")
-        .attr("class", "y graphAxis")
-        .call(d3.axisLeft(graphY)
-        //  .ticks(6)
-          .tickSize(-graphWidth)
-          .tickFormat(d3.format('.2f'))
-          .tickValues(getTickValues(graphY, selectedCategory))
-        )
-
-      graphSvg.append("text")
-        .text("PROGRESSIVE")
-        .attr("class", "largeChartLabel progressiveLabel")
-        .attr("transform", "translate("+ graphWidth/3.8 +", "+ graphY(1.05)+")") 
-      graphSvg.append("text")
-        .text("REGRESSIVE")
-        .attr("class", "largeChartLabel regressiveLabel")
-        .attr("transform", "translate("+ graphWidth/3.8 +", "+ graphY(.95)+")") 
-
-      graphSvg.append("text")
-        .attr("text-anchor", "middle") 
-        .text("Progressivity")
-        .attr("transform", "translate(10, -15)") 
-        .attr("class", "y-label")
-
-      graphSvg.append("path")
-        .data([trendsDataNest])
-        .attr("class", "line-USA")
-        .attr("id", "usa-line")
-        // .attr("d", graphLine);
-        .attr("d", function(d) {d.graphLine = this; 
-          return (graphLine(d[0].values));
-        });
-      graphSvg.append("text")
-        .attr("transform", "translate("+(graphWidth+3)+","+graphY((trendsDataNest[0]).values[20][selectedCategory])+")")
-        .attr("dy", ".35em")
-        .attr("text-anchor", "start")
-        .text("US")
-        .attr("class", "usaLabel")
-
-      drawVoronoi(trendsDataNest, selectedCategory, graphY);
-
-      var threshold = graphSvg.append("line")
-        .attr("x1", 0)
-        .attr("y1", graphY(1))
-        .attr("x2", graphWidth)
-        .attr("y2", graphY(1))
-        .style("stroke-dasharray", 5)
-        .attr("stroke", "#5c5859")
-        .attr("class", "threshold")
-
-    }
-
-
-    function drawVoronoi(data, variable, yScale) {
-      var voronoi = d3.voronoi()
-        .x(function(d) { return graphX(d.Year); })
-        .y(function(d) { return yScale(d[variable]); })
-        .extent([[-graphMargin.left, -graphMargin.top], [graphWidth + graphMargin.right, graphHeight + graphMargin.bottom]]);
-
-
-      // graphSvg.classed("voronoi--show", true)
-      voronoiGroup = graphSvg.selectAll(".voronoi")
-        .data(voronoi.polygons(d3.merge(data.map(function(d) { 
-          return d.values; 
-        }))))
-
-      voronoiGroup.exit().remove()
-
-      voronoiGroup.enter().append("path")
-        .attr("class", function() { return "voronoi"})
-        .merge(voronoiGroup)
-        .attr("d", function(d) {
-        return d ? "M" + d.join("L") + "Z" : null;
-        })
-        // .style("fill", "#45b29d")
-        .on("mouseover", function(d){ mouseover(d, this, yScale)})
-        .on("mouseout", mouseout);
-    }
-
-
-    function mouseover(d, obj, yScale) {
-      var newCategory = getCurrentCategory();
-
-      d3.select("#tooltip")
-        .style("display","block")
-        .style("margin-left", graphX(d.data.Year) - 6 + "px")
-        .style("margin-top", yScale(d.data[newCategory]) - 40 + "px")
+      var trendsDataAK = trendsDataFull.filter(function(d){
+        return d.State ==  "AK"
+      })
       
-      d3.select("#tt-year").text(d.data.Year)
-      if(newCategory.search("ratio") != -1){
-        d3.select("#tt-val").text(RATIO_FORMAT(d.data[newCategory]))
-      }else{
-        d3.select("#tt-val").text(DOLLAR_FORMAT(d.data[newCategory]))
-      }
-      hoverState(d.data.State)
-
-    }
-
-    function mouseout(d) {
-      d3.select("#tooltip")
-        .style("display","none")
-        .style("margin-left", "0px")
-        .style("margin-top", "0px")
-      dehoverState(d.data.State)
-    }
-
-    //CREATE INITIAL MAP ON LOAD
-    function  renderMap() {
-      //function called on load to create the svg and draw an initial set of line charts. trendsData is passed in from a csv, and startYear/endYear are just for the file uploader (will be constants in final features)
-
-      // generateButtons(trendsData, startYear, endYear) //just for the file uploader
-      mapSvg = d3.select("#vis")
-        .data([trendsData])
-        .append("svg")
-        .attr("width", mapWidth + mapMargin.left + mapMargin.right)
-        .attr("height", mapHeight + mapMargin.top + mapMargin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + -330 + "," + mapMargin.top *2+ ")");
-
-
-      //reshape data, nesting by State 
-      var trendsDataNest = d3.nest()
-        .key(function(d) {return d.State})
-        .entries(trendsData);
-
-      var trendsDataNestBlank = d3.nest()
-        .key(function(d) { return d.State})
-        .entries(blankStateData);
-
-
-      //generate a list of states in the dataset. For any states not in the dataset (stored temporarily in tmpKeys) but in the `stateData` object (which is in the global scope, stored in `stateData.js`, create a new data set, just for the blank states (not in data csv), which wil be greyed out
-      var tmpKeys = []
-      for(var i = 0; i < trendsDataNest.length; i++){
-        var obj = trendsDataNest[i]
-        if(obj.hasOwnProperty("key")){ 
-          tmpKeys.push(obj.key)
-        }
-      }
-
-
-      //tile grid map projection and geo path
-      var projection = d3.geoEquirectangular()
-        .scale(mapSizes[pageSize]["scale"])
-        .center([-96.03542,41.69553])
-        .translate(mapSizes[pageSize]["translate"]);
-
-      var geoPath = d3.geoPath()
-        .projection(projection);
-
-      //for each non blank state, create a group which will hold the line chart
-      var chartWidth = mapSizes[pageSize]["chartWidth"]
-      var chartMargin = mapSizes[pageSize]["chartMargin"]
-      var map = mapSvg
-        .selectAll(".state")
-        .data(trendsDataNest)
-        .enter()
-        .append("g")
-        .attr("class", function(d){ return "state " + d.key })
-        .attr("transform", function(d,i){
-          //grab the element in statesData corresponding to the correct trendsData state, and position accordingly
-          var tmp = stateData.features.filter(function(o) { return o.properties.abbr == d.key} )
-          return "translate(" + geoPath.centroid(tmp[0]) + ")"
-        })
-      map
-        .on("click", function(d) { 
-          var newCategory = getCurrentCategory();
-          var stateName = d.values[0]["state_full"]
-          var clickedState = d3.select(this).attr("class").split(" ")[1]
-          d3.select(".nonblank-rect." + clickedState)
-            .classed("selected-state", function(){
-              if (d3.select(".nonblank-rect." + clickedState).classed("selected-state") == true) {
-                // console.log('hi')
-                removeStateList(clickedState);
-                return false
-              }else { 
-                addStateList(clickedState, stateName);
-                return true;            
-              }
-            })
-          // d3.select(".mapLabel.standard." + clickedState)
-          //   .classed("selected-text", function(){
-          //     if (d3.select(this).classed("selected-text") == true) {
-          //       // console.log('hi')
-          //       return false
-          //     }else { 
-          //       return true;            
-          //     }
-          //   })
-          updateStateLine(clickedState, clickedState)
-          updateLineGraph(newCategory, newCategory, "click", clickedState)
-          // console.log(selectedCategory)
-        })
-        .on("mouseover", function() {
-          var newCategory = getCurrentCategory();
-          var hoveredState = d3.select(this).attr("class").split(" ")[1]
-          var hoveredStateName = trendsDataFull.filter(function(d) { 
-            return d.State == hoveredState
-          })
-          d3.select(".nonblank-rect." + hoveredState)
-            .classed("hovered-state", true)
-          d3.select(".mapLabel.standard." + hoveredState)
-            .classed("hovered-text", true)
-          hoverState(hoveredState)
-          updateStateLine(hoveredState)
-          updateLineGraph(newCategory, newCategory, "hover", hoveredState)
-
-        })
-        .on("mouseout", function() {
-          var newCategory = getCurrentCategory();
-          var hoveredState = d3.select(this).attr("class").split(" ")[1]
-          d3.select(".nonblank-rect." + hoveredState)
-            .classed("hovered-state", false)
-          d3.select(".nonblank-rect." + hoveredState)
-            .style("fill", function(){
-              if (d3.select("#revratio_").classed("current") == true){
-                if (d3.select(".nonblank-rect." + hoveredState).classed("selected-state") == true)  {
-                  return "#353535"
-                } return "#a2d3eb"
-              }else if (d3.select("#revpp_").classed("current") == true){
-                if (d3.select(".nonblank-rect." + hoveredState).classed("selected-state") == true)  {
-                 return "#fbbe15"
-                } return "#094c6a"
-              }
-            })
-          d3.select(".mapLabel.standard." + hoveredState)
-            .style("fill", function(){
-              if (d3.select("#revratio_").classed("current") == true){
-                if (d3.select(".mapLabel.standard." + hoveredState).classed("selected-text") == true)  {
-                  return "#ffffff"
-                } return "#353535"
-              }else if (d3.select("#revpp_").classed("current") == true){
-                if (d3.select(".mapLabel.standard." + hoveredState).classed("selected-text") == true)  {
-                 return "#353535"
-                } return "#ffffff"
-              }
-            })
-          // d3.selectAll(".state-name")
-          //   .html("")
-          //IF LINE IS ADDED THEN REMOVE
-          if (d3.select(".nonblank-rect." + hoveredState).classed("selected-state") == false) {
-            // console.log('remove')
-            for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
-              if (stateLinesArray[i] === hoveredState) { 
-                stateLinesArray.splice(i, 1);
-              }
-            }
-            graphSvg.select("path.line-" + hoveredState) 
-              .remove()
+      trendsDataFull.forEach(function(d) {
+        keys = Object.keys(d);
+        for(var i = 0; i<keys.length; i++){
+          var key = keys[i]
+          if(key == "State" || key == "Year" || key == "state_full"){
+            continue;
+          }else{
+            d[key] = +d[key]
           }
-          d3.select(".mapLabel.standard." + hoveredState)
-            .classed("hovered-text", false)
-          if(d3.select(".nonblank-rect." + hoveredState).classed("selected-state") == false){
-            updateLineGraph(newCategory, newCategory, "remove", hoveredState)
-          }
-          dehoverState(hoveredState)
-        })
-      // //draw greyed out blank states for HI and DC
-      var blank = mapSvg
-        .selectAll(".blank")
-        .data(trendsDataNestBlank)
-        .enter()
-        .append("g")
-        .attr("class","blank")
-        .attr("transform", function(d,i){
-          //grab the element in statesData corresponding to the correct trendsData state, and position accordingly
-          var tmp = stateData.features.filter(function(o) { return o.properties.abbr == d.key} )
-          return "translate(" + geoPath.centroid(tmp[0]) + ")"
-        })
-
-      //blank sate background
-      blank.append("rect")
-        .attr("width",chartWidth-2*chartMargin + 8)
-        .attr("height",chartWidth-2*chartMargin + 8)
-        .attr("x",chartMargin - 4)
-        .attr("y",chartMargin - 4)
-        .style("fill","#b3b3b3") 
-      blank.append("text")
-        .text(function(d){ return d.key })
-        .attr("class", function(d) {
-          return "mapLabel standard " + d.key
-        })
-        .attr("text-anchor", "end")
-        .attr("x",chartWidth+chartMargin - 25)
-        .attr("y",chartWidth+chartMargin - 25)
-
-      //chart background
-      map
-        .append("rect")
-        .attr("width",chartWidth-2*chartMargin + 8)
-        .attr("height",chartWidth-2*chartMargin + 8)
-        .attr("x",chartMargin - 4)
-        .attr("y",chartMargin - 4)
-        .style("fill","#a2d3eb") 
-        .attr("class", function(d) { 
-          return "nonblank-rect " + d.key
-        })
-
-      //set up scales for charts. THe code here assumes all states are on the same x/y scale. Alaska and the US avg will prob need to have special scales written for them, since they will be on a separate scale (I think). Also note currently there is no US average chart/tile.
-      var mapX = d3.scaleLinear().range([chartMargin, chartWidth-chartMargin]).nice();
-      var mapY = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin]).nice();
-      var mapY2 = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin]).nice();
-
-
-      //this is just for the file uploader, setting the key onload to whatever column is first in the data file, other than State/Year. In the real feature, firstKey will just be a constant
-      var firstKey = "adj_revratio_all"
-      var keys = Object.keys(trendsData[0])
-
-      mapX.domain([startYear,endYear]);
-      // console.log(startYear+ endYear)
-      //NEED TWO Y-AXES:
-      //ALL STATES EXCEPT AK
-      mapY.domain([d3.min(trendsDataFiltered, function(d) { return d[firstKey]; }), d3.max(trendsDataFiltered, function(d) { return d[firstKey]; })]); 
-      //AK ONLY
-      var min2 = d3.min([1, d3.min(trendsDataAK, function(d) {return d[firstKey]; })]);
-      var max2 = d3.max(trendsDataAK, function(d) { return d[firstKey]; })
-      mapY2.domain([min2, max2]); 
-
-
-      //line chart axes
-      var mapXAxis = d3.axisBottom(mapX)
-      var mapYAxis = d3.axisLeft(mapY)
-
-      //for each map chart line
-      var mapline = d3.line()
-        .x(function(d) { return mapX(d.Year); })
-        .y(function(d) { return mapY(d[firstKey]); });
-      var mapline2 = d3.line()
-        .x(function(d) { return mapX(d.Year); })
-        .y(function(d) { return mapY2(d[firstKey]); });
-
-     // A white line at y=1. This is just a placeholder. In the final feature, we want some sort of distinction of y=1 for the ratio graphs, but not the level graphs. Will likely be two rects (above and below y=1) instead of a line, but TBD
-      //DRAWING THE RATIO LINE FOR ALL STATES BUT AK
-      d3.selectAll(".state:not(.AK)").append("line")
-        .attr("x1",chartMargin)
-        .attr("x2",chartWidth-chartMargin)
-        .attr("y1",mapY(1))
-        .attr("y2",mapY(1))
-        .attr("class", function(d) {
-          return "ratioOneLine ratioOneLine-" + d.key
-        })
-      //DRAWING THE RATIO LINE FOR AK
-      d3.select(".state.AK").append("line")
-        .attr("x1",chartMargin)
-        .attr("x2",chartWidth-chartMargin)
-        .attr("y1",mapY2(1))
-        .attr("y2",mapY2(1))
-        .attr("class", function(d) {
-          return "ratioOneLine ratioOneLine-" + d.key
-        })
-
-      //DRAWING THE GRAPH LINE FOR ALL STATES BUT AKK
-      d3.selectAll(".state:not(.AK)").append("path")
-        .attr("class", function(d){ return "standard line " + d.key })
-        .attr("d", function(d){  return mapline(d.values)})
-      //DRAWING THE GRAPH LINE FOR AK
-      d3.select(".state.AK").append("path")
-        .attr("class", function(d){ return "standard line " + d.key })
-        .attr("d", function(d){  return mapline2(d.values)})
-      //NEED TO HIDE THE GRAPH LINE FOR DC AND HI FOR THE RATIO TAB
-      map.selectAll(".standard.line.DC, .standard.line.HI")
-        .style("opacity", function() {
-          return (d3.select("#revpp_").classed("current") == true) ?  1 : 0;
-        })
-
-
-    //  see drawBackMapCurtain for explanation--draw a "curtain" on top of the line, which can be animated away to simulate the line animating left to right
-      map.append("rect")
-        .attr("class", function(d) {
-          return "mapCurtain " + d.key 
-        })
-        .attr("width",0)
-        .attr("height",chartWidth-2*chartMargin)
-        .attr("x",0)
-        .attr("y",chartMargin)
-        .style("fill", "#a2d3eb")
-
-      //draw the state name on the tile
-      map.append("text")
-        .text(function(d){ return d.key })
-        .attr("class", function(d) {
-          return "mapLabel standard " + d.key
-        })        
-        .attr("text-anchor", "end")
-        .attr("x",chartWidth+chartMargin - 25)
-        .attr("y",chartWidth+chartMargin - 25)
-
-      //add the X axis 
-      map.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + (chartWidth-chartMargin) + ")")
-        .call(mapXAxis);
-
-      //add the Y Axis
-      map.append("g")
-        .attr("class", function(d){ return "y axis " + d.key})
-        .attr("transform", "translate(" + chartMargin + ",0)")
-        .call(mapYAxis);
-
-      d3.select("#vis")
-        .append("div")
-        .attr("id", "ak-disclaimer")
-        .html("Alaska data are displayed on a separate y axis scale (from <span id =\"ak-min\">" + RATIO_FORMAT(min2)+ "</span> to <span id =\"ak-max\">" + RATIO_FORMAT(max2) + "</span>) from the other 49 states.")
-     d3.select("#vis")
-        .append("div")
-        .attr("id", "note-blank")
-        .html(blankNote)
-
-    }
-
-    d3.select(".checkbox-div")
-      .on("click", function() {
-        if (d3.select(".checkbox-image").classed('checked') == true){
-        d3.select(".checkbox-image")
-          .classed("checked", false)
-        d3.select(".empty-checkbox-image")
-          .classed("checked", true)
-        checkAdjusted()
-        }else {
-          d3.select(".empty-checkbox-image")
-            .classed("checked", false)
-          d3.select(".checkbox-image")
-            .classed("checked", true)
-          checkAdjusted();
         }
-      })
-    var div = d3.select("body").append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0);
-
-    d3.select(".checkbox-label")
-      .on("mouseover", function() { 
-        div.transition()
-          .duration(200)
-          .style("opacity", .85);
-        div.html("Cost-adjusted numbers account for cost differences among districts.")
-          .style("left", (d3.event.pageX) + "px")
-          .style("top", (d3.event.pageY) + 10 + "px");
-      })
-      .on("mouseout", function(d) {
-        div
-          .transition()
-          .duration(500)
-          .style("opacity", 0);
+        d.adj_revratio_ = 1;
+        d.revratio_ = 1;
+        d.adj_revpp_ = 0;
+        d.revpp_ = 0;
       });
-
-    /*IF ADJUSTED IS CHECKED*/
-    var adjusted = "adj_"
-
-    function checkAdjusted() {
-      // adjusted = (d3.select('#adjusted-checkbox').property('checked') == true) ? "adj_" : ""
-      var newCategory = getCurrentCategory();
-      updateLineGraph(newCategory, selectedCategory, "toggle", null)
-      updateMapLine(newCategory, selectedCategory)
-      d3.select(".switch-main-text")
-        .html(function() { 
-          return toggleText[0][getCurrentCategory()];
-        })
-    }
-
-
-    d3.select("#adjusted-checkbox").on("change", checkAdjusted)
-
-
-
-    // /*SWITCHING BETWEEN TABS*/
-
-
-    d3.selectAll(".top-tab")
-      .on("click", function(d){  
-        d3.selectAll(".top-tab").classed('current', false)
-        d3.select(this).classed('current', true)
-        var currentTab = d3.select(this).attr("id")
-        d3.select(".switch-main-text")
-          .html(function() { 
-            return toggleText[0][getCurrentCategory()];
-          })
-        checkAdjusted();
-        drawBackMapCurtain(0, currentTab)
+      //FILTERING DATA FOR MAP TO NOT INCLUDE USA
+      var trendsData = trendsDataFull.filter(function(d) { 
+        return d.State !== "USA"
       })
-
-    /*TOGGLE BUTTONS*/
-    var selectedToggles = "all";
-
-  
-
-
-
-    // WHEN CLICKING ON EACH TOGGLE:
-    d3.selectAll(".button_toggle")
-      .on('click', function() {
-        // checkAdjusted();
-        if(d3.select(this).classed("on")){ 
-          d3.select(this).classed("on", false)
-          d3.select(this).classed("off", true)
-          d3.select(".switch-main-text")
-            .html(function() { 
-              return toggleText[0][getCurrentCategory()];
-            })
-        }else {
-          checkAdjusted();
-          d3.select(this).classed("on", true)
-          d3.select(this).classed("off", false)
-          d3.select(".switch-main-text")
-            .html(function() { 
-              return toggleText[0][getCurrentCategory()];
-            })
-        }
-        checkAdjusted();
-
-      }) 
-
-
-    //WHEN CLICKING ON CLEAR ALL UNDER SELECTED STATE LIST
-    d3.select(".state-clear")
-      .on('click', function() {
-        for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
-          removeStateList(stateLinesArray[i])
-        }
+      var trendsDataUSA = trendsDataFull.filter(function(d) { 
+        return d.State == "USA"
       })
-    //WHEN CLICKING ON STATE, ADD TAG TO BOTTOM OF LINE GRAPH
-    function addStateList(state, stateName) { 
-      d3.selectAll(".lineChart-details, .lineChart-notes-under")
-        .classed("show", true)
-      d3.select(".lineChart-notes-above")
-        .classed("show", false)
-      var stateItem = d3.select("#state-list")
-        .datum(state)
-        .append("li")
-        .html(stateName)
-        .attr("class", "state-item item-" + state)
-        .on("mouseover", function(){ hoverState(state)})
-        .on("mouseout", function(){ dehoverState(state)})
-      stateItem.append("div")
-        .attr("class", "close-sign close-sign-" + state)
-        .on("click", function(d) {
-          removeStateList(d)
-        })
-      d3.select(".mapLabel.standard." + state)
-        .classed("selected-text", true)
-    }
-
-    function removeStateList(state) {
-      var newCategory = getCurrentCategory();
-      updateLineGraph(newCategory, newCategory, "remove", state)
-      d3.select(".nonblank-rect." + state)
-        .classed("selected-state", false)
-        .style("fill", function(){
-          if (d3.select("#revratio_").classed("current") == true){
-            return "#a2d3eb"
-          }else if (d3.select("#revpp_").classed("current") == true){
-            return "#094c6a"
-          }
-        })
-      d3.select(".mapLabel.standard." + state)
-        .style("fill", function(){
-          if (d3.select("#revratio_").classed("current") == true){
-            return "#353535"
-          }else if (d3.select("#revpp_").classed("current") == true){
-            return "#ffffff"
-          }
-        })
-
-
-      d3.select(".item-" + state)
-        .remove();
-      d3.select(".line-state.line-" + state)
-        .remove()
-      d3.selectAll("g.state." + state + " .selected-state")
-        .classed("selected-state", false)
-      if (d3.select(".state-item").size() == 0) {
-        d3.selectAll(".lineChart-details, .lineChart-notes-under")
-          .classed("show", false)
-        d3.select(".lineChart-notes-above")
-          .classed("show", true)
-      }
-      d3.select(".mapLabel.standard." + state)
-        .classed("selected-text", false)
-        
-      for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
-        if (stateLinesArray[i] === state) { 
-          stateLinesArray.splice(i, 1);
-        }
-      }
-    }
-
-
-    function updateScales(variable, oldVariable){ 
-      var domainController;
-      if(variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_"){ 
-        domainController = variable;
-        selectedCategory = variable;
-      }else{ 
-        if(variable != oldVariable){
-          if (d3.select("#revpp_").classed("current")) {
-            //blank variable, from changing tabs
-            domainController = "adj_revpp_lo";
-            selectedCategory = "adj_revpp_lo"
-          //blank variable, from changing toggles
-          } else if (d3.select("#revratio_").classed("current")) {
-            //blank variable, from changing tabs
-            domainController = "adj_revratio_lo";
-            selectedCategory = "adj_revratio_lo"
-          //blank variable, from changing toggles
-          }
-        }else{          
-          //blank variable, from clicking on state
-          domainController = selectedCategory;
-        }
-      }
-
-      var graphDataSelected = trendsDataFull.filter(function(d) {           
-        if ((stateLinesArray.includes(d.State)) || (d.State == "USA")) {         
-          return d;              
-        }         
-      })
-
-      var graphDataNest = d3.nest()
-        .key(function(d) {return d.State;})
-        .entries(graphDataSelected);
-
-      var akNest = d3.nest()
-        .key(function(d) {return d.State;})
-        .entries(trendsDataAK);
-
-
-      var graphWidth =  graphSizes[pageSize]["width"]- graphMargin.left - graphMargin.right,
-      graphHeight = graphSizes[pageSize]["height"] - graphMargin.top - graphMargin.bottom;
-
-      d3.select("#lineChart svg")
-        .select("g")
-        .data(trendsDataFiltered)
-
-      var graphY = d3.scaleLinear().range([graphHeight, 0]).nice();
-      var graphY2 = d3.scaleLinear().range([graphHeight, 0]).nice();
-
-     // var max = d3.max(trendsDataMinMax, function(d) { return d[domainController]; })
-      var max = getMaxY(domainController, trendsDataMinMax)
-      var min = (domainController.search("ratio") != -1) ? getMinY(domainController, trendsDataMinMax) : 0;
-      var max2 = d3.max(trendsDataAK, function(d) { return d[domainController]; })
-      var min2 = (domainController.search("ratio") != -1) ? d3.min([1, d3.min(trendsDataAK, function(d) {return d[domainController]; })]) : 0;
-
-      if(max > max2){
-        max2 = max;
-        min2 = min;
-      }
-      if(min < min2){
-        min2 = min;
-      }
-
-
-
-      graphY.domain([min, max]);
-      graphY2.domain([min2, max2])
-
-      var graphLine = d3.line()
-        .x(function(d) { return graphX(d.Year); })
-        .y(function(d) { return graphY(d[variable]); });
-
-      var graphLine2 = d3.line()
-        .x(function(d) { return graphX(d.Year); })
-        .y(function(d) { return graphY2(d[variable]); });
-
-      return {"graphY": graphY, "graphY2": graphY2, "graphLine": graphLine, "graphLine2":graphLine2, "graphDataNest": graphDataNest, "akNest": akNest}
-
-    }
-
-
-    //ADJUSTS LINE GRAPH TO ACCOMMODATE CHANGING Y-AXIS DUE TO ADDITION OR REMOVAL OF STATE LINES
-    function updateLineGraph(variable, oldVariable, action, state) {
-      var scales = updateScales(variable, oldVariable)
-      var graphY = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state") || variable.includes("revpp_fe")) ? scales.graphY2 : scales.graphY;
-      var graphLine = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state")) ? scales.graphLine2 : scales.graphLine
-      var graphDataNest = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state")) ? scales.akNest : scales.graphDataNest
-      var trendsDataNestUSA = d3.nest()
-        .key(function(d) {return d.State;})
-        .entries(trendsDataUSA);
-      if(variable == "adj_revratio_" || variable == "revratio_" || variable == "revpp_" || variable == "adj_revpp_"){
-        d3.select(".usaLabel").attr("opacity", 0)
-       } else {
-        d3.select(".usaLabel").attr("opacity", 1)
-       }
-      graphSvg.select(".progressiveLabel")
-        .transition().duration(1200)
-        .attr("transform", "translate("+ graphWidth/3.8 +", "+ graphY(1.05)+")") 
-      graphSvg.select(".regressiveLabel")
-        .transition().duration(1200)
-        .attr("transform", "translate("+ graphWidth/3.8 +", "+ graphY(.95)+")") 
-        .style("opacity", function() { 
-         var domain = graphY.domain() 
-          return (domain[0] >= .9) ? 0 : 1
-        })
-
-      graphSvg.selectAll(".largeChartLabel")
-        .style("opacity", function() {
-          return (d3.select("#revpp_").classed("current") == true) ? 0 : 1
-        })
-      d3.selectAll("#lineChart .y.graphAxis")
-        .transition().duration(1200)
-        .call(d3.axisLeft(graphY)
-          .tickSize(-graphWidth)
-          .tickFormat((d3.select("#revpp_").classed("current") == true) ? d3.format('.2s') : d3.format('.2f'))
-          .tickValues(getTickValues(graphY, variable))
-        );
-
-      var duration = (action == "toggle" || state == "AK") ? 1200 : 0
-      d3.selectAll(".line-USA, .line-state")
-        .transition()
-        .duration(duration)
-        // .attr("d", graphLine)
-        .attr("d", function(d) {
-        // console.log(graphLine(d[0].values))
-          return (graphLine(d[0].values));
-        });
-      graphSvg.select("text.usaLabel")
-        .transition()
-        .duration(duration)
-        .attr("transform", "translate("+(graphWidth+3)+","+graphY((trendsDataNestUSA[0]).values[20][selectedCategory])+")")
-        .attr("dy", ".35em")
-        .attr("text-anchor", "start")
-
-      var threshold = d3.select(".threshold")
-        .transition()
-        .duration(1200)
-        .attr("y1", graphY(1))
-        .attr("y2", graphY(1))
-        .style("opacity", function() {
-          return (d3.select("#revpp_").classed("current") == true) ? 0 : 1
-        })
-
-      threshold.node().parentNode.appendChild(threshold.node())
-
-      if(action == "remove"){
-        graphDataNest = graphDataNest.filter(function(d){ return d.key != state})
-      }
-      else if(action == "removeAll"){
-       graphDataNest = graphDataNest.filter(function(d){ return d.key == "USA"}) 
-      }
-      if(typeof(graphDataNest) != "undefined"){
-        drawVoronoi(graphDataNest, variable, graphY)
-      }
-
-    }
-
-    function updateMapLine(variable, oldVariable){
       var trendsDataFiltered = trendsDataFull.filter(function(d) { 
         if (selectedCategory.includes("revratio")) {
           return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
@@ -990,389 +196,1195 @@ d3.csv("data/toggle_text.csv", function(error, toggleText) {
           return d.State;
         }
       })
-      //var domainController = (variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_") ? variable : oldVariable;
-      if(variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_"){ 
-        domainController = variable;
-      }else{ 
-        if(variable != oldVariable){
-          if (d3.select("#revpp_").classed("current")) {
-            //blank variable, from changing tabs
-            domainController = "adj_revpp_lo";
-            selectedCategory = "adj_revpp_lo";
-          //blank variable, from changing toggles
-          } else if (d3.select("#revratio_").classed("current")) {
-            //blank variable, from changing tabs
-            domainController = "adj_revratio_lo";
-            selectedCategory = "adj_revratio_lo";
-          //blank variable, from changing toggles
+
+      var trendsDataAK = trendsDataFull.filter(function(d) { 
+        if (selectedCategory.includes("revratio")) {
+          return d.State == "AK"
+        }else {
+          return d.State;
+        }
+      })
+      //FILTERING DATA TO HI AND DC TO DRAW BOXES OVER TILES
+      var blankStateData = trendsDataFull.filter(function(d) { 
+        if (selectedCategory.includes("revratio")) {
+          return d.State == "HI" || d.State == "DC"
+        }
+      })
+      
+      //CREATE INITIAL LINE GRAPH ON LOAD
+      function renderGraph() {
+
+        var graphDataSelected = trendsDataFull.filter(function(d) {           
+          if ((stateLinesArray.includes(d.State)) || (d.State == "USA")) {         
+            return d;              
+          }         
+        })
+
+        var trendsDataNest = d3.nest()
+          .key(function(d) {return d.State })
+          .entries(graphDataSelected);
+
+        graphX.domain(d3.extent(trendsDataFiltered, function(d) { return d.Year; }));
+        graphY.domain([ getMinY(selectedCategory, trendsDataFiltered), getMaxY(selectedCategory, trendsDataFiltered)]);
+          
+        graphSvg.append("g")
+          .attr("transform", "translate(0," + graphHeight + ")")
+          .attr("class", "x graphAxis")
+          .call(d3.axisBottom(graphX)
+          .ticks(20)
+          //.ticks(5)
+          .tickFormat(d3.format('')))
+        //ADD MAJOR AND MINOR TICKS ON X-AXIS
+        d3.selectAll('.x.graphAxis .tick').each(function(d, i) {  
+           // every 4th is 'major' without .minor class
+           d3.select(this).classed('minor', (i % 5 !== 0));
+        });
+        d3.selectAll('.x.graphAxis .tick.minor text').each(function(d, i) {  
+           // every 4th is 'major' without .minor class
+           d3.select(this).classed('minor', (i % 5 !== 0));
+        });
+
+        // Add the Y Axis
+        graphSvg.append("g")
+          .attr("class", "y graphAxis")
+          .call(d3.axisLeft(graphY)
+          //  .ticks(6)
+            .tickSize(-graphWidth)
+            .tickFormat(d3.format('.2f'))
+            .tickValues(getTickValues(graphY, selectedCategory))
+          )
+
+        graphSvg.append("text")
+          .text("PROGRESSIVE")
+          .attr("class", "largeChartLabel progressiveLabel")
+          .attr("transform", "translate("+ graphWidth/3.8 +", "+ graphY(1.05)+")") 
+        graphSvg.append("text")
+          .text("REGRESSIVE")
+          .attr("class", "largeChartLabel regressiveLabel")
+          .attr("transform", "translate("+ graphWidth/3.8 +", "+ graphY(.95)+")") 
+
+        graphSvg.append("text")
+          .attr("text-anchor", "middle") 
+          .text("Progressivity")
+          .attr("transform", "translate(10, -15)") 
+          .attr("class", "y-label")
+
+        graphSvg.append("path")
+          .data([trendsDataNest])
+          .attr("class", "line-USA")
+          .attr("id", "usa-line")
+          // .attr("d", graphLine);
+          .attr("d", function(d) {d.graphLine = this; 
+            return (graphLine(d[0].values));
+          });
+        graphSvg.append("text")
+          .attr("transform", "translate("+(graphWidth+3)+","+graphY((trendsDataNest[0]).values[20][selectedCategory])+")")
+          .attr("dy", ".35em")
+          .attr("text-anchor", "start")
+          .text("US")
+          .attr("class", "usaLabel")
+
+        drawVoronoi(trendsDataNest, selectedCategory, graphY);
+
+        var threshold = graphSvg.append("line")
+          .attr("x1", 0)
+          .attr("y1", graphY(1))
+          .attr("x2", graphWidth)
+          .attr("y2", graphY(1))
+          .style("stroke-dasharray", 5)
+          .attr("stroke", "#5c5859")
+          .attr("class", "threshold")
+
+      }
+
+
+      function drawVoronoi(data, variable, yScale) {
+        var voronoi = d3.voronoi()
+          .x(function(d) { return graphX(d.Year); })
+          .y(function(d) { return yScale(d[variable]); })
+          .extent([[-graphMargin.left, -graphMargin.top], [graphWidth + graphMargin.right, graphHeight + graphMargin.bottom]]);
+
+
+        // graphSvg.classed("voronoi--show", true)
+        voronoiGroup = graphSvg.selectAll(".voronoi")
+          .data(voronoi.polygons(d3.merge(data.map(function(d) { 
+            return d.values; 
+          }))))
+
+        voronoiGroup.exit().remove()
+
+        voronoiGroup.enter().append("path")
+          .attr("class", function() { return "voronoi"})
+          .merge(voronoiGroup)
+          .attr("d", function(d) {
+          return d ? "M" + d.join("L") + "Z" : null;
+          })
+          // .style("fill", "#45b29d")
+          .on("mouseover", function(d){ mouseover(d, this, yScale)})
+          .on("mouseout", mouseout);
+      }
+
+
+      function mouseover(d, obj, yScale) {
+        var newCategory = getCurrentCategory();
+
+        d3.select("#tooltip")
+          .style("display","block")
+          .style("margin-left", graphX(d.data.Year) - 6 + "px")
+          .style("margin-top", yScale(d.data[newCategory]) - 40 + "px")
+        
+        d3.select("#tt-year").text(d.data.Year)
+        if(newCategory.search("ratio") != -1){
+          d3.select("#tt-val").text(RATIO_FORMAT(d.data[newCategory]))
+        }else{
+          d3.select("#tt-val").text(DOLLAR_FORMAT(d.data[newCategory]))
+        }
+        hoverState(d.data.State)
+
+      }
+
+      function mouseout(d) {
+        d3.select("#tooltip")
+          .style("display","none")
+          .style("margin-left", "0px")
+          .style("margin-top", "0px")
+        dehoverState(d.data.State)
+      }
+
+      //CREATE INITIAL MAP ON LOAD
+      function  renderMap() {
+        //function called on load to create the svg and draw an initial set of line charts. trendsData is passed in from a csv, and startYear/endYear are just for the file uploader (will be constants in final features)
+
+        // generateButtons(trendsData, startYear, endYear) //just for the file uploader
+        $("#vis").empty();
+        mapSvg = d3.select("#vis")
+          .data([trendsData])
+          .append("svg")
+          .attr("width", mapWidth + mapMargin.left + mapMargin.right)
+          .attr("height", mapHeight + mapMargin.top + mapMargin.bottom)
+          .append("g")
+          .attr("transform", "translate(" + mapTranslateX + "," + mapMargin.top *2+ ")");
+
+
+        //reshape data, nesting by State 
+        var trendsDataNest = d3.nest()
+          .key(function(d) {return d.State})
+          .entries(trendsData);
+
+        var trendsDataNestBlank = d3.nest()
+          .key(function(d) { return d.State})
+          .entries(blankStateData);
+
+
+        //generate a list of states in the dataset. For any states not in the dataset (stored temporarily in tmpKeys) but in the `stateData` object (which is in the global scope, stored in `stateData.js`, create a new data set, just for the blank states (not in data csv), which wil be greyed out
+        var tmpKeys = []
+        for(var i = 0; i < trendsDataNest.length; i++){
+          var obj = trendsDataNest[i]
+          if(obj.hasOwnProperty("key")){ 
+            tmpKeys.push(obj.key)
           }
-        }else{          
-          //blank variable, from clicking on state
-          domainController = oldVariable
+        }
+
+
+        //tile grid map projection and geo path
+        var projection = d3.geoEquirectangular()
+          .scale(mapSizes[pageSize]["scale"])
+          .center([-96.03542,41.69553])
+          .translate(mapSizes[pageSize]["translate"]);
+
+        var geoPath = d3.geoPath()
+          .projection(projection);
+
+        //for each non blank state, create a group which will hold the line chart
+        var chartWidth = mapSizes[pageSize]["chartWidth"]
+        var chartMargin = mapSizes[pageSize]["chartMargin"]
+        var map = mapSvg
+          .selectAll(".state")
+          .data(trendsDataNest)
+          .enter()
+          .append("g")
+          .attr("class", function(d){ return "state " + d.key })
+          .attr("transform", function(d,i){
+            //grab the element in statesData corresponding to the correct trendsData state, and position accordingly
+            var tmp = stateData.features.filter(function(o) { return o.properties.abbr == d.key} )
+            return "translate(" + geoPath.centroid(tmp[0]) + ")"
+          })
+        map
+          .on("click", function(d) { 
+            var newCategory = getCurrentCategory();
+            var stateName = d.values[0]["state_full"]
+            var clickedState = d3.select(this).attr("class").split(" ")[1]
+            d3.select(".nonblank-rect." + clickedState)
+              .classed("selected-state", function(){
+                if (d3.select(".nonblank-rect." + clickedState).classed("selected-state") == true) {
+                  // console.log('hi')
+                  removeStateList(clickedState);
+                  return false
+                }else { 
+                  addStateList(clickedState, stateName);
+                  return true;            
+                }
+              })
+            // d3.select(".mapLabel.standard." + clickedState)
+            //   .classed("selected-text", function(){
+            //     if (d3.select(this).classed("selected-text") == true) {
+            //       // console.log('hi')
+            //       return false
+            //     }else { 
+            //       return true;            
+            //     }
+            //   })
+            updateStateLine(clickedState, clickedState)
+            updateLineGraph(newCategory, newCategory, "click", clickedState)
+            // console.log(selectedCategory)
+          })
+          .on("mouseover", function() {
+            var newCategory = getCurrentCategory();
+            var hoveredState = d3.select(this).attr("class").split(" ")[1]
+            var hoveredStateName = trendsDataFull.filter(function(d) { 
+              return d.State == hoveredState
+            })
+            d3.select(".nonblank-rect." + hoveredState)
+              .classed("hovered-state", true)
+            d3.select(".mapLabel.standard." + hoveredState)
+              .classed("hovered-text", true)
+            hoverState(hoveredState)
+            updateStateLine(hoveredState)
+            updateLineGraph(newCategory, newCategory, "hover", hoveredState)
+
+          })
+          .on("mouseout", function() {
+            var newCategory = getCurrentCategory();
+            var hoveredState = d3.select(this).attr("class").split(" ")[1]
+            d3.select(".nonblank-rect." + hoveredState)
+              .classed("hovered-state", false)
+            d3.select(".nonblank-rect." + hoveredState)
+              .style("fill", function(){
+                if (d3.select("#revratio_").classed("current") == true){
+                  if (d3.select(".nonblank-rect." + hoveredState).classed("selected-state") == true)  {
+                    return "#353535"
+                  } return "#a2d3eb"
+                }else if (d3.select("#revpp_").classed("current") == true){
+                  if (d3.select(".nonblank-rect." + hoveredState).classed("selected-state") == true)  {
+                   return "#fbbe15"
+                  } return "#094c6a"
+                }
+              })
+            d3.select(".mapLabel.standard." + hoveredState)
+              .style("fill", function(){
+                if (d3.select("#revratio_").classed("current") == true){
+                  if (d3.select(".mapLabel.standard." + hoveredState).classed("selected-text") == true)  {
+                    return "#ffffff"
+                  } return "#353535"
+                }else if (d3.select("#revpp_").classed("current") == true){
+                  if (d3.select(".mapLabel.standard." + hoveredState).classed("selected-text") == true)  {
+                   return "#353535"
+                  } return "#ffffff"
+                }
+              })
+            // d3.selectAll(".state-name")
+            //   .html("")
+            //IF LINE IS ADDED THEN REMOVE
+            if (d3.select(".nonblank-rect." + hoveredState).classed("selected-state") == false) {
+              // console.log('remove')
+              for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
+                if (stateLinesArray[i] === hoveredState) { 
+                  stateLinesArray.splice(i, 1);
+                }
+              }
+              graphSvg.select("path.line-" + hoveredState) 
+                .remove()
+            }
+            d3.select(".mapLabel.standard." + hoveredState)
+              .classed("hovered-text", false)
+            if(d3.select(".nonblank-rect." + hoveredState).classed("selected-state") == false){
+              updateLineGraph(newCategory, newCategory, "remove", hoveredState)
+            }
+            dehoverState(hoveredState)
+          })
+        // //draw greyed out blank states for HI and DC
+        var blank = mapSvg
+          .selectAll(".blank")
+          .data(trendsDataNestBlank)
+          .enter()
+          .append("g")
+          .attr("class","blank")
+          .attr("transform", function(d,i){
+            //grab the element in statesData corresponding to the correct trendsData state, and position accordingly
+            var tmp = stateData.features.filter(function(o) { return o.properties.abbr == d.key} )
+            return "translate(" + geoPath.centroid(tmp[0]) + ")"
+          })
+
+        //blank sate background
+        blank.append("rect")
+          .attr("width",chartWidth-2*chartMargin + 8)
+          .attr("height",chartWidth-2*chartMargin + 8)
+          .attr("x",chartMargin - 4)
+          .attr("y",chartMargin - 4)
+          .style("fill","#b3b3b3") 
+        blank.append("text")
+          .text(function(d){ return d.key })
+          .attr("class", function(d) {
+            return "mapLabel standard " + d.key
+          })
+          .attr("text-anchor", "end")
+          .attr("x",chartWidth+chartMargin - 25)
+          .attr("y",chartWidth+chartMargin - 25)
+
+        //chart background
+        map
+          .append("rect")
+          .attr("width",chartWidth-2*chartMargin + 8)
+          .attr("height",chartWidth-2*chartMargin + 8)
+          .attr("x",chartMargin - 4)
+          .attr("y",chartMargin - 4)
+          .style("fill","#a2d3eb") 
+          .attr("class", function(d) { 
+            return "nonblank-rect " + d.key
+          })
+
+        //set up scales for charts. THe code here assumes all states are on the same x/y scale. Alaska and the US avg will prob need to have special scales written for them, since they will be on a separate scale (I think). Also note currently there is no US average chart/tile.
+        var mapX = d3.scaleLinear().range([chartMargin, chartWidth-chartMargin]).nice();
+        var mapY = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin]).nice();
+        var mapY2 = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin]).nice();
+
+
+        //this is just for the file uploader, setting the key onload to whatever column is first in the data file, other than State/Year. In the real feature, firstKey will just be a constant
+        var firstKey = "adj_revratio_all"
+        var keys = Object.keys(trendsData[0])
+
+        mapX.domain([startYear,endYear]);
+        // console.log(startYear+ endYear)
+        //NEED TWO Y-AXES:
+        //ALL STATES EXCEPT AK
+        mapY.domain([d3.min(trendsDataFiltered, function(d) { return d[firstKey]; }), d3.max(trendsDataFiltered, function(d) { return d[firstKey]; })]); 
+        //AK ONLY
+        var min2 = d3.min([1, d3.min(trendsDataAK, function(d) {return d[firstKey]; })]);
+        var max2 = d3.max(trendsDataAK, function(d) { return d[firstKey]; })
+        mapY2.domain([min2, max2]); 
+
+
+        //line chart axes
+        var mapXAxis = d3.axisBottom(mapX)
+        var mapYAxis = d3.axisLeft(mapY)
+
+        //for each map chart line
+        var mapline = d3.line()
+          .x(function(d) { return mapX(d.Year); })
+          .y(function(d) { return mapY(d[firstKey]); });
+        var mapline2 = d3.line()
+          .x(function(d) { return mapX(d.Year); })
+          .y(function(d) { return mapY2(d[firstKey]); });
+
+       // A white line at y=1. This is just a placeholder. In the final feature, we want some sort of distinction of y=1 for the ratio graphs, but not the level graphs. Will likely be two rects (above and below y=1) instead of a line, but TBD
+        //DRAWING THE RATIO LINE FOR ALL STATES BUT AK
+        d3.selectAll(".state:not(.AK)").append("line")
+          .attr("x1",chartMargin)
+          .attr("x2",chartWidth-chartMargin)
+          .attr("y1",mapY(1))
+          .attr("y2",mapY(1))
+          .attr("class", function(d) {
+            return "ratioOneLine ratioOneLine-" + d.key
+          })
+        //DRAWING THE RATIO LINE FOR AK
+        d3.select(".state.AK").append("line")
+          .attr("x1",chartMargin)
+          .attr("x2",chartWidth-chartMargin)
+          .attr("y1",mapY2(1))
+          .attr("y2",mapY2(1))
+          .attr("class", function(d) {
+            return "ratioOneLine ratioOneLine-" + d.key
+          })
+
+        //DRAWING THE GRAPH LINE FOR ALL STATES BUT AKK
+        d3.selectAll(".state:not(.AK)").append("path")
+          .attr("class", function(d){ return "standard line " + d.key })
+          .attr("d", function(d){  return mapline(d.values)})
+        //DRAWING THE GRAPH LINE FOR AK
+        d3.select(".state.AK").append("path")
+          .attr("class", function(d){ return "standard line " + d.key })
+          .attr("d", function(d){  return mapline2(d.values)})
+        //NEED TO HIDE THE GRAPH LINE FOR DC AND HI FOR THE RATIO TAB
+        map.selectAll(".standard.line.DC, .standard.line.HI")
+          .style("opacity", function() {
+            return (d3.select("#revpp_").classed("current") == true) ?  1 : 0;
+          })
+
+
+      //  see drawBackMapCurtain for explanation--draw a "curtain" on top of the line, which can be animated away to simulate the line animating left to right
+        map.append("rect")
+          .attr("class", function(d) {
+            return "mapCurtain " + d.key 
+          })
+          .attr("width",0)
+          .attr("height",chartWidth-2*chartMargin)
+          .attr("x",0)
+          .attr("y",chartMargin)
+          .style("fill", "#a2d3eb")
+
+        //draw the state name on the tile
+        map.append("text")
+          .text(function(d){ return d.key })
+          .attr("class", function(d) {
+            return "mapLabel standard " + d.key
+          })        
+          .attr("text-anchor", "end")
+          .attr("x",chartWidth+chartMargin - 25)
+          .attr("y",chartWidth+chartMargin - 25)
+
+        //add the X axis 
+        map.append("g")
+          .attr("class", "x axis")
+          .attr("transform", "translate(0," + (chartWidth-chartMargin) + ")")
+          .call(mapXAxis);
+
+        //add the Y Axis
+        map.append("g")
+          .attr("class", function(d){ return "y axis " + d.key})
+          .attr("transform", "translate(" + chartMargin + ",0)")
+          .call(mapYAxis);
+
+        d3.select("#vis")
+          .append("div")
+          .attr("id", "ak-disclaimer")
+          .html("Alaska data are displayed on a separate y axis scale (from <span id =\"ak-min\">" + RATIO_FORMAT(min2)+ "</span> to <span id =\"ak-max\">" + RATIO_FORMAT(max2) + "</span>) from the other 49 states.")
+       d3.select("#vis")
+          .append("div")
+          .attr("id", "note-blank")
+          .html(blankNote)
+
+      }
+
+      d3.select(".checkbox-div")
+        .on("click", function() {
+          if (d3.select(".checkbox-image").classed('checked') == true){
+          d3.select(".checkbox-image")
+            .classed("checked", false)
+          d3.select(".empty-checkbox-image")
+            .classed("checked", true)
+          checkAdjusted()
+          }else {
+            d3.select(".empty-checkbox-image")
+              .classed("checked", false)
+            d3.select(".checkbox-image")
+              .classed("checked", true)
+            checkAdjusted();
+          }
+        })
+      var div = d3.select("body").append("div")
+      .attr("class", "tooltip")
+      .style("opacity", 0);
+
+      d3.select(".checkbox-label")
+        .on("mouseover", function() { 
+          div.transition()
+            .duration(200)
+            .style("opacity", .85);
+          div.html("Cost-adjusted numbers account for cost differences among districts.")
+            .style("left", (d3.event.pageX) + "px")
+            .style("top", (d3.event.pageY) + 10 + "px");
+        })
+        .on("mouseout", function(d) {
+          div
+            .transition()
+            .duration(500)
+            .style("opacity", 0);
+        });
+
+      /*IF ADJUSTED IS CHECKED*/
+      var adjusted = "adj_"
+
+      function checkAdjusted() {
+        // adjusted = (d3.select('#adjusted-checkbox').property('checked') == true) ? "adj_" : ""
+        var newCategory = getCurrentCategory();
+        updateLineGraph(newCategory, selectedCategory, "toggle", null)
+        updateMapLine(newCategory, selectedCategory)
+        d3.select(".switch-main-text")
+          .html(function() { 
+            return toggleText[0][getCurrentCategory()];
+          })
+      }
+
+
+      d3.select("#adjusted-checkbox").on("change", checkAdjusted)
+
+
+
+      // /*SWITCHING BETWEEN TABS*/
+
+
+      d3.selectAll(".top-tab")
+        .on("click", function(d){  
+          d3.selectAll(".top-tab").classed('current', false)
+          d3.select(this).classed('current', true)
+          var currentTab = d3.select(this).attr("id")
+          d3.select(".switch-main-text")
+            .html(function() { 
+              return toggleText[0][getCurrentCategory()];
+            })
+          checkAdjusted();
+          drawBackMapCurtain(0, currentTab)
+        })
+
+      /*TOGGLE BUTTONS*/
+      var selectedToggles = "all";
+
+    
+
+
+
+      // WHEN CLICKING ON EACH TOGGLE:
+      d3.selectAll(".button_toggle")
+        .on('click', function() {
+          // checkAdjusted();
+          if(d3.select(this).classed("on")){ 
+            d3.select(this).classed("on", false)
+            d3.select(this).classed("off", true)
+            d3.select(".switch-main-text")
+              .html(function() { 
+                return toggleText[0][getCurrentCategory()];
+              })
+          }else {
+            checkAdjusted();
+            d3.select(this).classed("on", true)
+            d3.select(this).classed("off", false)
+            d3.select(".switch-main-text")
+              .html(function() { 
+                return toggleText[0][getCurrentCategory()];
+              })
+          }
+          checkAdjusted();
+
+        }) 
+
+
+      //WHEN CLICKING ON CLEAR ALL UNDER SELECTED STATE LIST
+      d3.select(".state-clear")
+        .on('click', function() {
+          for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
+            removeStateList(stateLinesArray[i])
+          }
+        })
+      //WHEN CLICKING ON STATE, ADD TAG TO BOTTOM OF LINE GRAPH
+      function addStateList(state, stateName) { 
+        d3.selectAll(".lineChart-details, .lineChart-notes-under")
+          .classed("show", true)
+        d3.selectAll(".lineChart-notes-above")
+          .classed("show", false)
+        var stateItem = d3.selectAll(".state-list")
+          .datum(state)
+          .append("li")
+          .html(stateName)
+          .attr("class", "state-item item-" + state)
+          .on("mouseover", function(){ hoverState(state)})
+          .on("mouseout", function(){ dehoverState(state)})
+        stateItem.append("div")
+          .attr("class", "close-sign close-sign-" + state)
+          .on("click", function(d) {
+            removeStateList(d)
+          })
+        d3.select(".mapLabel.standard." + state)
+          .classed("selected-text", true)
+      }
+
+      function removeStateList(state) {
+        var newCategory = getCurrentCategory();
+        updateLineGraph(newCategory, newCategory, "remove", state)
+        d3.select(".nonblank-rect." + state)
+          .classed("selected-state", false)
+          .style("fill", function(){
+            if (d3.select("#revratio_").classed("current") == true){
+              return "#a2d3eb"
+            }else if (d3.select("#revpp_").classed("current") == true){
+              return "#094c6a"
+            }
+          })
+        d3.select(".mapLabel.standard." + state)
+          .style("fill", function(){
+            if (d3.select("#revratio_").classed("current") == true){
+              return "#353535"
+            }else if (d3.select("#revpp_").classed("current") == true){
+              return "#ffffff"
+            }
+          })
+
+
+        d3.select(".item-" + state)
+          .remove();
+        d3.select(".line-state.line-" + state)
+          .remove()
+        d3.selectAll("g.state." + state + " .selected-state")
+          .classed("selected-state", false)
+        if (d3.select(".state-item").size() == 0) {
+          d3.selectAll(".lineChart-details, .lineChart-notes-under")
+            .classed("show", false)
+          d3.selectAll(".lineChart-notes-above")
+            .classed("show", true)
+        }
+        d3.select(".mapLabel.standard." + state)
+          .classed("selected-text", false)
+          
+        for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
+          if (stateLinesArray[i] === state) { 
+            stateLinesArray.splice(i, 1);
+          }
         }
       }
 
-      //reshape the data
-      graphSvg.select(".y-label")
-        .text(function() {
-          if (d3.select("#revpp_").classed("current") == true) {
-          return "Funding Levels per student"
-          } else {
-            return "Progressivity"
-          }
-        })
-        .attr("transform", function() {
-          if (d3.select("#revpp_").classed("current") == true) {
-            return "translate(52,-18)"
-          } else {
-            return "translate(10, -18)"
-          }
-        })  
 
-      var trendsData = d3.select("#vis").datum()
-      var trendsDataNest = d3.nest()
-        .key(function(d) {return d.State;})
-        .entries(trendsData);
-
-      var chartWidth = mapSizes[pageSize]["chartWidth"]
-      var chartMargin = mapSizes[pageSize]["chartMargin"]
-      // console.log(trendsDataNest)
-      //update data binding
-      map = d3.select("#vis svg")
-        .selectAll(".state")
-        .data(trendsDataNest)
-
-      //update scales
-      var mapX = d3.scaleLinear().range([chartMargin, chartWidth-chartMargin]);
-
-      var mapY = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin]).nice();
-      var mapY2 = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin]).nice();
-
-      mapX.domain([startYear,endYear]);
-
-      //min and max value for scales determined by min/max values in all data (so they're the same for all states)
-      var max = d3.max(trendsDataFiltered, function(d) { return d[domainController]; })
-      var min = (domainController.search("ratio") != -1) ? d3.min(trendsDataFiltered, function(d) {return d[domainController]; }) : 0;
-      //FOR AK ONLY:
-      var max2 = d3.max(trendsDataAK, function(d) { return d[domainController]; })
-      var min2 = (domainController.search("ratio") != -1) ? d3.min([1, d3.min(trendsDataAK, function(d) {return d[domainController]; })]) : 0;
-
-      if(max > max2){ 
-        max2 = max;
-        min2 = min;
-        d3.select("#ak-disclaimer")
-          .transition()
-          .duration(1200)
-          .style("opacity",0)
-      }else if (domainController.includes("revpp_fe")){ 
-        max = max2;
-        min2 = min;
-        d3.select("#ak-disclaimer")
-          .transition()
-          .duration(1200)
-          .style("opacity",0)
-      }else{ 
-        d3.select("#ak-min")
-          .html(RATIO_FORMAT(min2))
-        d3.select("#ak-max")
-          .html(RATIO_FORMAT(max2))
-        d3.select("#ak-disclaimer")
-          .transition()
-          .duration(1200)
-          .style("opacity",1)
-      }
-
-      if(d3.select("#revratio_").classed("current")==true) { 
-        d3.select("#note-blank")
-          .style("opacity", 1)
-      }else{
-        d3.select("#note-blank")
-          .style("opacity", 0)
-      }
-
-      mapY.domain([min, max]); 
-      mapY2.domain([min2, max2]);      
-
-      //udpdate line function
-      var mapline = d3.line()
-        .x(function(d) { return mapX(d.Year); })
-        .y(function(d) { return mapY(d[variable]); });
-      var mapline2 = d3.line()
-        .x(function(d) { return mapX(d.Year); })
-        .y(function(d) { return mapY2(d[variable]); });
-
-      var mapYAxis = d3.axisLeft(mapY)
-
-      //animate y axis change. Note most y axes are hidden, but axis in key will change
-      //note it's assumed that startyear/endyear don't change when variables are changed, so no need to animate x axis update
-      d3.selectAll("#vis .y.axis")
-        .transition()
-        .call(mapYAxis)
-
-      //update the line. In some cases may need to drawBackMapCurtain here (see below)
-      map.selectAll("#vis svg .line:not(.AK)")
-        .transition()
-        .duration(1200)
-        .attr("d", function(d){ 
-          return mapline(d.values)
-        })
-      d3.select(".line.AK")
-        .transition()
-        .duration(1200)
-        .attr("d", function(d){
-          return mapline2(d.values)
-        })
-
-      //move y=1 line. Note this will need to be hidden (or whatever comparable elements exist will be hidden) for the levels graphs
-      d3.selectAll(".ratioOneLine")
-        .style("opacity", function() {
-          return (d3.select("#revpp_").classed("current") == true) ?  0 : 1;
-        })
-        .transition()
-        .duration(1200)
-        .attr("y1",function(d){
-          if(d3.select(this).classed("ratioOneLine-AK")){
-            return mapY2(1)
-          }else{
-            return mapY(1)            
-          }
-        })
-        .attr("y2",function(d){
-          if(d3.select(this).classed("ratioOneLine-AK")){
-            return mapY2(1)
-          }else{
-            return mapY(1)            
-          }
-        })
-
-      //REMOVE BLANK BOXES AND MAKES LINES APPEAR FOR HI AND DC ON LEVELS TAB
-      d3.selectAll(".blank")
-        .style("opacity", function() {
-          return (d3.select("#revpp_").classed("current") == true) ?  0 : 1;
-        })
-        .transition()
-        .duration(1200)
-        .attr("y1",mapY(1))
-        .attr("y2",mapY(1))
-      d3.selectAll(".standard.line.DC, .standard.line.HI")
-        .style("opacity", function() {
-          return (d3.select("#revpp_").classed("current") == true) ?  1 : 0;
-        })
-      if(d3.select("#revpp_").classed('current') == true){
-        d3.selectAll(".blank").each(function() {
-          this.parentNode.insertBefore(this, this.parentNode.firstChild)
-        })
-      }else{
-        d3.selectAll(".blank").each(function() {
-          this.parentNode.appendChild(this)
-        })
-      }
-        //.transition()
-        //.duration(1200)
-        // .attr("y1",mapY(1))
-        // .attr("y2",mapY(1))
-
-      var rectWidth = d3.select("rect.nonblank-rect").attr("width")
-      var chartWidth = mapSizes[pageSize]["chartWidth"]
-      var chartMargin = mapSizes[pageSize]["chartMargin"]
-
-      //pretty sure this line can be remove, since x axis/scales aren't changing (as can all other references to x scale in this function), but keeping here in case it turns out the scales will change with different variabels (in which case you'll need to add some more code to animate the x axes etc)
-      var mapXAxis = d3.axisBottom(mapX)
-    }
-
-
-
-
-
-    function drawBackMapCurtain(delay, tab){
-      //To create the illusion of the lines in the chart animating across the chart area (left to right, small to large X values), I created a "curtain" which is a rect covering the line chart. Then, by animating it's width to 0, the animation effect is simulated. I would imagine that when the user switches between different units, on the graphs, e.g. when they switch from dollars to ratios, the curtain should draw back. On the other hand, if a user switches between combinations of state/local/federal, or toggles the adjustment on/off, the curtain should not draw back. Does that sound right to you?
-      d3.selectAll(".nonblank-rect")
-        .transition()
-        .style("fill", function() {
-          if (tab == "revpp_") {
-            return "#094c6a"
-          } else {
-            return "#a2d3eb"
-          }
-        })
-      d3.selectAll(".nonblank-rect.selected-state")
-        .transition()
-        .style("fill", function() {
-          if (tab == "revpp_") {
-            return "#fbbe15" 
-          } else {
-            return "#353535"
-          }
-        })
-
-      d3.selectAll(".mapLabel.standard")
-        .transition()
-        .style("fill", function() {
-          if (tab == "revpp_") {
-            return "#fff"
-          } else {
-            return "#353535"
-          }
-        })
-      d3.selectAll(".mapLabel.standard.selected-text")
-        .transition()
-        .style("fill", function() {
-          if (tab == "revpp_") {
-            return "#353535"
-          } else {
-            return "#fff"
-          }
-        })
-      var chartWidth = mapSizes[pageSize]["chartWidth"]
-      var chartMargin = mapSizes[pageSize]["chartMargin"]
-
-      d3.selectAll(".mapCurtain")
-        .transition()
-        .style("fill", function(d) {
-          if (tab == "revpp_") {
-            if(d3.select(".nonblank-rect." + d.key).classed("selected-state")){
-              return "#fbbe15"
-            }else{
-              return "#094c6a"
+      function updateScales(variable, oldVariable){ 
+        var domainController;
+        if(variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_"){ 
+          domainController = variable;
+          selectedCategory = variable;
+        }else{ 
+          if(variable != oldVariable){
+            if (d3.select("#revpp_").classed("current")) {
+              //blank variable, from changing tabs
+              domainController = "adj_revpp_lo";
+              selectedCategory = "adj_revpp_lo"
+            //blank variable, from changing toggles
+            } else if (d3.select("#revratio_").classed("current")) {
+              //blank variable, from changing tabs
+              domainController = "adj_revratio_lo";
+              selectedCategory = "adj_revratio_lo"
+            //blank variable, from changing toggles
             }
+          }else{          
+            //blank variable, from clicking on state
+            domainController = selectedCategory;
+          }
+        }
+
+        var graphDataSelected = trendsDataFull.filter(function(d) {           
+          if ((stateLinesArray.includes(d.State)) || (d.State == "USA")) {         
+            return d;              
+          }         
+        })
+
+        var graphDataNest = d3.nest()
+          .key(function(d) {return d.State;})
+          .entries(graphDataSelected);
+
+        var akNest = d3.nest()
+          .key(function(d) {return d.State;})
+          .entries(trendsDataAK);
+
+
+        var graphWidth =  graphSizes[pageSize]["width"]- graphMargin.left - graphMargin.right,
+        graphHeight = graphSizes[pageSize]["height"] - graphMargin.top - graphMargin.bottom;
+
+        d3.select("#lineChart svg")
+          .select("g")
+          .data(trendsDataFiltered)
+
+        var graphY = d3.scaleLinear().range([graphHeight, 0]).nice();
+        var graphY2 = d3.scaleLinear().range([graphHeight, 0]).nice();
+
+       // var max = d3.max(trendsDataMinMax, function(d) { return d[domainController]; })
+        var max = getMaxY(domainController, trendsDataMinMax)
+        var min = (domainController.search("ratio") != -1) ? getMinY(domainController, trendsDataMinMax) : 0;
+        var max2 = d3.max(trendsDataAK, function(d) { return d[domainController]; })
+        var min2 = (domainController.search("ratio") != -1) ? d3.min([1, d3.min(trendsDataAK, function(d) {return d[domainController]; })]) : 0;
+
+        if(max > max2){
+          max2 = max;
+          min2 = min;
+        }
+        if(min < min2){
+          min2 = min;
+        }
+
+
+
+        graphY.domain([min, max]);
+        graphY2.domain([min2, max2])
+
+        var graphLine = d3.line()
+          .x(function(d) { return graphX(d.Year); })
+          .y(function(d) { return graphY(d[variable]); });
+
+        var graphLine2 = d3.line()
+          .x(function(d) { return graphX(d.Year); })
+          .y(function(d) { return graphY2(d[variable]); });
+
+        return {"graphY": graphY, "graphY2": graphY2, "graphLine": graphLine, "graphLine2":graphLine2, "graphDataNest": graphDataNest, "akNest": akNest}
+
+      }
+
+
+      //ADJUSTS LINE GRAPH TO ACCOMMODATE CHANGING Y-AXIS DUE TO ADDITION OR REMOVAL OF STATE LINES
+      function updateLineGraph(variable, oldVariable, action, state) {
+        var scales = updateScales(variable, oldVariable)
+        var graphY = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state") || variable.includes("revpp_fe")) ? scales.graphY2 : scales.graphY;
+        var graphLine = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state")) ? scales.graphLine2 : scales.graphLine
+        var graphDataNest = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state")) ? scales.akNest : scales.graphDataNest
+        var trendsDataNestUSA = d3.nest()
+          .key(function(d) {return d.State;})
+          .entries(trendsDataUSA);
+        if(variable == "adj_revratio_" || variable == "revratio_" || variable == "revpp_" || variable == "adj_revpp_"){
+          d3.select(".usaLabel").attr("opacity", 0)
+         } else {
+          d3.select(".usaLabel").attr("opacity", 1)
+         }
+        graphSvg.select(".progressiveLabel")
+          .transition().duration(1200)
+          .attr("transform", "translate("+ graphWidth/3.8 +", "+ graphY(1.05)+")") 
+        graphSvg.select(".regressiveLabel")
+          .transition().duration(1200)
+          .attr("transform", "translate("+ graphWidth/3.8 +", "+ graphY(.95)+")") 
+          .style("opacity", function() { 
+           var domain = graphY.domain() 
+            return (domain[0] >= .9) ? 0 : 1
+          })
+
+        graphSvg.selectAll(".largeChartLabel")
+          .style("opacity", function() {
+            return (d3.select("#revpp_").classed("current") == true) ? 0 : 1
+          })
+        d3.selectAll("#lineChart .y.graphAxis")
+          .transition().duration(1200)
+          .call(d3.axisLeft(graphY)
+            .tickSize(-graphWidth)
+            .tickFormat((d3.select("#revpp_").classed("current") == true) ? d3.format('.2s') : d3.format('.2f'))
+            .tickValues(getTickValues(graphY, variable))
+          );
+
+        var duration = (action == "toggle" || state == "AK") ? 1200 : 0
+        d3.selectAll(".line-USA, .line-state")
+          .transition()
+          .duration(duration)
+          // .attr("d", graphLine)
+          .attr("d", function(d) {
+          // console.log(graphLine(d[0].values))
+            return (graphLine(d[0].values));
+          });
+        graphSvg.select("text.usaLabel")
+          .transition()
+          .duration(duration)
+          .attr("transform", "translate("+(graphWidth+3)+","+graphY((trendsDataNestUSA[0]).values[20][selectedCategory])+")")
+          .attr("dy", ".35em")
+          .attr("text-anchor", "start")
+
+        var threshold = d3.select(".threshold")
+          .transition()
+          .duration(1200)
+          .attr("y1", graphY(1))
+          .attr("y2", graphY(1))
+          .style("opacity", function() {
+            return (d3.select("#revpp_").classed("current") == true) ? 0 : 1
+          })
+
+        threshold.node().parentNode.appendChild(threshold.node())
+
+        if(action == "remove"){
+          graphDataNest = graphDataNest.filter(function(d){ return d.key != state})
+        }
+        else if(action == "removeAll"){
+         graphDataNest = graphDataNest.filter(function(d){ return d.key == "USA"}) 
+        }
+        if(typeof(graphDataNest) != "undefined"){
+          drawVoronoi(graphDataNest, variable, graphY)
+        }
+
+      }
+
+      function updateMapLine(variable, oldVariable){
+        var trendsDataFiltered = trendsDataFull.filter(function(d) { 
+          if (selectedCategory.includes("revratio")) {
+            return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
           }else {
-            if(d3.select(".nonblank-rect." + d.key).classed("selected-state")){
-              return "#353535"
-            }else{
-              return "#a2d3eb"
-            }
+            return d.State;
           }
         })
-        .transition()
-        .duration(0)
-        .attr("width",chartWidth-2*chartMargin+4)
-        .attr("x",chartMargin-2)
-        .transition()
-        .delay(delay + 200)
-        .duration(1200)
-        .attr("width",0)
-        .attr("x", chartWidth - chartMargin + 4)
-    }
-
-
-    function removeMapAttributes() { 
-      d3.selectAll(".standard.line, .positive-area")
-        .transition()
-        .duration(0)
-        .attr("opacity", 1)
-        .transition()
-        .delay( 200)
-        .duration(1200)
-        .attr("opacity", 0)
-      d3.selectAll(".ratioOneLine")
-        .classed("hidden", true)
-    }
-
-
-    function removeGraphLine() {
-      d3.selectAll(".line-USA, .line-state")
-        .transition()
-        .duration(0)
-        .attr("opacity", 1)
-        .transition()
-        .delay( 200)
-        .duration(1200)
-        .attr("opacity", 0)
-
-    }
-
-
-    function hoverState(state){
-      if(d3.select(".state." + state).select(".selected-state").node() != null){
-        d3.select(".state." + state).select(".selected-state").style("opacity", ".8")
-      }
-      d3.select(".state-item.item-" + state)
-        .style("background-color","#353535")
-        .style("color","#ffffff")
-      d3.select(".line-" + state)
-        .classed("line-hover", true)
-      if( d3.select(".line-" + state).node() != null){
-        d3.select(".line-" + state).node().parentNode.appendChild(d3.select(".line-" + state).node())
-        d3.select(".threshold").node().parentNode.appendChild(d3.select(".threshold").node())
-      }
-      if(state == "USA"){
-        d3.select(".usaLabel").classed("selected", true)
-      }
-    }
-    function dehoverState(state){
-      d3.select(".state." + state).selectAll("rect").style("opacity", "1")
-      d3.select(".state-item.item-" + state)
-        .style("background-color","#ececec")
-        .style("color","#353535")
-      d3.select(".line-" + state).classed("line-hover", false);
-      if(state == "USA"){
-        d3.select(".usaLabel").classed("selected", false)
-      }
-    }
-    //ADDS NEW STATE LINE AND UPDATES STATE ARRAY
-    function updateStateLine(state) { 
-      d3.select(".nonblank-rect." + state)
-        .style("fill", function(){
-          if (d3.select("#revratio_").classed("current") == true){
-            if (d3.select(".nonblank-rect." + state).classed("selected-state") == true || d3.select(".nonblank-rect." + state).classed("hovered-state") == true )  {
-              return "#353535"
-            }else{
-              return "#a2d3eb"
+        //var domainController = (variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_") ? variable : oldVariable;
+        if(variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_"){ 
+          domainController = variable;
+        }else{ 
+          if(variable != oldVariable){
+            if (d3.select("#revpp_").classed("current")) {
+              //blank variable, from changing tabs
+              domainController = "adj_revpp_lo";
+              selectedCategory = "adj_revpp_lo";
+            //blank variable, from changing toggles
+            } else if (d3.select("#revratio_").classed("current")) {
+              //blank variable, from changing tabs
+              domainController = "adj_revratio_lo";
+              selectedCategory = "adj_revratio_lo";
+            //blank variable, from changing toggles
             }
-          }else if (d3.select("#revpp_").classed("current") == true){
-            if (d3.select(".nonblank-rect." + state).classed("selected-state") == true || d3.select(".nonblank-rect." + state).classed("hovered-state") == true)  {
-             return "#fbbe15"
+          }else{          
+            //blank variable, from clicking on state
+            domainController = oldVariable
+          }
+        }
+
+        //reshape the data
+        graphSvg.select(".y-label")
+          .text(function() {
+            if (d3.select("#revpp_").classed("current") == true) {
+            return "Funding Levels per student"
+            } else {
+              return "Progressivity"
+            }
+          })
+          .attr("transform", function() {
+            if (d3.select("#revpp_").classed("current") == true) {
+              return "translate(52,-18)"
+            } else {
+              return "translate(10, -18)"
+            }
+          })  
+
+        var trendsData = d3.select("#vis").datum()
+        var trendsDataNest = d3.nest()
+          .key(function(d) {return d.State;})
+          .entries(trendsData);
+
+        var chartWidth = mapSizes[pageSize]["chartWidth"]
+        var chartMargin = mapSizes[pageSize]["chartMargin"]
+        // console.log(trendsDataNest)
+        //update data binding
+        map = d3.select("#vis svg")
+          .selectAll(".state")
+          .data(trendsDataNest)
+
+        //update scales
+        var mapX = d3.scaleLinear().range([chartMargin, chartWidth-chartMargin]);
+
+        var mapY = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin]).nice();
+        var mapY2 = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin]).nice();
+
+        mapX.domain([startYear,endYear]);
+
+        //min and max value for scales determined by min/max values in all data (so they're the same for all states)
+        var max = d3.max(trendsDataFiltered, function(d) { return d[domainController]; })
+        var min = (domainController.search("ratio") != -1) ? d3.min(trendsDataFiltered, function(d) {return d[domainController]; }) : 0;
+        //FOR AK ONLY:
+        var max2 = d3.max(trendsDataAK, function(d) { return d[domainController]; })
+        var min2 = (domainController.search("ratio") != -1) ? d3.min([1, d3.min(trendsDataAK, function(d) {return d[domainController]; })]) : 0;
+
+        if(max > max2){ 
+          max2 = max;
+          min2 = min;
+          d3.select("#ak-disclaimer")
+            .transition()
+            .duration(1200)
+            .style("opacity",0)
+        }else if (domainController.includes("revpp_fe")){ 
+          max = max2;
+          min2 = min;
+          d3.select("#ak-disclaimer")
+            .transition()
+            .duration(1200)
+            .style("opacity",0)
+        }else{ 
+          d3.select("#ak-min")
+            .html(RATIO_FORMAT(min2))
+          d3.select("#ak-max")
+            .html(RATIO_FORMAT(max2))
+          d3.select("#ak-disclaimer")
+            .transition()
+            .duration(1200)
+            .style("opacity",1)
+        }
+
+        if(d3.select("#revratio_").classed("current")==true) { 
+          d3.select("#note-blank")
+            .style("opacity", 1)
+        }else{
+          d3.select("#note-blank")
+            .style("opacity", 0)
+        }
+
+        mapY.domain([min, max]); 
+        mapY2.domain([min2, max2]);      
+
+        //udpdate line function
+        var mapline = d3.line()
+          .x(function(d) { return mapX(d.Year); })
+          .y(function(d) { return mapY(d[variable]); });
+        var mapline2 = d3.line()
+          .x(function(d) { return mapX(d.Year); })
+          .y(function(d) { return mapY2(d[variable]); });
+
+        var mapYAxis = d3.axisLeft(mapY)
+
+        //animate y axis change. Note most y axes are hidden, but axis in key will change
+        //note it's assumed that startyear/endyear don't change when variables are changed, so no need to animate x axis update
+        d3.selectAll("#vis .y.axis")
+          .transition()
+          .call(mapYAxis)
+
+        //update the line. In some cases may need to drawBackMapCurtain here (see below)
+        map.selectAll("#vis svg .line:not(.AK)")
+          .transition()
+          .duration(1200)
+          .attr("d", function(d){ 
+            return mapline(d.values)
+          })
+        d3.select(".line.AK")
+          .transition()
+          .duration(1200)
+          .attr("d", function(d){
+            return mapline2(d.values)
+          })
+
+        //move y=1 line. Note this will need to be hidden (or whatever comparable elements exist will be hidden) for the levels graphs
+        d3.selectAll(".ratioOneLine")
+          .style("opacity", function() {
+            return (d3.select("#revpp_").classed("current") == true) ?  0 : 1;
+          })
+          .transition()
+          .duration(1200)
+          .attr("y1",function(d){
+            if(d3.select(this).classed("ratioOneLine-AK")){
+              return mapY2(1)
             }else{
+              return mapY(1)            
+            }
+          })
+          .attr("y2",function(d){
+            if(d3.select(this).classed("ratioOneLine-AK")){
+              return mapY2(1)
+            }else{
+              return mapY(1)            
+            }
+          })
+
+        //REMOVE BLANK BOXES AND MAKES LINES APPEAR FOR HI AND DC ON LEVELS TAB
+        d3.selectAll(".blank")
+          .style("opacity", function() {
+            return (d3.select("#revpp_").classed("current") == true) ?  0 : 1;
+          })
+          .transition()
+          .duration(1200)
+          .attr("y1",mapY(1))
+          .attr("y2",mapY(1))
+        d3.selectAll(".standard.line.DC, .standard.line.HI")
+          .style("opacity", function() {
+            return (d3.select("#revpp_").classed("current") == true) ?  1 : 0;
+          })
+        if(d3.select("#revpp_").classed('current') == true){
+          d3.selectAll(".blank").each(function() {
+            this.parentNode.insertBefore(this, this.parentNode.firstChild)
+          })
+        }else{
+          d3.selectAll(".blank").each(function() {
+            this.parentNode.appendChild(this)
+          })
+        }
+          //.transition()
+          //.duration(1200)
+          // .attr("y1",mapY(1))
+          // .attr("y2",mapY(1))
+
+        var rectWidth = d3.select("rect.nonblank-rect").attr("width")
+        var chartWidth = mapSizes[pageSize]["chartWidth"]
+        var chartMargin = mapSizes[pageSize]["chartMargin"]
+
+        //pretty sure this line can be remove, since x axis/scales aren't changing (as can all other references to x scale in this function), but keeping here in case it turns out the scales will change with different variabels (in which case you'll need to add some more code to animate the x axes etc)
+        var mapXAxis = d3.axisBottom(mapX)
+      }
+
+
+
+
+
+      function drawBackMapCurtain(delay, tab){
+        //To create the illusion of the lines in the chart animating across the chart area (left to right, small to large X values), I created a "curtain" which is a rect covering the line chart. Then, by animating it's width to 0, the animation effect is simulated. I would imagine that when the user switches between different units, on the graphs, e.g. when they switch from dollars to ratios, the curtain should draw back. On the other hand, if a user switches between combinations of state/local/federal, or toggles the adjustment on/off, the curtain should not draw back. Does that sound right to you?
+        d3.selectAll(".nonblank-rect")
+          .transition()
+          .style("fill", function() {
+            if (tab == "revpp_") {
               return "#094c6a"
+            } else {
+              return "#a2d3eb"
             }
-          }
-        })
-      d3.select(".mapLabel.standard." + state)
-        .style("fill", function(){
-          if (d3.select("#revratio_").classed("current") == true){
-            if (d3.select(".mapLabel.standard." + state).classed("selected-text") == true || d3.select(".mapLabel.standard." + state).classed("hovered-text") == true)  {
-              return "#ffffff"
-            }else{
+          })
+        d3.selectAll(".nonblank-rect.selected-state")
+          .transition()
+          .style("fill", function() {
+            if (tab == "revpp_") {
+              return "#fbbe15" 
+            } else {
               return "#353535"
-            } 
-          }else if (d3.select("#revpp_").classed("current") == true){
-            if (d3.select(".mapLabel.standard." + state).classed("selected-text") == true || d3.select(".mapLabel.standard." + state).classed("hovered-text") == true)  {
-             return "#353535"
-            } return "#ffffff"
-          }
+            }
+          })
+
+        d3.selectAll(".mapLabel.standard")
+          .transition()
+          .style("fill", function() {
+            if (tab == "revpp_") {
+              return "#fff"
+            } else {
+              return "#353535"
+            }
+          })
+        d3.selectAll(".mapLabel.standard.selected-text")
+          .transition()
+          .style("fill", function() {
+            if (tab == "revpp_") {
+              return "#353535"
+            } else {
+              return "#fff"
+            }
+          })
+        var chartWidth = mapSizes[pageSize]["chartWidth"]
+        var chartMargin = mapSizes[pageSize]["chartMargin"]
+
+        d3.selectAll(".mapCurtain")
+          .transition()
+          .style("fill", function(d) {
+            if (tab == "revpp_") {
+              if(d3.select(".nonblank-rect." + d.key).classed("selected-state")){
+                return "#fbbe15"
+              }else{
+                return "#094c6a"
+              }
+            }else {
+              if(d3.select(".nonblank-rect." + d.key).classed("selected-state")){
+                return "#353535"
+              }else{
+                return "#a2d3eb"
+              }
+            }
+          })
+          .transition()
+          .duration(0)
+          .attr("width",chartWidth-2*chartMargin+4)
+          .attr("x",chartMargin-2)
+          .transition()
+          .delay(delay + 200)
+          .duration(1200)
+          .attr("width",0)
+          .attr("x", chartWidth - chartMargin + 4)
+      }
+
+
+      function removeMapAttributes() { 
+        d3.selectAll(".standard.line, .positive-area")
+          .transition()
+          .duration(0)
+          .attr("opacity", 1)
+          .transition()
+          .delay( 200)
+          .duration(1200)
+          .attr("opacity", 0)
+        d3.selectAll(".ratioOneLine")
+          .classed("hidden", true)
+      }
+
+
+      function removeGraphLine() {
+        d3.selectAll(".line-USA, .line-state")
+          .transition()
+          .duration(0)
+          .attr("opacity", 1)
+          .transition()
+          .delay( 200)
+          .duration(1200)
+          .attr("opacity", 0)
+
+      }
+
+
+      function hoverState(state){
+        if(d3.select(".state." + state).select(".selected-state").node() != null){
+          d3.select(".state." + state).select(".selected-state").style("opacity", ".8")
+        }
+        d3.select(".state-item.item-" + state)
+          .style("background-color","#353535")
+          .style("color","#ffffff")
+        d3.select(".line-" + state)
+          .classed("line-hover", true)
+        if( d3.select(".line-" + state).node() != null){
+          d3.select(".line-" + state).node().parentNode.appendChild(d3.select(".line-" + state).node())
+          d3.select(".threshold").node().parentNode.appendChild(d3.select(".threshold").node())
+        }
+        if(state == "USA"){
+          d3.select(".usaLabel").classed("selected", true)
+        }
+      }
+      function dehoverState(state){
+        d3.select(".state." + state).selectAll("rect").style("opacity", "1")
+        d3.select(".state-item.item-" + state)
+          .style("background-color","#ececec")
+          .style("color","#353535")
+        d3.select(".line-" + state).classed("line-hover", false);
+        if(state == "USA"){
+          d3.select(".usaLabel").classed("selected", false)
+        }
+      }
+      //ADDS NEW STATE LINE AND UPDATES STATE ARRAY
+      function updateStateLine(state) { 
+        d3.select(".nonblank-rect." + state)
+          .style("fill", function(){
+            if (d3.select("#revratio_").classed("current") == true){
+              if (d3.select(".nonblank-rect." + state).classed("selected-state") == true || d3.select(".nonblank-rect." + state).classed("hovered-state") == true )  {
+                return "#353535"
+              }else{
+                return "#a2d3eb"
+              }
+            }else if (d3.select("#revpp_").classed("current") == true){
+              if (d3.select(".nonblank-rect." + state).classed("selected-state") == true || d3.select(".nonblank-rect." + state).classed("hovered-state") == true)  {
+               return "#fbbe15"
+              }else{
+                return "#094c6a"
+              }
+            }
+          })
+        d3.select(".mapLabel.standard." + state)
+          .style("fill", function(){
+            if (d3.select("#revratio_").classed("current") == true){
+              if (d3.select(".mapLabel.standard." + state).classed("selected-text") == true || d3.select(".mapLabel.standard." + state).classed("hovered-text") == true)  {
+                return "#ffffff"
+              }else{
+                return "#353535"
+              } 
+            }else if (d3.select("#revpp_").classed("current") == true){
+              if (d3.select(".mapLabel.standard." + state).classed("selected-text") == true || d3.select(".mapLabel.standard." + state).classed("hovered-text") == true)  {
+               return "#353535"
+              } return "#ffffff"
+            }
+          })
+        var newCategory = getCurrentCategory();
+
+        var scales = updateScales(newCategory, newCategory)
+        var graphLine = scales.graphLine
+        // console.log(state)
+        var graphDataState = trendsDataFull.filter(function(d) { 
+          return d.State == state
         })
-      var newCategory = getCurrentCategory();
 
-      var scales = updateScales(newCategory, newCategory)
-      var graphLine = scales.graphLine
-      // console.log(state)
-      var graphDataState = trendsDataFull.filter(function(d) { 
-        return d.State == state
-      })
+        var graphDataStateNest = d3.nest()
+          .key(function(d) {return d.State;})
+          .entries(graphDataState);
 
-      var graphDataStateNest = d3.nest()
-        .key(function(d) {return d.State;})
-        .entries(graphDataState);
-
-      //IF LINE HASN'T BEEN ADDED YET TO THE GRAPH:
-      if ($(".line-" + state).length == 0) {
-        // console.log('push')
-        stateLinesArray.push(state); // ADD NEW STATE TO ARRAY 
-        graphSvg.append("path")
-          .data([graphDataStateNest])
-          .attr("class", "line-state line-" + state)
-          // .attr("d", graphLine);
-          .attr("d", function(d) { 
-        d.graphLine = this;               
-          return (graphLine(d[0].values));
-        });
+        //IF LINE HASN'T BEEN ADDED YET TO THE GRAPH:
+        if ($(".line-" + state).length == 0) {
+          // console.log('push')
+          stateLinesArray.push(state); // ADD NEW STATE TO ARRAY 
+          graphSvg.append("path")
+            .data([graphDataStateNest])
+            .attr("class", "line-state line-" + state)
+            // .attr("d", graphLine);
+            .attr("d", function(d) { 
+          d.graphLine = this;               
+            return (graphLine(d[0].values));
+          });
+        } 
       } 
-    } 
 
 
-    renderGraph();
-    renderMap();
+      renderGraph();
+      renderMap();
 
+    })
   })
-})
 
+}
+
+vizContent();
+
+window.onresize = vizContent;
