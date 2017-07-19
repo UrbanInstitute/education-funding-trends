@@ -594,7 +594,7 @@ var vizContent = function() {
           })
 
         //set up scales for charts. THe code here assumes all states are on the same x/y scale. Alaska and the US avg will prob need to have special scales written for them, since they will be on a separate scale (I think). Also note currently there is no US average chart/tile.
-        var mapX = d3.scaleLinear().range([chartMargin-4, chartWidth-chartMargin+4]).nice();
+        var mapX = (IS_PHONE_500) ? d3.scaleLinear().range([chartMargin-4, chartWidth-chartMargin+4]).nice() : d3.scaleLinear().range([chartMargin, chartWidth-chartMargin]).nice();
         var mapY = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin]).nice();
         var mapY2 = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin]).nice();
 
@@ -629,8 +629,12 @@ var vizContent = function() {
        // A white line at y=1. This is just a placeholder. In the final feature, we want some sort of distinction of y=1 for the ratio graphs, but not the level graphs. Will likely be two rects (above and below y=1) instead of a line, but TBD
         //DRAWING THE RATIO LINE FOR ALL STATES BUT AK
         d3.selectAll(".state:not(.AK)").append("line")
-          .attr("x1",chartMargin-4)
-          .attr("x2",chartWidth-chartMargin+4)
+          .attr("x1", function() {
+            return (IS_PHONE_500) ? chartMargin - 4 : chartMargin
+          })
+          .attr("x2", function() {
+            return (IS_PHONE_500) ? chartWidth-chartMargin+4 : chartWidth-chartMargin
+          })
           .attr("y1",mapY(1))
           .attr("y2",mapY(1))
           .attr("class", function(d) {
@@ -834,10 +838,12 @@ var vizContent = function() {
         })
       //WHEN CLICKING ON STATE, ADD TAG TO BOTTOM OF LINE GRAPH
       function addStateList(state, stateName) { 
-        d3.selectAll(".lineChart-details, .lineChart-notes-under")
-          .classed("show", true)
-        d3.selectAll(".lineChart-notes-above")
-          .classed("show", false)
+        if((d3.select("#revratio_").classed("current") == true)) {
+          d3.selectAll(".lineChart-details, .lineChart-notes-under")
+            .classed("show", true)
+          d3.selectAll(".lineChart-notes-above")
+            .classed("show", false)
+        }
         var stateItem = d3.selectAll(".state-list")
           .datum(state)
           .append("li")
@@ -1017,9 +1023,15 @@ var vizContent = function() {
             }else {
               return "translate("+ graphWidth/3.8 +", "+ graphY(.95)+")"
             }
-          })           .style("opacity", function() { 
+          })           
+          .style("opacity", function() { 
            var domain = graphY.domain() 
-            return (domain[0] >= .9) ? 0 : 1
+           if (d3.select("#revratio_").classed("current")==true) {
+            if (domain[0] >= .9) {
+              return 0
+            } return 1
+           } if (d3.select("#revpp_").classed("current") ==true) {
+           } return 0
           })
 
         graphSvg.selectAll(".largeChartLabel")
@@ -1134,7 +1146,7 @@ var vizContent = function() {
           .data(trendsDataNest)
 
         //update scales
-        var mapX = d3.scaleLinear().range([chartMargin-4, chartWidth-chartMargin+4]).nice();
+        var mapX = (IS_PHONE_500) ? d3.scaleLinear().range([chartMargin-4, chartWidth-chartMargin+4]).nice() : d3.scaleLinear().range([chartMargin, chartWidth-chartMargin]).nice();
         var mapY = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin]).nice();
         var mapY2 = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin]).nice();
 
