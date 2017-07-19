@@ -6,15 +6,19 @@ var vizContent = function() {
   var IS_MOBILE_900 = d3.select("#isMobile900").style("display") == "block";
   var IS_MOBILE_768 = d3.select("#isMobile768").style("display") == "block";
   var IS_PHONE_500 = d3.select("#isPhone500").style("display") == "block";
+  var IS_PHONE_320 = d3.select("#isPhone320").style("display") == "block";
   var IS_VERTICAL_LAYOUT = d3.select("#isVerticalLayout").style("display") == "block";
 
   (IS_VERTICAL_LAYOUT) ? $('#vis').insertBefore('.lineChart-div'): $('#vis').insertAfter('.lineChart-div');
 
   /*MAP VARIABLES*/
   var pageSizeFunction =  function() {
-      if (IS_PHONE_500){ console.log('small')
+    if (IS_PHONE_320){ console.log('small')
+      return "extraSmall"
+    } 
+    else if (IS_PHONE_500){ console.log('small')
       return "small"
-    } else if (IS_MOBILE_768){
+    }else if (IS_MOBILE_768){
         return "medium"
     }else if (IS_MOBILE_900) {
         return "full"
@@ -32,7 +36,8 @@ var vizContent = function() {
     /*screen width 1200*/"large": { "width": vizWidth/1.68, "height": vizWidth/2.1, "scale": vizWidth*2.625, "translate": [vizWidth/3.9,vizWidth/6.67], "chartWidth": vizWidth*.06166, "chartMargin": vizWidth*.01083, "mapTranslateX": 0, "mapTranslateY": mapMargin.top *2},
      /*screen width 900*/"full": { "width": vizWidth*.92, "height": vizWidth/1.4, "scale":vizWidth*4.055, "translate": [vizWidth/2.5,vizWidth/5], "chartWidth": vizWidth*.091, "chartMargin": vizWidth*.0144,  "mapTranslateX": 0, "mapTranslateY": mapMargin.top *2.5},
     /*screen width 768*/"medium": { "width": vizWidth*.92, "height": vizWidth/1.28, "scale":vizWidth*4.15, "translate": [vizWidth/2.5,vizWidth/4.2], "chartWidth": vizWidth*.104, "chartMargin": vizWidth*.022,  "mapTranslateX": 0, "mapTranslateY": mapMargin.top *2},
-    /*screen width 500*/"small": { "width": vizWidth*.98, "height": vizWidth/1.28, "scale":vizWidth*3.9, "translate": [vizWidth/2.6,vizWidth/4.2], "chartWidth": vizWidth*.104, "chartMargin": vizWidth*.027,  "mapTranslateX": 0, "mapTranslateY": mapMargin.top *2}
+    /*screen width 502*/"small": { "width": vizWidth*.92, "height": vizWidth/1.28, "scale":vizWidth*3.9, "translate": [vizWidth/2.6,vizWidth/4.2], "chartWidth": vizWidth*.104, "chartMargin": vizWidth*.027,  "mapTranslateX": 0, "mapTranslateY": mapMargin.top *2},
+    /*screen width 320*/"extraSmall": { "width": vizWidth*.92, "height": vizWidth/1.28, "scale":vizWidth*3.9, "translate": [vizWidth/2.6,vizWidth/4.2], "chartWidth": vizWidth*.095, "chartMargin": vizWidth*.027,  "mapTranslateX": 0, "mapTranslateY": mapMargin.top *2}
   }
 
   var category = "revratio";
@@ -49,7 +54,9 @@ var vizContent = function() {
    /*screen width 1200*/ "large": { "width": vizWidth/3.42, "height": 330, "translate": [720,180]},
    /*screen width 900*/ "full": { "width": vizWidth/2.4, "height": vizWidth/2.4, "translate": [300,200]},
   /*screen width 768*/"medium": { "width": vizWidth/2.3, "height": vizWidth/2.4, "translate": [300,200]},
-  /*screen width 500*/"small": { "width": vizWidth/2.1, "height": vizWidth/1.95, "translate": [300,200]},
+  /*screen width 502*/"small": { "width": vizWidth/2.1, "height": vizWidth/1.95, "translate": [300,200]},
+  /*screen width 320*/"extraSmall": { "width": vizWidth/2.1, "height": vizWidth/1.95, "translate": [300,200]}
+
   }
 
   var selectedCategory = "adj_revratio_all";
@@ -1164,14 +1171,6 @@ var vizContent = function() {
             .transition()
             .duration(1200)
             .style("opacity",1)
-        }
-
-        if(d3.select("#revratio_").classed("current")==true) { 
-          d3.select("#note-blank")
-            .style("opacity", 1)
-        }else{
-          d3.select("#note-blank")
-            .style("opacity", 0)
         }
 
         mapY.domain([min, max]); 
