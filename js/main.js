@@ -36,8 +36,8 @@ var vizContent = function() {
     /*screen width 1200*/"large": { "width": vizWidth/1.68, "height": vizWidth/2.1, "scale": vizWidth*2.625, "translate": [vizWidth/3.9,vizWidth/6.67], "chartWidth": vizWidth*.06166, "chartMargin": vizWidth*.01083, "mapTranslateX": 0, "mapTranslateY": mapMargin.top *2},
      /*screen width 900*/"full": { "width": vizWidth*.92, "height": vizWidth/1.4, "scale":vizWidth*4.055, "translate": [vizWidth/2.5,vizWidth/5], "chartWidth": vizWidth*.091, "chartMargin": vizWidth*.0144,  "mapTranslateX": 0, "mapTranslateY": mapMargin.top *2.5},
     /*screen width 768*/"medium": { "width": vizWidth*.92, "height": vizWidth/1.28, "scale":vizWidth*4.15, "translate": [vizWidth/2.5,vizWidth/4.2], "chartWidth": vizWidth*.104, "chartMargin": vizWidth*.022,  "mapTranslateX": 0, "mapTranslateY": mapMargin.top *2},
-    /*screen width 502*/"small": { "width": vizWidth*.92, "height": vizWidth/1.28, "scale":vizWidth*3.9, "translate": [vizWidth/2.6,vizWidth/4.2], "chartWidth": vizWidth*.104, "chartMargin": vizWidth*.027,  "mapTranslateX": 0, "mapTranslateY": mapMargin.top *2},
-    /*screen width 320*/"extraSmall": { "width": vizWidth*.92, "height": vizWidth/1.28, "scale":vizWidth*3.9, "translate": [vizWidth/2.6,vizWidth/4.2], "chartWidth": vizWidth*.095, "chartMargin": vizWidth*.027,  "mapTranslateX": 0, "mapTranslateY": mapMargin.top *2}
+    /*screen width 502*/"small": { "width": vizWidth*.92, "height": vizWidth/1.2, "scale":vizWidth*3.9, "translate": [vizWidth/2.6,vizWidth/4.2], "chartWidth": vizWidth*.104, "chartMargin": vizWidth*.027,  "mapTranslateX": 0, "mapTranslateY": mapMargin.top *2},
+    /*screen width 320*/"extraSmall": { "width": vizWidth*.92, "height": vizWidth/1.15, "scale":vizWidth*3.9, "translate": [vizWidth/2.6,vizWidth/4.2], "chartWidth": vizWidth*.095, "chartMargin": vizWidth*.027,  "mapTranslateX": 0, "mapTranslateY": mapMargin.top *2}
   }
 
   var category = "revratio";
@@ -55,7 +55,7 @@ var vizContent = function() {
    /*screen width 900*/ "full": { "width": vizWidth/2.4, "height": vizWidth/2.4, "translate": [300,200]},
   /*screen width 768*/"medium": { "width": vizWidth/2.3, "height": vizWidth/2.4, "translate": [300,200]},
   /*screen width 502*/"small": { "width": vizWidth/2.1, "height": vizWidth/1.95, "translate": [300,200]},
-  /*screen width 320*/"extraSmall": { "width": vizWidth/2.1, "height": vizWidth/1.95, "translate": [300,200]}
+  /*screen width 320*/"extraSmall": { "width": vizWidth/1.25, "height": vizWidth/1.4, "translate": [300,200]}
 
   }
 
@@ -594,7 +594,7 @@ var vizContent = function() {
           })
 
         //set up scales for charts. THe code here assumes all states are on the same x/y scale. Alaska and the US avg will prob need to have special scales written for them, since they will be on a separate scale (I think). Also note currently there is no US average chart/tile.
-        var mapX = d3.scaleLinear().range([chartMargin, chartWidth-chartMargin]).nice();
+        var mapX = d3.scaleLinear().range([chartMargin-4, chartWidth-chartMargin+4]).nice();
         var mapY = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin]).nice();
         var mapY2 = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin]).nice();
 
@@ -629,8 +629,8 @@ var vizContent = function() {
        // A white line at y=1. This is just a placeholder. In the final feature, we want some sort of distinction of y=1 for the ratio graphs, but not the level graphs. Will likely be two rects (above and below y=1) instead of a line, but TBD
         //DRAWING THE RATIO LINE FOR ALL STATES BUT AK
         d3.selectAll(".state:not(.AK)").append("line")
-          .attr("x1",chartMargin)
-          .attr("x2",chartWidth-chartMargin)
+          .attr("x1",chartMargin-4)
+          .attr("x2",chartWidth-chartMargin+4)
           .attr("y1",mapY(1))
           .attr("y2",mapY(1))
           .attr("class", function(d) {
@@ -638,8 +638,8 @@ var vizContent = function() {
           })
         //DRAWING THE RATIO LINE FOR AK
         d3.select(".state.AK").append("line")
-          .attr("x1",chartMargin)
-          .attr("x2",chartWidth-chartMargin)
+          .attr("x1",chartMargin-4)
+          .attr("x2",chartWidth-chartMargin-4)
           .attr("y1",mapY2(1))
           .attr("y2",mapY2(1))
           .attr("class", function(d) {
@@ -1134,8 +1134,7 @@ var vizContent = function() {
           .data(trendsDataNest)
 
         //update scales
-        var mapX = d3.scaleLinear().range([chartMargin, chartWidth-chartMargin]);
-
+        var mapX = d3.scaleLinear().range([chartMargin-4, chartWidth-chartMargin+4]).nice();
         var mapY = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin]).nice();
         var mapY2 = d3.scaleLinear().range([chartWidth-chartMargin, chartMargin]).nice();
 

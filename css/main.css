@@ -868,8 +868,6 @@ form {
   display: block;
   }
 
-
-
   #ak-disclaimer {
     top: 0px;
     left: 0px;
@@ -931,7 +929,9 @@ form {
     display: block;
   }
 
-
+  .about-text {
+    margin-right: 0px;
+  }
   text.mapLabel.blank{
     font-size: 11.4px;
   }
@@ -999,7 +999,7 @@ form {
   }
 
   #credits {
-    margin-top: 50px;
+    margin-top: 60px;
   }
 
   .lineChart-div {
@@ -1050,7 +1050,17 @@ form {
   }
 }
 @media (max-width: 502px) {
-
+  #ak-disclaimer {
+    font-size: 10px;
+    width: 40%;
+  }
+  #credits {
+    margin-top: 70px;
+  }
+  
+  #note-blank {
+    font-size: 10px;
+  }
   .ratioOneLine {
     stroke-dasharray: 2;
   }
@@ -1137,6 +1147,10 @@ form {
   }
   .adjusted-div-mobile {
     margin-left: 15px;
+  }
+
+  .viz-content {
+    margin-top: 0;
   }
 
   #vis {
