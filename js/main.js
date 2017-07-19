@@ -7,7 +7,7 @@ var vizContent = function() {
   var blankNote = "*Note: Washington, DC, and Hawaii are included in the national average calculations, however, we cannot calculate progressivity at the state level for either because both are single districts. National averages exclude charter-only districts and other districts not tied to geography.";
   var IS_MOBILE_900 = d3.select("#isMobile900").style("display") == "block";
   var IS_MOBILE_768 = d3.select("#isMobile768").style("display") == "block";
-  var IS_PHONE = d3.select("#isPhone").style("display") == "block";
+  var IS_PHONE500 = d3.select("#isPhone500").style("display") == "block";
   /*MAP VARIABLES*/
   var pageSizeFunction =  function() {
       if (IS_MOBILE_768){
@@ -28,7 +28,7 @@ var vizContent = function() {
   var mapSizes = {
     /*screen width 1200*/"large": { "width": vizWidth/1.55, "height": 555, "scale": vizWidth*2.625, "translate": [710,180], "chartWidth": vizWidth*.06166, "chartMargin": vizWidth*.01083, "mapTranslateX": -vizWidth*.3},
      /*screen width 900*/"full": { "width": vizWidth/1.1, "height": 600, "scale":vizWidth*4.055, "translate": [760,180], "chartWidth": vizWidth*.0911, "chartMargin": vizWidth*.0144,  "mapTranslateX": -vizWidth*.45},
-    /*screen width 768*/"medium": { "width": vizWidth*.92, "height": 600, "scale":vizWidth*4.15, "translate": [710,180], "chartWidth": vizWidth*.104, "chartMargin": vizWidth*.022,  "mapTranslateX": -vizWidth*.54},
+    /*screen width 768*/"medium": { "width": vizWidth*.92, "height": 600, "scale":vizWidth*4.15, "translate": [710,180], "chartWidth": vizWidth*.104, "chartMargin": vizWidth*.022,  "mapTranslateX": -vizWidth*.52},
     "small": { "width": 900, "height": 1270, "scale": 3800, "translate": [380,220], "chartWidth": 76, "chartMargin": 8}
   }
 

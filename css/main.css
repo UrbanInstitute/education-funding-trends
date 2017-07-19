@@ -670,9 +670,8 @@ text.mapLabel.blank{
 }
 
 #note-blank{
-  position: absolute;
-  top: 575px;
-  left: 73px;
+  margin-left: 40px;
+  margin-top: 15px;
   font-size: 14px;  
   width: 500px;
 }
@@ -821,7 +820,7 @@ form {
   background-color: rgba(255,255,255,0)
 }
 
-#isPhone, #isMobile768, #isMobile900 {
+#isPhone500, #isMobile768, #isMobile900 {
     display: none;
     width: 0;
     height: 0;
@@ -869,34 +868,37 @@ form {
     width: 77%;
   }
 
+  .lineChart-details {
+    margin-top: 0px;
+  }
 
   .tab:nth-child(1) {
     margin-left: 26%;
   }
   .main-content {
-    width: 89% !important;
+    width: 89%;
     margin-bottom: 160px;
   }
   #vis {
-    margin-left: calc(-26.5%);
+    margin-left: calc(-29%);
     margin-top: -50px;
     
   }
 
   .lineChart-div {
     margin-left: 30px;
-    margin-top: 700px;
+    margin-top: 680px;
     width: none;
   }
 
   #note-blank {
-    top: 635px;
+    margin-left: 0;
   }
 
   .lineChart-div-mobile {
     display: block;
     float: right;
-    margin-top: 145px;
+    margin-top: 45px;
   }
 
   .nonmobile {
@@ -922,7 +924,7 @@ form {
     margin-left: calc(-25% - 30px);
   }
   .main-content {
-    width: 91.15% !important;
+    width: 91.15%;
     margin-bottom: 95px;
   }
   .headline {
@@ -975,6 +977,7 @@ form {
   #credits {
     margin-top: 50px;
   }
+
 }
 
 @media (max-width: 695px) {
@@ -983,24 +986,18 @@ form {
   }
 }
 
+@media (max-width: 500px){
+  .main-content {
+    width: 88%;
+  }
+
+}
 
 @media (max-width: 350px){
   #sections{
     /*width: 300px;*/
     left: -20px;
     /*pointer-events: none;*/
-  }
-}
-
-@media (max-width: 500px){
-  #topText{
-    margin-top: -90px;
-    padding: 20px;
-  }
-  #sections{
-    width: 300px;
-    /*left: -20px;*/
-    pointer-events: none;
   }
 }
 
