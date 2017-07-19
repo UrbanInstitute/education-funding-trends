@@ -3,7 +3,6 @@
 var vizContent = function() {
 
   var stateLinesArray = [];
-  var stepArray = [];
   var blankNote = "*Note: Washington, DC, and Hawaii are included in the national average calculations, however, we cannot calculate progressivity at the state level for either because both are single districts. National averages exclude charter-only districts and other districts not tied to geography.";
   var IS_MOBILE_900 = d3.select("#isMobile900").style("display") == "block";
   var IS_MOBILE_768 = d3.select("#isMobile768").style("display") == "block";
@@ -101,23 +100,22 @@ var vizContent = function() {
 
   function getTickValues(y, variable){
     var domain = y.domain() 
-    var step = (domain[1] - domain[0]) < .35 ? .05 : .1
+    var step;
+    if(variable.search("ratio") != -1){
+      var step = (domain[1] - domain[0]) < .35 ? .05 : .1
+    }else{
+      step = (domain[1] - domain[0])/4
+    }
     var numberOfSteps = ((domain[1] - domain[0]) / step)
-    stepArray.length = 0;
-      for (var i=0; i<numberOfSteps; i++) {
-        var newStep = domain[0] + (i*step), step; 
-        stepArray.push(newStep);
-      }
+    var stepArray = [];
+    for (var i=0; i<numberOfSteps; i++) {
+      var newStep = domain[0] + (i*step), step; 
+      stepArray.push(newStep);
+    }
     //return stepArray;
     stepArray.splice(numberOfSteps + 1, 0, domain[1]);
-    if(variable.search("ratio") == -1){
-      return stepArray;
-     // return [domain[0], domain[0] + step, domain[0] + 2.0*step, domain[0] + 3.0*step, domain[1]]
-    }else{ 
-     return stepArray;
-     // return [domain[0], domain[0] + step, domain[0] + 2.0*step, domain[0] + 3.0*step, domain[1], 1].filter(function(d){ return Math.abs(d-1) > .03 || d == 1})
-    }
-
+    
+    return stepArray;
   }
 
   function getMaxY(variable, data){
