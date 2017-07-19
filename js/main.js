@@ -1,34 +1,38 @@
 
 //Prob easiest to have a few set sizes for the map, which change at broswer size breakpoints. So `pageSize` will be determined by some function which tests browser size (e.g. IS_MOBILE() functions in past projects). I don't think it's as straightforward to have a continuously resizing graphic. Note that these values are just placeholders, they'll need to be tested/updated, and potentially more or fewer sizes are needed
 var vizContent = function() {
-
   var stateLinesArray = [];
   var blankNote = "*Note: Washington, DC, and Hawaii are included in the national average calculations, however, we cannot calculate progressivity at the state level for either because both are single districts. National averages exclude charter-only districts and other districts not tied to geography.";
   var IS_MOBILE_900 = d3.select("#isMobile900").style("display") == "block";
   var IS_MOBILE_768 = d3.select("#isMobile768").style("display") == "block";
-  var IS_PHONE500 = d3.select("#isPhone500").style("display") == "block";
+  var IS_PHONE_500 = d3.select("#isPhone500").style("display") == "block";
+  var IS_VERTICAL_LAYOUT = d3.select("#isVerticalLayout").style("display") == "block";
+
+  (IS_VERTICAL_LAYOUT) ? $('#vis').insertBefore('.lineChart-div'): $('#vis').insertAfter('.lineChart-div');
+
   /*MAP VARIABLES*/
   var pageSizeFunction =  function() {
-      if (IS_MOBILE_768){
-      return "medium"
-    } else {
-      if (IS_MOBILE_900) {
+      if (IS_PHONE_500){ console.log('small')
+      return "small"
+    } else if (IS_MOBILE_768){
+        return "medium"
+    }else if (IS_MOBILE_900) {
         return "full"
-      } else {
+    }else {
         return "large"
       }
-    }
   }
+
   var pageSize = pageSizeFunction();
 
   console.log(pageSize)
   var vizWidth = $(".viz-content").width();
   var mapMargin = {top: 30, right: 20, bottom: 30, left: 50};
   var mapSizes = {
-    /*screen width 1200*/"large": { "width": vizWidth/1.68, "height": 555, "scale": vizWidth*2.625, "translate": [710,180], "chartWidth": vizWidth*.06166, "chartMargin": vizWidth*.01083, "mapTranslateX": -vizWidth*.34, "mapTranslateY": mapMargin.top *2},
-     /*screen width 900*/"full": { "width": vizWidth/1.1, "height": 620, "scale":vizWidth*4.055, "translate": [760,180], "chartWidth": vizWidth*.091, "chartMargin": vizWidth*.0144,  "mapTranslateX": -vizWidth*.45, "mapTranslateY": mapMargin.top *2.5},
-    /*screen width 768*/"medium": { "width": vizWidth*.92, "height": 600, "scale":vizWidth*4.15, "translate": [710,180], "chartWidth": vizWidth*.104, "chartMargin": vizWidth*.022,  "mapTranslateX": -vizWidth*.52, "mapTranslateY": mapMargin.top *2},
-    "small": { "width": 900, "height": 1270, "scale": 3800, "translate": [380,220], "chartWidth": 76, "chartMargin": 8}
+    /*screen width 1200*/"large": { "width": vizWidth/1.68, "height": vizWidth/2.1, "scale": vizWidth*2.625, "translate": [vizWidth/3.9,vizWidth/6.67], "chartWidth": vizWidth*.06166, "chartMargin": vizWidth*.01083, "mapTranslateX": 0, "mapTranslateY": mapMargin.top *2},
+     /*screen width 900*/"full": { "width": vizWidth*.92, "height": vizWidth/1.4, "scale":vizWidth*4.055, "translate": [vizWidth/2.5,vizWidth/5], "chartWidth": vizWidth*.091, "chartMargin": vizWidth*.0144,  "mapTranslateX": 0, "mapTranslateY": mapMargin.top *2.5},
+    /*screen width 768*/"medium": { "width": vizWidth*.92, "height": vizWidth/1.28, "scale":vizWidth*4.15, "translate": [vizWidth/2.5,vizWidth/4.2], "chartWidth": vizWidth*.104, "chartMargin": vizWidth*.022,  "mapTranslateX": 0, "mapTranslateY": mapMargin.top *2},
+    /*screen width 500*/"small": { "width": vizWidth*.92, "height": 350, "scale":vizWidth*4.15, "translate": [710,180], "chartWidth": vizWidth*.104, "chartMargin": vizWidth*.022,  "mapTranslateX": -vizWidth*.52, "mapTranslateY": mapMargin.top *2}
   }
 
   var category = "revratio";
@@ -38,7 +42,6 @@ var vizContent = function() {
   mapHeight = mapSizes[pageSize]["height"] - mapMargin.top - mapMargin.bottom,
   mapTranslateX = mapSizes[pageSize]["mapTranslateX"];
   mapTranslateY = mapSizes[pageSize]["mapTranslateY"];
-  console.log(mapTranslateX)
   /*LINE GRAPH VARIABLES*/
   var graphSize =  (IS_MOBILE_768) || (IS_MOBILE_900) ? "full" : "large";
 
@@ -46,14 +49,13 @@ var vizContent = function() {
    /*screen width 1200*/ "large": { "width": vizWidth/3.42, "height": 330, "translate": [720,180]},
    /*screen width 900*/ "full": { "width": vizWidth/2.4, "height": vizWidth/2.4, "translate": [300,200]},
   /*screen width 768*/"medium": { "width": vizWidth/2.3, "height": vizWidth/2.4, "translate": [300,200]},
-    "small": { "width": 900, "height": 1270, "translate": [380,220]}
+  /*screen width 500*/"small": { "width": vizWidth/2.3, "height": vizWidth/2.4, "translate": [300,200]},
   }
 
   var selectedCategory = "adj_revratio_all";
   var graphMargin = {top: 30, right: 30, bottom: 30, left: 28},
   graphWidth =  graphSizes[pageSize]["width"]- graphMargin.left - graphMargin.right,
   graphHeight = graphSizes[pageSize]["height"] - graphMargin.top - graphMargin.bottom;
-  console.log(graphWidth)
   var graphX = d3.scaleTime().range([0, graphWidth]);
   var graphY = d3.scaleLinear().range([graphHeight, 0]).nice();
   var graphLine = d3.line()
@@ -539,16 +541,16 @@ var vizContent = function() {
           .attr("text-anchor", "end")
           .attr("x", function() {
             if (IS_MOBILE_768) {
-                return chartWidth+chartMargin - 31
-            }else{
-              return chartWidth+chartMargin - 25
+              return chartWidth+chartMargin - chartWidth/2.4
+            }else {
+              return chartWidth+chartMargin - chartWidth/3.2              
             }
           })
           .attr("y", function() {
             if (IS_MOBILE_768) {
-                return chartWidth+chartMargin - 31
-            }else{
-              return chartWidth+chartMargin - 25
+              return chartWidth+chartMargin - chartWidth/2.4
+            }else {
+              return chartWidth+chartMargin - chartWidth/3.2              
             }
           })
 
@@ -652,16 +654,16 @@ var vizContent = function() {
           .attr("text-anchor", "end")
           .attr("x", function() {
             if (IS_MOBILE_768) {
-                return chartWidth+chartMargin - 31
-            }else{
-              return chartWidth+chartMargin - 25
+              return chartWidth+chartMargin - chartWidth/2.4
+            }else {
+              return chartWidth+chartMargin - chartWidth/3.2              
             }
           })
           .attr("y", function() {
             if (IS_MOBILE_768) {
-                return chartWidth+chartMargin - 32
-            }else{
-              return chartWidth+chartMargin - 25
+              return chartWidth+chartMargin - chartWidth/2.4
+            }else {
+              return chartWidth+chartMargin - chartWidth/3.2              
             }
           })
         //add the X axis 

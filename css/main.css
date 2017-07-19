@@ -657,7 +657,7 @@ div.close-sign {
 
 
 text.mapLabel.blank{
-  font-size: 12.24px;
+  font-size: 13px;
   fill: #666666;
 }
 
@@ -676,7 +676,7 @@ text.mapLabel.blank{
 }
 
 text.mapLabel.standard {
-  font-size: 12px;
+  font-size: 13px;
 }
 
 /*text.mapLabel.standard.hovered-text {
@@ -819,7 +819,7 @@ form {
   background-color: rgba(255,255,255,0)
 }
 
-#isPhone500, #isMobile768, #isMobile900 {
+#isPhone500, #isMobile768, #isMobile900, #isVerticalLayout {
     display: none;
     width: 0;
     height: 0;
@@ -859,9 +859,11 @@ form {
 
 
 @media (max-width: 900px) {
-  #isMobile900 {
+  #isMobile900, #isVerticalLayout {
   display: block;
   }
+
+
 
   #ak-disclaimer {
     top: 0px;
@@ -886,13 +888,12 @@ form {
     margin-bottom: 160px;
   }
   #vis {
-    margin-left: calc(-29%);
-    
+    margin: 0 35px;    
   }
 
   .lineChart-div {
     margin-left: 50px;
-    margin-top: 680px;
+    margin-top: 45px;
     width: none;
   }
 
@@ -921,12 +922,21 @@ form {
 
 @media (max-width: 768px){
 
-  #isMobile768 {
+  #isMobile768, #isVerticalLayout {
     display: block;
   }
 
-  #vis {
-    margin-left: calc(-25% - 30px);
+
+  text.mapLabel.blank{
+    font-size: 11.4px;
+  }
+  text.mapLabel.standard {
+    font-size: 11.4px;
+  }
+  .lineChart-div-mobile {
+    display: block;
+    float: right;
+    margin-top: 47px;
   }
   .main-content {
     width: 91.15%;
@@ -940,7 +950,7 @@ form {
     font-size: 16px;
   }
   #switch-div {
-    width: 86.85%;
+    width: 91%;
   }
 
   #switch-div-mobile {
@@ -995,7 +1005,7 @@ form {
 
 @media (max-width: 695px) {
   #switch-div-mobile {
-    margin: 0 5%;
+    margin: 0 3% 0 7%;
   }
   .tab:nth-child(1) {
     margin-left: 18%;
@@ -1006,16 +1016,8 @@ form {
   }
 }
 
-@media (max-width: 500px){
-  .main-content {
-    width: 88%;
-  }
 
-}
-
-
-
-@media (max-width: 600px){
+@media (max-width: 585px){
   .switch-div-individual {
     margin: 6% 0 0 0 ;
   }
@@ -1028,12 +1030,12 @@ form {
     margin: 0 15px;
   }
   .tab:nth-child(1) {
-    margin-left: 12%;
+    margin-left: 13%;
   }
 
 }
 
-@media (max-width: 535px) {
+@media (max-width: 510px) {
   .switch-div-individual {
     margin: 6% 3% 0 12%;
   }
@@ -1054,9 +1056,6 @@ form {
     margin-left: 0%;
   }
 
-  #vis {
-    margin-left: calc(-25% - 56px);
-  }
 }
 
 @media (max-width: 500px) {
@@ -1066,9 +1065,12 @@ form {
   .tab:nth-child(1) {
     margin-left: 23%;
   }
-}
-
-@media (max-width: 500px) {
+  #isPhone500, #isVerticalLayout {
+    display: block;
+  }
+  .main-content {
+    width: 88%;
+  }
   .switch-div-individual {
     margin: 40px 12px 0 28px;
   }
@@ -1076,8 +1078,16 @@ form {
     margin: 0 15px 0 12px;
   }
 
+  #note-blank {
+    width: 80%;
+  }
+
   .adjusted-div-mobile {
     margin-left: 15px;
+  }
+
+  #vis {
+    margin-left: 0px;
   }
 }
 @media (max-width: 450px) {
