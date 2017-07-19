@@ -53,13 +53,19 @@ li.state-mobile {
   width: 100%;
 }
 #double li {
-  width: 46%;
-  margin-right: 15px;
+  width: 47.1%;
+  margin-right: 1.6%;
+  float:left;
 }
 
 .lineChart-div-mobile > .lineChart-details > .header-row > .state-clear {
   margin-right: 15px;
 }
+
+.lineChart-div-phone {
+  display: none;
+}
+
 div.tooltip {
   position: absolute;
   text-align: left;
@@ -700,7 +706,7 @@ text.mapLabel.standard.selected-text {
   height: 50px;
 }
 .switch-div-full {
-  width: 100%;
+  margin: 0 35px;
 
 }
 
@@ -950,7 +956,7 @@ form {
     font-size: 16px;
   }
   #switch-div {
-    width: 91%;
+    width: 100%;
   }
 
   #switch-div-mobile {
@@ -1014,6 +1020,9 @@ form {
   .lineChart-div-mobile {
     width: 40%;
   }
+  div.close-sign {
+    margin-left: 77%;
+  }
 }
 
 
@@ -1035,7 +1044,29 @@ form {
 
 }
 
-@media (max-width: 510px) {
+@media (max-width: 535px) {
+  #switch-div-mobile {
+    margin: 0;
+  }
+}
+@media (max-width: 502px) {
+  .lineChart-div-phone {
+    display: block;
+    margin: 10px 30px;
+  }
+
+  .lineChart-div-mobile {
+    width: 32%;
+  }
+  .lineChart-div-mobile > .lineChart-notes-above {
+    display: none !important;
+  }
+  .lineChart-div-mobile > .lineChart-notes-under {
+    display: none !important;
+  }
+  .lineChart-div-phone * {
+    float: left;
+  }
   .switch-div-individual {
     margin: 6% 3% 0 12%;
   }
@@ -1045,7 +1076,14 @@ form {
   .switch-div-individual.last-switch {
     margin: 0 0 5% 8%;
   }
+  .state-clear {
+    float: left;
+    margin-bottom: 20px;
+  }
 
+  .state-title {
+    margin-bottom: 0;
+  }
   .adjusted-div-mobile {
     width: 150px;
     float: left;
@@ -1055,41 +1093,55 @@ form {
   .adjusted-div {
     margin-left: 0%;
   }
-
-}
-
-@media (max-width: 500px) {
   .tab .top-tab {
     padding: 15px 14px 19px 14px;
   }
   .tab:nth-child(1) {
     margin-left: 23%;
   }
-  #isPhone500, #isVerticalLayout {
+ #isPhone500, #isVerticalLayout {
     display: block;
   }
   .main-content {
     width: 88%;
   }
+ 
   .switch-div-individual {
     margin: 40px 12px 0 28px;
   }
   .switch-div-individual.last-switch {
     margin: 0 15px 0 12px;
   }
+  div.close-sign {
+    margin-left: 82%;
+  }
 
+  #bottom-content {
+    margin-top: 30px;
+  }
   #note-blank {
     width: 80%;
   }
-
+  #double li {
+    width: 100%;
+    margin-right: 0;
+  }
   .adjusted-div-mobile {
     margin-left: 15px;
   }
 
   #vis {
-    margin-left: 0px;
+    margin: 0 30px;
+  }
+
+  text.mapLabel.blank{
+    font-size: 7.19px;
+  }
+  text.mapLabel.standard {
+    font-size: 7.19px;
   }
 }
+
 @media (max-width: 450px) {
   .adjusted-div-mobile {
     margin-left: 0px;

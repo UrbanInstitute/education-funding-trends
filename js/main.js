@@ -32,7 +32,7 @@ var vizContent = function() {
     /*screen width 1200*/"large": { "width": vizWidth/1.68, "height": vizWidth/2.1, "scale": vizWidth*2.625, "translate": [vizWidth/3.9,vizWidth/6.67], "chartWidth": vizWidth*.06166, "chartMargin": vizWidth*.01083, "mapTranslateX": 0, "mapTranslateY": mapMargin.top *2},
      /*screen width 900*/"full": { "width": vizWidth*.92, "height": vizWidth/1.4, "scale":vizWidth*4.055, "translate": [vizWidth/2.5,vizWidth/5], "chartWidth": vizWidth*.091, "chartMargin": vizWidth*.0144,  "mapTranslateX": 0, "mapTranslateY": mapMargin.top *2.5},
     /*screen width 768*/"medium": { "width": vizWidth*.92, "height": vizWidth/1.28, "scale":vizWidth*4.15, "translate": [vizWidth/2.5,vizWidth/4.2], "chartWidth": vizWidth*.104, "chartMargin": vizWidth*.022,  "mapTranslateX": 0, "mapTranslateY": mapMargin.top *2},
-    /*screen width 500*/"small": { "width": vizWidth*.92, "height": 350, "scale":vizWidth*4.15, "translate": [710,180], "chartWidth": vizWidth*.104, "chartMargin": vizWidth*.022,  "mapTranslateX": -vizWidth*.52, "mapTranslateY": mapMargin.top *2}
+    /*screen width 500*/"small": { "width": vizWidth*.98, "height": vizWidth/1.28, "scale":vizWidth*3.9, "translate": [vizWidth/2.6,vizWidth/4.2], "chartWidth": vizWidth*.104, "chartMargin": vizWidth*.027,  "mapTranslateX": 0, "mapTranslateY": mapMargin.top *2}
   }
 
   var category = "revratio";
@@ -49,7 +49,7 @@ var vizContent = function() {
    /*screen width 1200*/ "large": { "width": vizWidth/3.42, "height": 330, "translate": [720,180]},
    /*screen width 900*/ "full": { "width": vizWidth/2.4, "height": vizWidth/2.4, "translate": [300,200]},
   /*screen width 768*/"medium": { "width": vizWidth/2.3, "height": vizWidth/2.4, "translate": [300,200]},
-  /*screen width 500*/"small": { "width": vizWidth/2.3, "height": vizWidth/2.4, "translate": [300,200]},
+  /*screen width 500*/"small": { "width": vizWidth/2.1, "height": vizWidth/1.95, "translate": [300,200]},
   }
 
   var selectedCategory = "adj_revratio_all";
@@ -268,12 +268,27 @@ var vizContent = function() {
         graphSvg.append("text")
           .text("PROGRESSIVE")
           .attr("class", "largeChartLabel progressiveLabel")
-          .attr("transform", "translate("+ graphWidth/3.8 +", "+ graphY(1.05)+")") 
+          .attr("transform", function() {
+            if (IS_PHONE_500) {
+              return "translate("+ graphWidth/10 +", "+ graphY(1.05)+")"
+            }else if (IS_MOBILE_768) {
+              return "translate("+ graphWidth/4.1 +", "+ graphY(1.05)+")"
+            }else {
+              return "translate("+ graphWidth/3.8 +", "+ graphY(1.05)+")"
+            }
+          }) 
         graphSvg.append("text")
           .text("REGRESSIVE")
           .attr("class", "largeChartLabel regressiveLabel")
-          .attr("transform", "translate("+ graphWidth/3.8 +", "+ graphY(.95)+")") 
-
+          .attr("transform", function() {
+            if (IS_PHONE_500) {
+              return "translate("+ graphWidth/10 +", "+ graphY(.95)+")"
+            }else if (IS_MOBILE_768) {
+              return "translate("+ graphWidth/4.1 +", "+ graphY(.95)+")"
+            }else {
+              return "translate("+ graphWidth/3.8 +", "+ graphY(.95)+")"
+            }
+          }) 
         graphSvg.append("text")
           .attr("text-anchor", "middle") 
           .text("Progressivity")
@@ -540,14 +555,19 @@ var vizContent = function() {
           })
           .attr("text-anchor", "end")
           .attr("x", function() {
-            if (IS_MOBILE_768) {
+            if (IS_PHONE_500) {
+              return chartWidth+chartMargin - chartWidth/2.2
+            }
+            else if (IS_MOBILE_768) {
               return chartWidth+chartMargin - chartWidth/2.4
             }else {
               return chartWidth+chartMargin - chartWidth/3.2              
             }
           })
           .attr("y", function() {
-            if (IS_MOBILE_768) {
+            if (IS_PHONE_500) {
+              return chartWidth+chartMargin - chartWidth/2.2
+            }else if (IS_MOBILE_768) {
               return chartWidth+chartMargin - chartWidth/2.4
             }else {
               return chartWidth+chartMargin - chartWidth/3.2              
@@ -653,14 +673,18 @@ var vizContent = function() {
           })        
           .attr("text-anchor", "end")
           .attr("x", function() {
-            if (IS_MOBILE_768) {
+            if (IS_PHONE_500) {
+              return chartWidth+chartMargin - chartWidth/2.2
+            }else if (IS_MOBILE_768) {
               return chartWidth+chartMargin - chartWidth/2.4
             }else {
               return chartWidth+chartMargin - chartWidth/3.2              
             }
           })
           .attr("y", function() {
-            if (IS_MOBILE_768) {
+            if (IS_PHONE_500) {
+              return chartWidth+chartMargin - chartWidth/2.2
+            }else if (IS_MOBILE_768) {
               return chartWidth+chartMargin - chartWidth/2.4
             }else {
               return chartWidth+chartMargin - chartWidth/3.2              
@@ -967,12 +991,26 @@ var vizContent = function() {
           d3.select(".usaLabel").attr("opacity", 1)
          }
         graphSvg.select(".progressiveLabel")
-          .transition().duration(1200)
-          .attr("transform", "translate("+ graphWidth/3.8 +", "+ graphY(1.05)+")") 
+          .attr("transform", function() {
+            if (IS_PHONE_500) {
+              return "translate("+ graphWidth/10 +", "+ graphY(1.05)+")"
+            }else if (IS_MOBILE_768) {
+              return "translate("+ graphWidth/4.1 +", "+ graphY(1.05)+")"
+            }else {
+              return "translate("+ graphWidth/3.8 +", "+ graphY(1.05)+")"
+            }
+          }) 
         graphSvg.select(".regressiveLabel")
           .transition().duration(1200)
-          .attr("transform", "translate("+ graphWidth/3.8 +", "+ graphY(.95)+")") 
-          .style("opacity", function() { 
+          .attr("transform", function() {
+            if (IS_PHONE_500) {
+              return "translate("+ graphWidth/10 +", "+ graphY(.95)+")"
+            }else if (IS_MOBILE_768) {
+              return "translate("+ graphWidth/4.1 +", "+ graphY(.95)+")"
+            }else {
+              return "translate("+ graphWidth/3.8 +", "+ graphY(.95)+")"
+            }
+          })           .style("opacity", function() { 
            var domain = graphY.domain() 
             return (domain[0] >= .9) ? 0 : 1
           })
