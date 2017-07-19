@@ -304,7 +304,11 @@ var vizContent = function() {
         graphSvg.append("text")
           .attr("text-anchor", "middle") 
           .text("Fiscal Year")
-          .attr("transform", "translate(150, 290)") 
+          .attr("transform", function() {
+            var height = $("#lineChart svg").attr("height")
+            console.log(height)
+            return "translate(140," + height*.88 + ")"
+          })           
           .attr("class", "x-label axis-label")
 
         graphSvg.append("path")
@@ -1134,9 +1138,13 @@ var vizContent = function() {
               return "translate(10, -18)"
             }
           })  
+
         graphSvg.select(".x-label")
-          .text("Fiscal Year")
-          .attr("transform", "translate(150,290)")  
+          .attr("transform", function() {
+            var height = $("#lineChart svg").attr("height")
+            console.log(height)
+            return "translate(150," + height*.88 + ")"
+        })  
         var trendsData = d3.select("#vis").datum()
         var trendsDataNest = d3.nest()
           .key(function(d) {return d.State;})
