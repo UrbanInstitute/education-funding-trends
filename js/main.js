@@ -51,7 +51,7 @@ var vizContent = function() {
   var graphSize =  (IS_MOBILE_768) || (IS_MOBILE_900) ? "full" : "large";
 
   var graphSizes = {
-   /*screen width 1200*/ "large": { "width": vizWidth/3.42, "height": 330, "translate": [720,180]},
+   /*screen width 1200*/ "large": { "width": vizWidth/3.42, "height": vizWidth/3.7, "translate": [720,180]},
    /*screen width 900*/ "full": { "width": vizWidth/2.4, "height": vizWidth/2.4, "translate": [300,200]},
   /*screen width 768*/"medium": { "width": vizWidth/2.3, "height": vizWidth/2.4, "translate": [300,200]},
   /*screen width 502*/"small": { "width": vizWidth/2.1, "height": vizWidth/1.95, "translate": [300,200]},
@@ -60,7 +60,7 @@ var vizContent = function() {
   }
 
   var selectedCategory = "adj_revratio_all";
-  var graphMargin = {top: 30, right: 30, bottom: 30, left: 28},
+  var graphMargin = {top: 30, right: 30, bottom: 40, left: 28},
   graphWidth =  graphSizes[pageSize]["width"]- graphMargin.left - graphMargin.right,
   graphHeight = graphSizes[pageSize]["height"] - graphMargin.top - graphMargin.bottom;
   var graphX = d3.scaleTime().range([0, graphWidth]);
@@ -300,7 +300,12 @@ var vizContent = function() {
           .attr("text-anchor", "middle") 
           .text("Progressivity")
           .attr("transform", "translate(10, -15)") 
-          .attr("class", "y-label")
+          .attr("class", "y-label axis-label")
+        graphSvg.append("text")
+          .attr("text-anchor", "middle") 
+          .text("Fiscal Year")
+          .attr("transform", "translate(150, 290)") 
+          .attr("class", "x-label axis-label")
 
         graphSvg.append("path")
           .data([trendsDataNest])
@@ -838,12 +843,10 @@ var vizContent = function() {
         })
       //WHEN CLICKING ON STATE, ADD TAG TO BOTTOM OF LINE GRAPH
       function addStateList(state, stateName) { 
-        if((d3.select("#revratio_").classed("current") == true)) {
           d3.selectAll(".lineChart-details, .lineChart-notes-under")
             .classed("show", true)
           d3.selectAll(".lineChart-notes-above")
             .classed("show", false)
-        }
         var stateItem = d3.selectAll(".state-list")
           .datum(state)
           .append("li")
@@ -1131,7 +1134,9 @@ var vizContent = function() {
               return "translate(10, -18)"
             }
           })  
-
+        graphSvg.select(".x-label")
+          .text("Fiscal Year")
+          .attr("transform", "translate(150,290)")  
         var trendsData = d3.select("#vis").datum()
         var trendsDataNest = d3.nest()
           .key(function(d) {return d.State;})
