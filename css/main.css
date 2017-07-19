@@ -234,9 +234,10 @@ path.domain {
 div.close-sign {
   background-image: url("../img/close-sign.png");
   background-repeat: no-repeat;
-  margin-left: 365px;
+  margin-left: 90%;
   margin-top: -30px;
   height: 30px;
+  width: 30px;
   pointer-events: all;
   cursor: pointer;
 }
@@ -339,7 +340,7 @@ div.close-sign {
 
 .tab .top-tab {
   background: #eee; 
-  padding: 20px 50px 20px 50px; 
+  padding: 20px 50px 19px 50px; 
   border: 1px solid #ccc; 
   margin-left: -1px; 
   position: relative;
@@ -464,9 +465,8 @@ div.close-sign {
 #vis {
   float: left;
   position: relative;
-  margin-top: -50px;
   /*top: calc(50% - 300px);*/
-  margin-left: 0;
+  margin-left: 25px;
   /* height: 600px; */
   /* width: 600px; */
   /* background-color: #ddd; */
@@ -663,14 +663,13 @@ text.mapLabel.blank{
 
 #ak-disclaimer{
   position: absolute;
-  top: 50px;
-  left: 160px;
+  top: 0px;
+  left: 0px;
   font-size: 14px;  
-  width: 240px;
+  width: 320px;
 }
 
 #note-blank{
-  margin-left: 40px;
   margin-top: 15px;
   font-size: 14px;  
   width: 500px;
@@ -864,6 +863,13 @@ form {
   display: block;
   }
 
+  #ak-disclaimer {
+    top: 0px;
+    left: 0px;
+  }
+  div.close-sign {
+    margin-left: 82%;
+  }
   .wrapper {
     width: 77%;
   }
@@ -881,12 +887,11 @@ form {
   }
   #vis {
     margin-left: calc(-29%);
-    margin-top: -50px;
     
   }
 
   .lineChart-div {
-    margin-left: 30px;
+    margin-left: 50px;
     margin-top: 680px;
     width: none;
   }
@@ -959,7 +964,10 @@ form {
   .adjusted-div-mobile {
     width: 100%;
     float: left;
+  }
 
+  .urban-switch.large {
+    margin-bottom: 12px;
   }
 
   .bottom-section{
@@ -978,11 +986,23 @@ form {
     margin-top: 50px;
   }
 
+  .lineChart-div {
+    margin-left: 35px;
+  }
+
+
 }
 
 @media (max-width: 695px) {
   #switch-div-mobile {
     margin: 0 5%;
+  }
+  .tab:nth-child(1) {
+    margin-left: 18%;
+  }
+
+  .lineChart-div-mobile {
+    width: 40%;
   }
 }
 
@@ -993,6 +1013,89 @@ form {
 
 }
 
+
+
+@media (max-width: 600px){
+  .switch-div-individual {
+    margin: 6% 0 0 0 ;
+  }
+
+  .adjusted-div {
+    margin-right: 0;
+  }
+
+  #switch-div-mobile {
+    margin: 0 15px;
+  }
+  .tab:nth-child(1) {
+    margin-left: 12%;
+  }
+
+}
+
+@media (max-width: 535px) {
+  .switch-div-individual {
+    margin: 6% 3% 0 12%;
+  }
+  .tab:nth-child(1) {
+    margin-left: 9%;
+  }
+  .switch-div-individual.last-switch {
+    margin: 0 0 5% 8%;
+  }
+
+  .adjusted-div-mobile {
+    width: 150px;
+    float: left;
+    margin-left: 13%;
+  }
+
+  .adjusted-div {
+    margin-left: 0%;
+  }
+
+  #vis {
+    margin-left: calc(-25% - 56px);
+  }
+}
+
+@media (max-width: 500px) {
+  .tab .top-tab {
+    padding: 15px 14px 19px 14px;
+  }
+  .tab:nth-child(1) {
+    margin-left: 23%;
+  }
+}
+
+@media (max-width: 500px) {
+  .switch-div-individual {
+    margin: 40px 12px 0 28px;
+  }
+  .switch-div-individual.last-switch {
+    margin: 0 15px 0 12px;
+  }
+
+  .adjusted-div-mobile {
+    margin-left: 15px;
+  }
+}
+@media (max-width: 450px) {
+  .adjusted-div-mobile {
+    margin-left: 0px;
+  }
+  .switch-div-individual {
+    margin: 40px 5px 0 18px;
+  }
+  .switch-div-individual.last-switch {
+    margin: 0 15px 0 0;
+  }
+}
+@media (max-width: 380px) {
+  #switch-div-mobile {
+    margin: 0 0px;
+  }
+}
 @media (max-width: 350px){
   #sections{
     /*width: 300px;*/

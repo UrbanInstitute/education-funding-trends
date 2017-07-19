@@ -23,23 +23,21 @@ var vizContent = function() {
 
   console.log(pageSize)
   var vizWidth = $(".viz-content").width();
-
+  var mapMargin = {top: 30, right: 20, bottom: 30, left: 50};
   var mapSizes = {
-    /*screen width 1200*/"large": { "width": vizWidth/1.55, "height": 555, "scale": vizWidth*2.625, "translate": [710,180], "chartWidth": vizWidth*.06166, "chartMargin": vizWidth*.01083, "mapTranslateX": -vizWidth*.3},
-     /*screen width 900*/"full": { "width": vizWidth/1.1, "height": 600, "scale":vizWidth*4.055, "translate": [760,180], "chartWidth": vizWidth*.0911, "chartMargin": vizWidth*.0144,  "mapTranslateX": -vizWidth*.45},
-    /*screen width 768*/"medium": { "width": vizWidth*.92, "height": 600, "scale":vizWidth*4.15, "translate": [710,180], "chartWidth": vizWidth*.104, "chartMargin": vizWidth*.022,  "mapTranslateX": -vizWidth*.52},
+    /*screen width 1200*/"large": { "width": vizWidth/1.68, "height": 555, "scale": vizWidth*2.625, "translate": [710,180], "chartWidth": vizWidth*.06166, "chartMargin": vizWidth*.01083, "mapTranslateX": -vizWidth*.34, "mapTranslateY": mapMargin.top *2},
+     /*screen width 900*/"full": { "width": vizWidth/1.1, "height": 620, "scale":vizWidth*4.055, "translate": [760,180], "chartWidth": vizWidth*.091, "chartMargin": vizWidth*.0144,  "mapTranslateX": -vizWidth*.45, "mapTranslateY": mapMargin.top *2.5},
+    /*screen width 768*/"medium": { "width": vizWidth*.92, "height": 600, "scale":vizWidth*4.15, "translate": [710,180], "chartWidth": vizWidth*.104, "chartMargin": vizWidth*.022,  "mapTranslateX": -vizWidth*.52, "mapTranslateY": mapMargin.top *2},
     "small": { "width": 900, "height": 1270, "scale": 3800, "translate": [380,220], "chartWidth": 76, "chartMargin": 8}
   }
-
 
   var category = "revratio";
   var startYear = 1995;
   var endYear = 2015;
-
-  var mapMargin = {top: 30, right: 20, bottom: 30, left: 50},
-  mapWidth = mapSizes[pageSize]["width"] - mapMargin.left - mapMargin.right,
+  var mapWidth = mapSizes[pageSize]["width"] - mapMargin.left - mapMargin.right,
   mapHeight = mapSizes[pageSize]["height"] - mapMargin.top - mapMargin.bottom,
   mapTranslateX = mapSizes[pageSize]["mapTranslateX"];
+  mapTranslateY = mapSizes[pageSize]["mapTranslateY"];
   console.log(mapTranslateX)
   /*LINE GRAPH VARIABLES*/
   var graphSize =  (IS_MOBILE_768) || (IS_MOBILE_900) ? "full" : "large";
@@ -374,7 +372,7 @@ var vizContent = function() {
           .attr("width", mapWidth + mapMargin.left + mapMargin.right)
           .attr("height", mapHeight + mapMargin.top + mapMargin.bottom)
           .append("g")
-          .attr("transform", "translate(" + mapTranslateX + "," + mapMargin.top *2+ ")");
+          .attr("transform", "translate(" + mapTranslateX + "," + mapTranslateY+ ")");
 
 
         //reshape data, nesting by State 
@@ -557,8 +555,8 @@ var vizContent = function() {
         //chart background
         map
           .append("rect")
-          .attr("width",chartWidth-2*chartMargin + 8)
-          .attr("height",chartWidth-2*chartMargin + 8)
+          .attr("width", chartWidth-2*chartMargin + 8)
+          .attr("height", chartWidth-2*chartMargin + 8)
           .attr("x",chartMargin - 4)
           .attr("y",chartMargin - 4)
           .style("fill","#a2d3eb") 
@@ -682,6 +680,8 @@ var vizContent = function() {
           .append("div")
           .attr("id", "ak-disclaimer")
           .html("Alaska data are displayed on a separate y axis scale (from <span id =\"ak-min\">" + RATIO_FORMAT(min2)+ "</span> to <span id =\"ak-max\">" + RATIO_FORMAT(max2) + "</span>) from the other 49 states.")
+
+
        d3.select("#vis")
           .append("div")
           .attr("id", "note-blank")
@@ -810,7 +810,8 @@ var vizContent = function() {
           .append("li")
           .html(stateName)
           .attr("class", function() {
-            return (IS_MOBILE_768) || (IS_MOBILE_900) ? "state-item item-" + state + " state-mobile" :  "state-item item-" + state + " state-nonmobile";
+            return "state-item item-" + state + " state-nonmobile";
+            //return (IS_MOBILE_768) || (IS_MOBILE_900) ? "state-item item-" + state + " state-mobile" :  "state-item item-" + state + " state-nonmobile";
           })
           .on("mouseover", function(){ hoverState(state)})
           .on("mouseout", function(){ dehoverState(state)})
