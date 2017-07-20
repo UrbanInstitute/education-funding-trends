@@ -242,6 +242,7 @@ var vizContent = function() {
           .entries(graphDataSelected);
 
         graphX.domain(d3.extent(trendsDataFiltered, function(d) { return d.Year; }));
+
         graphY.domain([ getMinY(selectedCategory, trendsDataFiltered), getMaxY(selectedCategory, trendsDataFiltered)]);
           
         graphSvg.append("g")
@@ -258,7 +259,7 @@ var vizContent = function() {
         });
         d3.selectAll('.x.graphAxis .tick.minor text').each(function(d, i) {  
            // every 4th is 'major' without .minor class
-           d3.select(this).classed('minor', (i % 5 !== 0));
+            d3.select(this).classed('minor', (i % 5 !== 0));
         });
 
         // Add the Y Axis
@@ -975,7 +976,6 @@ var vizContent = function() {
         var max2 = getMaxY(domainController, trendsDataAK)
         //var max2 = d3.max(trendsDataAK, function(d) { return d[domainController]; })
         var min2 = (domainController.search("ratio") != -1) ? d3.min([1, d3.min(trendsDataAK, function(d) {return d[domainController]; })]) : 0;
-console.log(max2)
         if(max > max2){
           max2 = max;
           min2 = min;

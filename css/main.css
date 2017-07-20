@@ -1054,6 +1054,12 @@ form {
     font-size: 10px;
     width: 40%;
   }
+  .tick.minor > line {
+      opacity: 0;
+  }
+  #header-pinned .title {
+    font-size: 13px;
+  }
   #credits {
     margin-top: 70px;
   }
@@ -1075,7 +1081,8 @@ form {
     margin-left: 4%;
   }
   .lineChart-div-mobile {
-    width: 32%;
+    width: 38%;
+    margin-right: -20px;
   }
   .lineChart-div-mobile > .lineChart-notes-above {
     display: none !important;
@@ -1099,6 +1106,7 @@ form {
 
   .state-title {
     margin-bottom: 0;
+    width: 100%;
   }
   .adjusted-div-mobile {
     width: 150px;
@@ -1159,6 +1167,10 @@ form {
   #vis {
     margin: 0 30px;
   }
+  .state-title, .state-item {
+    font-size: 14px;
+  }
+
 
   text.mapLabel.blank{
     font-size: 7.19px;
@@ -1190,8 +1202,16 @@ form {
   .switch-div-individual.last-switch {
     margin: 0 15px 0 0;
   }
+  .largeChartLabel {
+    font-size: 10px;
+  }
+
 }
 @media (max-width: 391px) {
+
+  .lineChart-div-mobile {
+    width: 34%;
+  }
   .tab:nth-child(1) {
     margin-left: 10%;
   }
@@ -1217,11 +1237,28 @@ form {
   }
 }
 @media (max-width: 320px){
+  .lineChart-div-mobile {
+    width: 80%;
+    margin-top: 0px;
+  }
+  .state-title {
+    font-size: 18px;
+    width: 60%;
+  }
    #isPhone320, #isVerticalLayout {
     display: block;
   }
   .tab:nth-child(1) {
     margin-left: 5%;
+  }
+  .largeChartLabel {
+    font-size: 14px;
+  }
+  .state-clear {
+    float: right;
+  }
+  div.close-sign {
+    margin-left: 88%;
   }
 }
 

@@ -332,12 +332,15 @@ ul{
 @media(max-width:480px) {
     #header-pinned .title{
         font-size: 15px !important;
-		width:350px;
+		width:70%;
 	 line-height: 20px;
     white-space: normal;
     overflow:visible;
 	margin-top:3px;
 	margin-bottom:3px;
+    }
+    #header-pinned .share-icons .shareThisP {
+        height: 39px;
     }
 }
 
@@ -345,13 +348,14 @@ ul{
     #header-pinned .title{
         font-size: 15px !important;
         margin-left: 55px !important;
-		width:250px;
+		width:65%;
 	 line-height: 20px;
     white-space: normal;
     overflow:visible;
 	margin-top:3px;
 	margin-bottom:3px;
     }
+
 }
 
 
