@@ -32,7 +32,7 @@ var vizContent = function() {
   var vizWidth = $(".viz-content").width();
   var mapMargin = {top: 30, right: 20, bottom: 30, left: 50};
   var mapSizes = {
-    /*screen width 1200*/"large": { "width": vizWidth/1.68, "height": vizWidth/2.1, "scale": vizWidth*2.625, "translate": [vizWidth/3.9,vizWidth/6.67], "chartWidth": vizWidth*.06166, "chartMargin": vizWidth*.01083, "mapTranslateX": 0, "mapTranslateY": mapMargin.top *2},
+    /*screen width 1200*/"large": { "width": vizWidth/1.68, "height": vizWidth/2.1, "scale": vizWidth*2.625, "translate": [vizWidth/3.9,vizWidth/6.67], "chartWidth": vizWidth*.06166, "chartMargin": vizWidth*.01083, "mapTranslateX": 0, "mapTranslateY": 5},
      /*screen width 900*/"full": { "width": vizWidth*.92, "height": vizWidth/1.4, "scale":vizWidth*4.055, "translate": [vizWidth/2.5,vizWidth/5], "chartWidth": vizWidth*.091, "chartMargin": vizWidth*.0144,  "mapTranslateX": 0, "mapTranslateY": mapMargin.top *2.5},
     /*screen width 768*/"medium": { "width": vizWidth*.92, "height": vizWidth/1.28, "scale":vizWidth*4.15, "translate": [vizWidth/2.5,vizWidth/4.2], "chartWidth": vizWidth*.104, "chartMargin": vizWidth*.022,  "mapTranslateX": 0, "mapTranslateY": mapMargin.top *2},
     /*screen width 502*/"small": { "width": vizWidth*.92, "height": vizWidth/1.2, "scale":vizWidth*3.9, "translate": [vizWidth/2.6,vizWidth/4.2], "chartWidth": vizWidth*.104, "chartMargin": vizWidth*.027,  "mapTranslateX": 0, "mapTranslateY": mapMargin.top *2},
@@ -50,7 +50,7 @@ var vizContent = function() {
   var graphSize =  (IS_MOBILE_768) || (IS_MOBILE_900) ? "full" : "large";
 
   var graphSizes = {
-   /*screen width 1200*/ "large": { "width": vizWidth/3.42, "height": vizWidth/3.7, "translate": [720,180]},
+   /*screen width 1200*/ "large": { "width": vizWidth/3.42, "height": vizWidth/3.8, "translate": [720,180]},
    /*screen width 900*/ "full": { "width": vizWidth/2.4, "height": vizWidth/2.4, "translate": [300,200]},
   /*screen width 768*/"medium": { "width": vizWidth/2.3, "height": vizWidth/2.4, "translate": [300,200]},
   /*screen width 502*/"small": { "width": vizWidth/2.1, "height": vizWidth/1.95, "translate": [300,200]},
@@ -577,7 +577,7 @@ var vizContent = function() {
             else if (IS_MOBILE_768) {
               return chartWidth+chartMargin - chartWidth/2.4
             }else {
-              return chartWidth+chartMargin - chartWidth/3.2              
+              return chartWidth+chartMargin - chartWidth/2.9              
             }
           })
           .attr("y", function() {
@@ -586,7 +586,7 @@ var vizContent = function() {
             }else if (IS_MOBILE_768) {
               return chartWidth+chartMargin - chartWidth/2.4
             }else {
-              return chartWidth+chartMargin - chartWidth/3.2              
+              return chartWidth+chartMargin - chartWidth/2.9            
             }
           })
 
@@ -698,7 +698,7 @@ var vizContent = function() {
             }else if (IS_MOBILE_768) {
               return chartWidth+chartMargin - chartWidth/2.4
             }else {
-              return chartWidth+chartMargin - chartWidth/3.2              
+              return chartWidth+chartMargin - chartWidth/2.9              
             }
           })
           .attr("y", function() {
@@ -707,7 +707,7 @@ var vizContent = function() {
             }else if (IS_MOBILE_768) {
               return chartWidth+chartMargin - chartWidth/2.4
             }else {
-              return chartWidth+chartMargin - chartWidth/3.2              
+              return chartWidth+chartMargin - chartWidth/2.9             
             }
           })
         //add the X axis 
