@@ -59,6 +59,8 @@ var vizContent = function() {
 
   }
 
+  // console.log(selectedCategory)
+  // var selectedCategory = getCurrentCategory();
   var selectedCategory = "adj_revratio_all";
   var graphMargin = {top: 30, right: 30, bottom: 40, left: 28},
   graphWidth =  graphSizes[pageSize]["width"]- graphMargin.left - graphMargin.right,
@@ -166,9 +168,9 @@ var vizContent = function() {
   d3.csv("data/toggle_text.csv", function(error, toggleText) {
     d3.csv("data/data.csv", function(error, trendsDataFull) {
 
-
       var trendsDataMinMax = trendsDataFull.filter(function(d) { 
-        if (selectedCategory.includes("revratio")) {
+       if (selectedCategory.indexOf("revratio") >= 0) {
+       // if (selectedCategory.includes("revratio")) {
           if (d3.select(".standard.line.AK.selected-state").node() !== null) { 
             // console.log('AK')
             return d.State !== "HI" && d.State !== "DC"
@@ -208,7 +210,7 @@ var vizContent = function() {
         return d.State == "USA"
       })
       var trendsDataFiltered = trendsDataFull.filter(function(d) { 
-        if (selectedCategory.includes("revratio")) {
+        if (selectedCategory.indexOf("revratio") >= 0) {
           return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
         }else {
           return d.State;
@@ -216,7 +218,8 @@ var vizContent = function() {
       })
 
       var trendsDataAK = trendsDataFull.filter(function(d) { 
-        if (selectedCategory.includes("revratio")) {
+        if (selectedCategory.indexOf("revratio") >= 0) {
+        //if (selectedCategory.includes("revratio")) {
           return d.State == "AK"
         }else {
           return d.State;
@@ -224,7 +227,8 @@ var vizContent = function() {
       })
       //FILTERING DATA TO HI AND DC TO DRAW BOXES OVER TILES
       var blankStateData = trendsDataFull.filter(function(d) { 
-        if (selectedCategory.includes("revratio")) {
+        if (selectedCategory.indexOf("revratio") >= 0) {
+        //if (selectedCategory.includes("revratio")) {
           return d.State == "HI" || d.State == "DC"
         }
       })
@@ -233,7 +237,7 @@ var vizContent = function() {
       function renderGraph() {
 
         var graphDataSelected = trendsDataFull.filter(function(d) {           
-          if ((stateLinesArray.includes(d.State)) || (d.State == "USA")) {         
+          if ((stateLinesArray.indexOf(d.State) >= 0) || (d.State == "USA")) {         
             return d;              
           }         
         })
@@ -948,7 +952,7 @@ var vizContent = function() {
         }
 
         var graphDataSelected = trendsDataFull.filter(function(d) {           
-          if ((stateLinesArray.includes(d.State)) || (d.State == "USA")) {         
+          if ((stateLinesArray.indexOf(d.State) >= 0) || (d.State == "USA")) {         
             return d;              
           }         
         })
@@ -1018,7 +1022,7 @@ var vizContent = function() {
           d3.selectAll(".lineChart-notes-above, .lineChart-notes-under").classed("show", false)
         }
         var scales = updateScales(variable, oldVariable)
-        var graphY = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state") || variable.includes("revpp_fe")) ? scales.graphY2 : scales.graphY;
+        var graphY = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state") || variable.indexOf("revpp_fe") >= 0) ? scales.graphY2 : scales.graphY;
         var graphLine = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state")) ? scales.graphLine2 : scales.graphLine
         var graphDataNest = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state")) ? scales.akNest : scales.graphDataNest
         var trendsDataNestUSA = d3.nest()
@@ -1116,8 +1120,10 @@ var vizContent = function() {
           .html(function() {
             return (d3.select("#revratio_").classed("current") == true) ? blankNote_1 : blankNote_2
           })
+
         var trendsDataFiltered = trendsDataFull.filter(function(d) { 
-          if (selectedCategory.includes("revratio")) {
+          if (selectedCategory.indexOf("revratio") >= 0) {
+          // if (selectedCategory.includes("revratio")) {
             return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
           }else {
             return d.State;
@@ -1202,7 +1208,7 @@ var vizContent = function() {
             .transition()
             .duration(1200)
             .style("opacity",0)
-        }else if (domainController.includes("revpp_fe")){ 
+        }else if (domainController.indexOf("revpp_fe") >= 0){ 
           max = max2;
           min2 = min;
           d3.select("#ak-disclaimer")
