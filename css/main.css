@@ -669,10 +669,10 @@ text.mapLabel.blank{
 
 #ak-disclaimer{
   position: absolute;
-  top: 0px;
-  left: 0px;
+  top: 50px;
+  left: 65px;
   font-size: 14px;  
-  width: 320px;
+  width: 230px;
 }
 
 #note-blank{
@@ -860,6 +860,12 @@ form {
   .tab:nth-child(1) {
     margin-left: 29%;
   }
+  #ak-disclaimer {
+  top: 50px;
+  left: 53px;
+  font-size: 14px;  
+  width: 180px;  
+  }
 }
 
 
@@ -869,8 +875,8 @@ form {
   }
 
   #ak-disclaimer {
-    top: 0px;
-    left: 0px;
+    top: 35px;
+    left: 75px;
   }
   div.close-sign {
     margin-left: 82%;
@@ -928,7 +934,10 @@ form {
   #isMobile768, #isVerticalLayout {
     display: block;
   }
-
+  #ak-disclaimer {
+    top: 55px;
+    left: 60px;
+  }
   .about-text {
     margin-right: 0px;
   }
@@ -1034,6 +1043,11 @@ form {
   .adjusted-div {
     margin-right: 0;
   }
+  #ak-disclaimer {
+    top: 50px;
+    left: 50px;
+    width: 160px;
+  }
 
   #switch-div-mobile {
     margin: 0 15px;
@@ -1053,6 +1067,9 @@ form {
   #ak-disclaimer {
     font-size: 10px;
     width: 40%;
+    top: 62px;
+    left: 45px;
+    width: 120px;
   }
   .tick.minor > line {
       opacity: 0;
@@ -1235,15 +1252,24 @@ form {
   .tab .top-tab {
     padding: 15px 10px 19px 10px;
   }
+  #ak-disclaimer {
+    top: 43px;
+    left: 38px;
+    width: 100px;
+  }
 }
 @media (max-width: 320px){
+  #ak-disclaimer {
+    top: 38px;
+    left: 32px;
+  }
   .lineChart-div-mobile {
     width: 80%;
     margin-top: 0px;
   }
   .state-title {
     font-size: 18px;
-    width: 60%;
+    width: 70%;
   }
    #isPhone320, #isVerticalLayout {
     display: block;
@@ -1259,6 +1285,9 @@ form {
   }
   div.close-sign {
     margin-left: 88%;
+  }
+  .lineChart-div-mobile > .lineChart-details > .header-row > .state-clear {
+    margin-right: 0;
   }
 }
 
