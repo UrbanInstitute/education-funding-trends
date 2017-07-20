@@ -10,7 +10,6 @@ var vizContent = function() {
   var IS_VERTICAL_LAYOUT = d3.select("#isVerticalLayout").style("display") == "block";
 
   (IS_VERTICAL_LAYOUT) ? $('#vis').insertBefore('.lineChart-div'): $('#vis').insertAfter('.lineChart-div');
-
   /*MAP VARIABLES*/
   var pageSizeFunction =  function() {
     if (IS_PHONE_320){ console.log('small')
@@ -301,15 +300,15 @@ var vizContent = function() {
           .text("Progressivity")
           .attr("transform", "translate(10, -15)") 
           .attr("class", "y-label axis-label")
-        graphSvg.append("text")
-          .attr("text-anchor", "middle") 
-          .text("Fiscal Year")
-          .attr("transform", function() {
-            var height = $("#lineChart svg").attr("height")
-            console.log(height)
-            return "translate(140," + height*.88 + ")"
-          })           
-          .attr("class", "x-label axis-label")
+        // graphSvg.append("text")
+        //   .attr("text-anchor", "middle") 
+        //   .text("Fiscal Year")
+        //   .attr("transform", function() {
+        //     var height = $("#lineChart svg").attr("height")
+        //     console.log(height)
+        //     return "translate(140," + height*.88 + ")"
+        //   })           
+        //   .attr("class", "x-label axis-label")
 
         graphSvg.append("path")
           .data([trendsDataNest])
@@ -847,10 +846,16 @@ var vizContent = function() {
         })
       //WHEN CLICKING ON STATE, ADD TAG TO BOTTOM OF LINE GRAPH
       function addStateList(state, stateName) { 
-          d3.selectAll(".lineChart-details, .lineChart-notes-under")
-            .classed("show", true)
-          d3.selectAll(".lineChart-notes-above")
-            .classed("show", false)
+        d3.selectAll(".lineChart-notes-under")
+          .classed("show", function() {
+            (d3.select("#revratio_").classed("current") == true) ? true : false
+          })
+        d3.selectAll(".lineChart-details")
+          .classed("show", true)
+        d3.selectAll(".lineChart-notes-above")
+          .classed("show", function() {
+            (d3.select("#revratio_").classed("current") == true) ? true : false
+          })        
         var stateItem = d3.selectAll(".state-list")
           .datum(state)
           .append("li")
@@ -967,9 +972,10 @@ var vizContent = function() {
        // var max = d3.max(trendsDataMinMax, function(d) { return d[domainController]; })
         var max = getMaxY(domainController, trendsDataMinMax)
         var min = (domainController.search("ratio") != -1) ? getMinY(domainController, trendsDataMinMax) : 0;
-        var max2 = d3.max(trendsDataAK, function(d) { return d[domainController]; })
+        var max2 = getMaxY(domainController, trendsDataAK)
+        //var max2 = d3.max(trendsDataAK, function(d) { return d[domainController]; })
         var min2 = (domainController.search("ratio") != -1) ? d3.min([1, d3.min(trendsDataAK, function(d) {return d[domainController]; })]) : 0;
-
+console.log(max2)
         if(max > max2){
           max2 = max;
           min2 = min;
@@ -998,6 +1004,17 @@ var vizContent = function() {
 
       //ADJUSTS LINE GRAPH TO ACCOMMODATE CHANGING Y-AXIS DUE TO ADDITION OR REMOVAL OF STATE LINES
       function updateLineGraph(variable, oldVariable, action, state) {
+        if (d3.select("#revratio_").classed("current") == true) { 
+          if(d3.selectAll(".selected-state").node() != null) { 
+            d3.selectAll(".lineChart-notes-under").classed("show", true)
+            d3.selectAll(".lineChart-notes-above").classed("show", false)
+          }else {
+            d3.selectAll(".lineChart-notes-above").classed("show", true)
+            d3.selectAll(".lineChart-notes-under").classed("show", false); 
+          }
+        }else {
+          d3.selectAll(".lineChart-notes-above, .lineChart-notes-under").classed("show", false)
+        }
         var scales = updateScales(variable, oldVariable)
         var graphY = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state") || variable.includes("revpp_fe")) ? scales.graphY2 : scales.graphY;
         var graphLine = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state")) ? scales.graphLine2 : scales.graphLine
@@ -1139,12 +1156,12 @@ var vizContent = function() {
             }
           })  
 
-        graphSvg.select(".x-label")
-          .attr("transform", function() {
-            var height = $("#lineChart svg").attr("height")
-            console.log(height)
-            return "translate(150," + height*.88 + ")"
-        })  
+        // graphSvg.select(".x-label")
+        //   .attr("transform", function() {
+        //     var height = $("#lineChart svg").attr("height")
+        //     console.log(height)
+        //     return "translate(150," + height*.88 + ")"
+        //   })  
         var trendsData = d3.select("#vis").datum()
         var trendsDataNest = d3.nest()
           .key(function(d) {return d.State;})
