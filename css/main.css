@@ -306,17 +306,22 @@ div.close-sign {
 .about-text {
   font-size: 14px;
   color: #231f20;
-  margin-right: 50px;
+  padding-right: 25px;
 }
 
+.bottom-header.project {
+  padding-left: 25px;
+}
 .credit-text {
   font-size: 13px;
   font-style: italic;
   color: #808285;
+  padding-left: 25px;
 }
 
 .credit-list {
   font-size: 14px;
+  padding-left: 25px;
 }
 
 .credit-names {
@@ -858,6 +863,25 @@ form {
 @media(min-width: 1400px) {
   text.mapLabel.standard {
     font-size: 14.25px;
+  }
+
+  .about-text {
+    padding-right: 65px;
+  }
+  .bottom-header.project {
+    padding-left: 65px;
+  }
+  .credit-text {
+    padding-left: 65px;
+  }
+  .credit-list {
+    padding-left: 65px;
+  }
+  .usaLabel {
+    font-size: 16.63px;
+  }
+  .state-title {
+    font-size: 18px;
   }
 }
 @media(min-width: 1201px) {

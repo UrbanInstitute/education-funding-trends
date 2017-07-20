@@ -2,7 +2,8 @@
 //Prob easiest to have a few set sizes for the map, which change at broswer size breakpoints. So `pageSize` will be determined by some function which tests browser size (e.g. IS_MOBILE() functions in past projects). I don't think it's as straightforward to have a continuously resizing graphic. Note that these values are just placeholders, they'll need to be tested/updated, and potentially more or fewer sizes are needed
 var vizContent = function() {
   var stateLinesArray = [];
-  var blankNote = "*Note: Washington, DC, and Hawaii are included in the national average calculations, however, we cannot calculate progressivity at the state level for either because both are single districts. National averages exclude charter-only districts and other districts not tied to geography.";
+  var blankNote_1 = "<strong>*Note:</strong> Washington, DC, and Hawaii are included in the national average calculations, however, we cannot calculate progressivity at the state level for either because both are single districts. National averages exclude charter-only districts and other districts not tied to geography.";
+  var blankNote_2= "<strong>*Note:</strong> National averages exclude charter-only districts and other districts not tied to geography.";
   var IS_MOBILE_900 = d3.select("#isMobile900").style("display") == "block";
   var IS_MOBILE_768 = d3.select("#isMobile768").style("display") == "block";
   var IS_PHONE_500 = d3.select("#isPhone500").style("display") == "block";
@@ -50,7 +51,7 @@ var vizContent = function() {
   var graphSize =  (IS_MOBILE_768) || (IS_MOBILE_900) ? "full" : "large";
 
   var graphSizes = {
-   /*screen width 1200*/ "large": { "width": vizWidth/3.42, "height": vizWidth/3.8, "translate": [720,180]},
+   /*screen width 1200*/ "large": { "width": vizWidth/3.32, "height": vizWidth/3.8, "translate": [720,180]},
    /*screen width 900*/ "full": { "width": vizWidth/2.4, "height": vizWidth/2.4, "translate": [300,200]},
   /*screen width 768*/"medium": { "width": vizWidth/2.3, "height": vizWidth/2.4, "translate": [300,200]},
   /*screen width 502*/"small": { "width": vizWidth/2.1, "height": vizWidth/1.95, "translate": [300,200]},
@@ -731,8 +732,9 @@ var vizContent = function() {
        d3.select("#vis")
           .append("div")
           .attr("id", "note-blank")
-          .html(blankNote)
-
+          .html(function() {
+            return (d3.select("#revratio_").classed("current") == true) ? blankNote_1 : blankNote_2
+          })
       }
 
       d3.select(".checkbox-div")
@@ -1110,6 +1112,10 @@ var vizContent = function() {
       }
 
       function updateMapLine(variable, oldVariable){
+        d3.select("#note-blank")
+          .html(function() {
+            return (d3.select("#revratio_").classed("current") == true) ? blankNote_1 : blankNote_2
+          })
         var trendsDataFiltered = trendsDataFull.filter(function(d) { 
           if (selectedCategory.includes("revratio")) {
             return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
