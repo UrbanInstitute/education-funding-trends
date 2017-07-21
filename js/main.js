@@ -334,10 +334,23 @@ var vizContent = function() {
           .attr("d", function(d) {d.graphLine = this; 
             return (graphLine(d[0].values));
           });
-        graphSvg.append("text")
-          .attr("transform", "translate("+(graphWidth+3)+","+graphY((trendsDataNest[0]).values[20][selectedCategory])+")")
-          .attr("dy", ".35em")
-          .attr("text-anchor", "start")
+        // graphSvg.append("text")
+        //   .attr("transform", "translate("+(graphWidth+3)+","+graphY((trendsDataNest[0]).values[20][selectedCategory])+")")
+        //   .attr("dy", ".35em")
+        //   .attr("text-anchor", "start")
+        //   .text("US")
+        //   .attr("class", "usaLabel")
+        var usaG = d3.select("#lineChart svg")
+          .append("g")
+          .attr("transform", "translate(" + graphMargin.left +", "+ graphMargin.top+")")
+          .attr("class", "g-usa")
+        usaG.append("rect")
+          .attr("transform", "translate("+(graphWidth + 3)+","+ graphY((trendsDataNest[0]).values[20][selectedCategory])*.88+")")
+          .style("fill", "#000")
+          .attr("width", "17px")
+          .attr("height", "17px")
+        usaG.append("text")
+          .attr("transform", "translate("+(graphWidth + 3)+","+ graphY((trendsDataNest[0]).values[20][selectedCategory])+")")
           .text("US")
           .attr("class", "usaLabel")
 
@@ -1549,13 +1562,25 @@ var vizContent = function() {
             return (graphLine(d[0].values));
             });
 
-        console.log(graphDataStateNest[0].values[20][selectedCategory])
-          graphSvg.append("text")
-          .attr("transform", "translate("+(graphWidth+3)+","+graphY((graphDataStateNest[0]).values[20][selectedCategory])+")")
-          .attr("dy", ".35em")
-          .attr("text-anchor", "start")
-          .text(graphDataStateNest[0].key)
-          .attr("class", "stateLabel " + graphDataStateNest[0].key)
+        // graphSvg.append("text")
+        //   .attr("transform", "translate("+(graphWidth+3)+","+graphY((graphDataStateNest[0]).values[20][selectedCategory])+")")
+        //   .attr("dy", ".35em")
+        //   .attr("text-anchor", "start")
+        //   .text(graphDataStateNest[0].key)
+        //   .attr("class", "stateLabel " + graphDataStateNest[0].key)
+        var stateG = d3.select("#lineChart svg")
+          .append("g")
+          .attr("transform", "translate(" + graphMargin.left +", "+ graphMargin.top+")")
+          .attr("class", "g-" + state)
+        stateG.append("rect")
+          .attr("transform", "translate("+(graphWidth + 3)+","+ graphY((graphDataStateNest[0]).values[20][selectedCategory])*.88+")")
+          .style("fill", "#000")
+          .attr("width", "17px")
+          .attr("height", "17px")
+        stateG.append("text")
+          .attr("transform", "translate("+(graphWidth + 3)+","+ graphY((graphDataStateNest[0]).values[20][selectedCategory])+")")
+          .text(state)
+          .attr("class", "stateLabel")
         } 
       } 
 
