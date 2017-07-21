@@ -90,7 +90,9 @@ var vizContent = function() {
     .attr("height", graphHeight + graphMargin.top + graphMargin.bottom )
     .append("g")
     .attr("transform", "translate(" + graphMargin.left +", "+ graphMargin.top+")");
-
+  var labelG = d3.select("#lineChart svg")
+    .append("g")
+    .attr("transform", "translate(" + graphMargin.left +", "+ graphMargin.top+")")
   var voronoi = d3.voronoi()
     .x(function(d) { return graphX(d.Year); })
     .y(function(d) { return graphY(d[selectedCategory]); })
@@ -340,9 +342,8 @@ var vizContent = function() {
         //   .attr("text-anchor", "start")
         //   .text("US")
         //   .attr("class", "usaLabel")
-        var usaG = d3.select("#lineChart svg")
-          .append("g")
-          .attr("transform", "translate(" + graphMargin.left +", "+ graphMargin.top+")")
+
+        var usaG = labelG.append("g")
           .attr("class", "g-usa")
         usaG.append("rect")
           .attr("transform", "translate("+(graphWidth + 3)+","+ graphY((trendsDataNest[0]).values[20][selectedCategory])*.88+")")
@@ -488,8 +489,8 @@ var vizContent = function() {
             var clickedState = d3.select(this).attr("class").split(" ")[1]
             d3.select(".nonblank-rect." + clickedState)
               .classed("selected-state", function(){
-                if (d3.select(".nonblank-rect." + clickedState).classed("selected-state") == true) {
-                  graphSvg.select(".stateLabel." + clickedState)
+                if (d3.select(".nonblank-rect." + clickedState).classed("selected-state") == true) { 
+                  labelG.select(".g-" + clickedState)
                     .remove();
                   // console.log('hi')
                   removeStateList(clickedState);
@@ -568,7 +569,7 @@ var vizContent = function() {
               }
               graphSvg.select("path.line-" + hoveredState) 
                 .remove()
-              graphSvg.select(".stateLabel." + hoveredState)
+              labelG.select(".g-" + hoveredState)
                 .remove();
             }
             d3.select(".mapLabel.standard." + hoveredState)
@@ -1140,12 +1141,12 @@ var vizContent = function() {
           // console.log(graphLine(d[0].values))
             return (graphLine(d[0].values));
           });
-        graphSvg.selectAll("text.usaLabel")
-          .transition()
-          .duration(duration)
-          .attr("transform", "translate("+(graphWidth+3)+","+graphY((trendsDataNestUSA[0]).values[20][selectedCategory])+")")
-          .attr("dy", ".35em")
-          .attr("text-anchor", "start")
+        // graphSvg.selectAll("text.usaLabel")
+        //   .transition()
+        //   .duration(duration)
+        //   .attr("transform", "translate("+(graphWidth+3)+","+graphY((trendsDataNestUSA[0]).values[20][selectedCategory])+")")
+        //   .attr("dy", ".35em")
+        //   .attr("text-anchor", "start")
 
         var threshold = d3.select(".threshold")
           .transition()
@@ -1487,9 +1488,9 @@ var vizContent = function() {
           d3.select(".threshold").node().parentNode.appendChild(d3.select(".threshold").node())
         }
         if(state == "USA"){
-          d3.select(".usaLabel").classed("selected", true)
+          d3.select("text.usaLabel").classed("selected", true)
         }else {
-          d3.select(".stateLabel." + state).classed("selected", true)
+          d3.select("text.stateLabel." + state).classed("selected", true)
         }
       }
       function dehoverState(state){
@@ -1499,9 +1500,9 @@ var vizContent = function() {
           .style("color","#353535")
         d3.select(".line-" + state).classed("line-hover", false);
         if(state == "USA"){
-          d3.select(".usaLabel").classed("selected", false)
+          d3.select("text.usaLabel").classed("selected", false)
         }else {
-          d3.select(".stateLabel." + state).classed("selected", false)
+          d3.select("text.stateLabel."+ state).classed("selected", false)
         }
       }
       //ADDS NEW STATE LINE AND UPDATES STATE ARRAY
@@ -1562,25 +1563,51 @@ var vizContent = function() {
             return (graphLine(d[0].values));
             });
 
-        // graphSvg.append("text")
-        //   .attr("transform", "translate("+(graphWidth+3)+","+graphY((graphDataStateNest[0]).values[20][selectedCategory])+")")
-        //   .attr("dy", ".35em")
-        //   .attr("text-anchor", "start")
-        //   .text(graphDataStateNest[0].key)
-        //   .attr("class", "stateLabel " + graphDataStateNest[0].key)
-        var stateG = d3.select("#lineChart svg")
-          .append("g")
-          .attr("transform", "translate(" + graphMargin.left +", "+ graphMargin.top+")")
+        stateG = labelG.append("g")
           .attr("class", "g-" + state)
         stateG.append("rect")
           .attr("transform", "translate("+(graphWidth + 3)+","+ graphY((graphDataStateNest[0]).values[20][selectedCategory])*.88+")")
           .style("fill", "#000")
           .attr("width", "17px")
           .attr("height", "17px")
+          .attr("class", "rect-" + state)
         stateG.append("text")
-          .attr("transform", "translate("+(graphWidth + 3)+","+ graphY((graphDataStateNest[0]).values[20][selectedCategory])+")")
+          //.attr("transform", "translate("+(graphWidth + 3)+","+ graphY((graphDataStateNest[0]).values[20][selectedCategory])+")")
           .text(state)
-          .attr("class", "stateLabel")
+          .attr("class", "stateLabel " + state)
+          .attr("transform", function() { 
+            // var usaBottom = ($(".g-usa")[0].getBoundingClientRect().top);
+            // var stateTop = ($(".g-" + state)[0].getBoundingClientRect().bottom);
+            // if ((stateTop-usaBottom <25) && (stateTop-usaBottom > 0))  {
+            //   console.log(stateTop-usaBottom)
+            //   return "translate("+(graphWidth + 3)+","+ graphY((graphDataStateNest[0]).values[20][selectedCategory]*.99)+")"
+            // } 
+            // else {
+              return "translate("+(graphWidth + 3)+","+ graphY((graphDataStateNest[0]).values[20][selectedCategory])+")"
+
+         //   }
+          })
+          var usaTop = ($(".g-usa")[0].getBoundingClientRect().top);
+          var stateTop = ($(".g-" + state)[0].getBoundingClientRect().top);
+                      console.log(stateTop-usaTop)
+          //IF STATE IS BELOW USA LINE
+          if ((stateTop-usaTop >0) && (stateTop-usaTop) < 15) {
+              console.log(stateTop-usaTop)
+              d3.select(".g-usa")
+                .attr("transform", "translate("+0+","+ (-7) +")")
+              d3.select(".g-" + state)
+                .attr("transform", "translate("+0+","+ (7) +")")
+            }else if ((stateTop-usaTop <0) && stateTop-usaTop > -15) { //IF STATE  IS ABOVE USA LINE
+              console.log(stateTop - usaTop)
+              d3.select(".g-usa")
+                .attr("transform", "translate("+0+","+ (7) +")")
+              d3.select(".g-" + state)
+                .attr("transform", "translate("+0+","+ (-7) +")")
+            }
+             else {
+              d3.selectAll(".g-usa, .g-" + state)
+                .attr("transform", "translate(0,0)")
+            }
         } 
       } 
 
