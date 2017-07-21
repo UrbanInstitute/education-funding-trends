@@ -74,6 +74,16 @@ var vizContent = function() {
   
 
   $("#lineChart").empty();
+  if (d3.select("#revratio_").classed("current") == true) {
+          d3.selectAll(".lineChart-notes-above")
+            .classed("show", true)
+          d3.selectAll(".lineChart-details, .lineChart-notes-under")
+            .classed("show", false)
+  } else {
+       d3.selectAll(".lineChart-details")
+            .classed("show", false)
+  }
+
   var graphSvg = d3.select("#lineChart")
     .append("svg")
     .attr("width", graphWidth + graphMargin.left + graphMargin.right)
