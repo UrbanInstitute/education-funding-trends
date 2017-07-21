@@ -28,8 +28,6 @@ var vizContent = function() {
   }
 
   var pageSize = pageSizeFunction();
-
-  console.log(pageSize)
   var vizWidth = $(".viz-content").width();
   var mapMargin = {top: 30, right: 20, bottom: 30, left: 50};
   var mapSizes = {
@@ -61,7 +59,10 @@ var vizContent = function() {
 
   // console.log(selectedCategory)
   // var selectedCategory = getCurrentCategory();
-  var selectedCategory = "adj_revratio_all";
+  //INITIAL CATEGORY
+  var initialCategory = "adj_revratio_all";
+  var selectedCategory = getCurrentCategory();
+  initialCategory = selectedCategory;
   var graphMargin = {top: 30, right: 30, bottom: 40, left: 28},
   graphWidth =  graphSizes[pageSize]["width"]- graphMargin.left - graphMargin.right,
   graphHeight = graphSizes[pageSize]["height"] - graphMargin.top - graphMargin.bottom;
@@ -123,7 +124,6 @@ var vizContent = function() {
     }
     //return stepArray;
     stepArray.splice(numberOfSteps + 1, 0, domain[1]);
-    
     return stepArray;
   }
 
@@ -178,7 +178,7 @@ var vizContent = function() {
             // console.log('no AK')
             return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
           }
-        }else { console.log('2')
+        }else {
           return d.State;
         }
       })
@@ -236,6 +236,7 @@ var vizContent = function() {
       //CREATE INITIAL LINE GRAPH ON LOAD
       function renderGraph() {
 
+        $(".state-list").empty()
         var graphDataSelected = trendsDataFull.filter(function(d) {           
           if ((stateLinesArray.indexOf(d.State) >= 0) || (d.State == "USA")) {         
             return d;              
@@ -249,7 +250,6 @@ var vizContent = function() {
         graphX.domain(d3.extent(trendsDataFiltered, function(d) { return d.Year; }));
 
         graphY.domain([ getMinY(selectedCategory, trendsDataFiltered), getMaxY(selectedCategory, trendsDataFiltered)]);
-          
         graphSvg.append("g")
           .attr("transform", "translate(0," + graphHeight + ")")
           .attr("class", "x graphAxis")
@@ -273,7 +273,7 @@ var vizContent = function() {
           .call(d3.axisLeft(graphY)
           //  .ticks(6)
             .tickSize(-graphWidth)
-            .tickFormat(d3.format('.2f'))
+            .tickFormat((d3.select("#revpp_").classed("current") == true) ? d3.format('.2s') : d3.format('.2f'))
             .tickValues(getTickValues(graphY, selectedCategory))
           )
 
@@ -523,7 +523,7 @@ var vizContent = function() {
                   if (d3.select(".mapLabel.standard." + hoveredState).classed("selected-text") == true)  {
                     return "#ffffff"
                   } return "#353535"
-                }else if (d3.select("#revpp_").classed("current") == true){
+                }else if (d3.select("#revpp_").classed("current") == true){ 
                   if (d3.select(".mapLabel.standard." + hoveredState).classed("selected-text") == true)  {
                    return "#353535"
                   } return "#ffffff"
@@ -602,7 +602,13 @@ var vizContent = function() {
           .attr("height", chartWidth-2*chartMargin + 8)
           .attr("x",chartMargin - 4)
           .attr("y",chartMargin - 4)
-          .style("fill","#a2d3eb") 
+          .style("fill", function(){
+            if (d3.select("#revratio_").classed("current") == true){
+              return "#a2d3eb"
+            }else {
+              return "#094c6a"
+            }
+          })          
           .attr("class", function(d) { 
             return "nonblank-rect " + d.key
           })
@@ -614,17 +620,17 @@ var vizContent = function() {
 
 
         //this is just for the file uploader, setting the key onload to whatever column is first in the data file, other than State/Year. In the real feature, firstKey will just be a constant
-        var firstKey = "adj_revratio_all"
+        // var firstKey = "adj_revratio_all"
         var keys = Object.keys(trendsData[0])
 
         mapX.domain([startYear,endYear]);
         // console.log(startYear+ endYear)
         //NEED TWO Y-AXES:
         //ALL STATES EXCEPT AK
-        mapY.domain([d3.min(trendsDataFiltered, function(d) { return d[firstKey]; }), d3.max(trendsDataFiltered, function(d) { return d[firstKey]; })]); 
+        mapY.domain([d3.min(trendsDataFiltered, function(d) {return d[selectedCategory]; }), d3.max(trendsDataFiltered, function(d) { return d[selectedCategory]; })]); 
         //AK ONLY
-        var min2 = d3.min([1, d3.min(trendsDataAK, function(d) {return d[firstKey]; })]);
-        var max2 = d3.max(trendsDataAK, function(d) { return d[firstKey]; })
+        var min2 = d3.min([1, d3.min(trendsDataAK, function(d) {return d[selectedCategory]; })]);
+        var max2 = d3.max(trendsDataAK, function(d) { return d[selectedCategory]; })
         mapY2.domain([min2, max2]); 
 
 
@@ -635,10 +641,10 @@ var vizContent = function() {
         //for each map chart line
         var mapline = d3.line()
           .x(function(d) { return mapX(d.Year); })
-          .y(function(d) { return mapY(d[firstKey]); });
+          .y(function(d) { return mapY(d[selectedCategory]); });
         var mapline2 = d3.line()
           .x(function(d) { return mapX(d.Year); })
-          .y(function(d) { return mapY2(d[firstKey]); });
+          .y(function(d) { return mapY2(d[selectedCategory]); });
 
        // A white line at y=1. This is just a placeholder. In the final feature, we want some sort of distinction of y=1 for the ratio graphs, but not the level graphs. Will likely be two rects (above and below y=1) instead of a line, but TBD
         //DRAWING THE RATIO LINE FOR ALL STATES BUT AK
@@ -654,6 +660,7 @@ var vizContent = function() {
           .attr("class", function(d) {
             return "ratioOneLine ratioOneLine-" + d.key
           })
+
         //DRAWING THE RATIO LINE FOR AK
         d3.select(".state.AK").append("line")
           .attr("x1",chartMargin-4)
@@ -663,7 +670,10 @@ var vizContent = function() {
           .attr("class", function(d) {
             return "ratioOneLine ratioOneLine-" + d.key
           })
-
+        d3.selectAll(".ratioOneLine")
+          .style("opacity", function() {
+            return (d3.select("#revpp_").classed("current") == true) ?  0 : 1;
+          })
         //DRAWING THE GRAPH LINE FOR ALL STATES BUT AKK
         d3.selectAll(".state:not(.AK)").append("path")
           .attr("class", function(d){ return "standard line " + d.key })
@@ -713,6 +723,13 @@ var vizContent = function() {
               return chartWidth+chartMargin - chartWidth/2.4
             }else {
               return chartWidth+chartMargin - chartWidth/2.9             
+            }
+          })
+          .style("fill", function(){
+            if (d3.select("#revratio_").classed("current") == true){
+              return "#353535"
+            }else if (d3.select("#revpp_").classed("current") == true){
+              return "#ffffff"
             }
           })
         //add the X axis 
