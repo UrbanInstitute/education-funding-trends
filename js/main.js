@@ -341,6 +341,8 @@ var vizContent = function() {
           .text("US")
           .attr("class", "usaLabel")
 
+          console.log(trendsDataNest[0])
+
         drawVoronoi(trendsDataNest, selectedCategory, graphY);
 
         var threshold = graphSvg.append("line")
@@ -474,6 +476,8 @@ var vizContent = function() {
             d3.select(".nonblank-rect." + clickedState)
               .classed("selected-state", function(){
                 if (d3.select(".nonblank-rect." + clickedState).classed("selected-state") == true) {
+                  graphSvg.select(".stateLabel." + clickedState)
+                    .remove();
                   // console.log('hi')
                   removeStateList(clickedState);
                   return false
@@ -551,6 +555,8 @@ var vizContent = function() {
               }
               graphSvg.select("path.line-" + hoveredState) 
                 .remove()
+              graphSvg.select(".stateLabel." + hoveredState)
+                .remove();
             }
             d3.select(".mapLabel.standard." + hoveredState)
               .classed("hovered-text", false)
@@ -915,6 +921,7 @@ var vizContent = function() {
           })
         d3.select(".mapLabel.standard." + state)
           .classed("selected-text", true)
+
       }
 
       function removeStateList(state) {
@@ -1064,9 +1071,9 @@ var vizContent = function() {
           .key(function(d) {return d.State;})
           .entries(trendsDataUSA);
         if(variable == "adj_revratio_" || variable == "revratio_" || variable == "revpp_" || variable == "adj_revpp_"){
-          d3.select(".usaLabel").attr("opacity", 0)
+          d3.selectAll(".usaLabel, .stateLabel").attr("opacity", 0)
          } else {
-          d3.select(".usaLabel").attr("opacity", 1)
+          d3.selectAll(".usaLabel, .stateLabel").attr("opacity", 1)
          }
         graphSvg.select(".progressiveLabel")
           .attr("transform", function() {
@@ -1120,7 +1127,7 @@ var vizContent = function() {
           // console.log(graphLine(d[0].values))
             return (graphLine(d[0].values));
           });
-        graphSvg.select("text.usaLabel")
+        graphSvg.selectAll("text.usaLabel")
           .transition()
           .duration(duration)
           .attr("transform", "translate("+(graphWidth+3)+","+graphY((trendsDataNestUSA[0]).values[20][selectedCategory])+")")
@@ -1468,6 +1475,8 @@ var vizContent = function() {
         }
         if(state == "USA"){
           d3.select(".usaLabel").classed("selected", true)
+        }else {
+          d3.select(".stateLabel." + state).classed("selected", true)
         }
       }
       function dehoverState(state){
@@ -1478,6 +1487,8 @@ var vizContent = function() {
         d3.select(".line-" + state).classed("line-hover", false);
         if(state == "USA"){
           d3.select(".usaLabel").classed("selected", false)
+        }else {
+          d3.select(".stateLabel." + state).classed("selected", false)
         }
       }
       //ADDS NEW STATE LINE AND UPDATES STATE ARRAY
@@ -1536,7 +1547,15 @@ var vizContent = function() {
             .attr("d", function(d) { 
           d.graphLine = this;               
             return (graphLine(d[0].values));
-          });
+            });
+
+        console.log(graphDataStateNest[0].values[20][selectedCategory])
+          graphSvg.append("text")
+          .attr("transform", "translate("+(graphWidth+3)+","+graphY((graphDataStateNest[0]).values[20][selectedCategory])+")")
+          .attr("dy", ".35em")
+          .attr("text-anchor", "start")
+          .text(graphDataStateNest[0].key)
+          .attr("class", "stateLabel " + graphDataStateNest[0].key)
         } 
       } 
 

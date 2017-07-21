@@ -543,9 +543,17 @@ div.close-sign {
   font-weight: 700;
   fill: #11719f;
 }
-.usaLabel.selected{
+
+.stateLabel {
+  font-size: 13px;
+  font-weight: 700;
+  fill: #11719f;
+}
+
+.usaLabel.selected, .stateLabel.selected{
   fill: #353535;
 }
+
 .threshold {
   stroke: #eb098a;
   stroke-width: 1;
