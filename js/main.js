@@ -9,6 +9,8 @@ var vizContent = function() {
   var IS_PHONE_500 = d3.select("#isPhone500").style("display") == "block";
   var IS_PHONE_320 = d3.select("#isPhone320").style("display") == "block";
   var IS_VERTICAL_LAYOUT = d3.select("#isVerticalLayout").style("display") == "block";
+  var initialUsaTop;
+  var stateTop;
 
   (IS_VERTICAL_LAYOUT) ? $('#vis').insertBefore('.lineChart-div'): $('#vis').insertAfter('.lineChart-div');
   /*MAP VARIABLES*/
@@ -529,8 +531,31 @@ var vizContent = function() {
 
           })
           .on("mouseout", function() {
+
             var newCategory = getCurrentCategory();
             var hoveredState = d3.select(this).attr("class").split(" ")[1]
+                            console.log($(".g-" + hoveredState)[0].getBoundingClientRect().top)
+
+            var usaDiff = Math.abs(($(".g-usa")[0].getBoundingClientRect().top)-initialUsaTop);
+            var stateDiff = Math.abs(($(".g-" + hoveredState)[0].getBoundingClientRect().top)-initialStateTop);
+            console.log(stateDiff)
+            if ((d3.select(".g-usa").classed("movedUp") == true) || (d3.select(".g-" + hoveredState).classed("movedDown") == true))  { 
+              console.log("state:" + initialStateTop + " us:" + initialUsaTop)
+              d3.select(".g-usa")
+                .classed("movedUp", false)
+                .attr("transform", "translate("+0+","+ (usaDiff) +")")
+              d3.select(".g-" + hoveredState)
+                .classed("movedDown", false)
+                .attr("transform", "translate("+0+","+ (-stateDiff) +")")
+            }else if ((d3.select(".g-usa").classed("movedDown") == true) ||  (d3.select(".g-" + hoveredState).classed("movedUp") == true)){
+              d3.select(".g-usa")
+                .classed("movedDown", false)
+              d3.select(".g-" + hoveredState)
+                .classed("movedUp", false)
+                .attr("transform", "translate("+0+","+ (stateDiff) +")")            
+            }else {
+              console.log("state:" + initialStateTop + " us:" + initialUsaTop)
+            }
             d3.select(".nonblank-rect." + hoveredState)
               .classed("hovered-state", false)
             d3.select(".nonblank-rect." + hoveredState)
@@ -1551,7 +1576,7 @@ var vizContent = function() {
           .entries(graphDataState);
 
         //IF LINE HASN'T BEEN ADDED YET TO THE GRAPH:
-        if ($(".line-" + state).length == 0) {
+        if ($(".line-" + state).length == 0) { console.log('hi')
           // console.log('push')
           stateLinesArray.push(state); // ADD NEW STATE TO ARRAY 
           graphSvg.append("path")
@@ -1563,58 +1588,61 @@ var vizContent = function() {
             return (graphLine(d[0].values));
             });
 
-        stateG = labelG.append("g")
-          .attr("class", "g-" + state)
-        stateG.append("rect")
-          .attr("transform", "translate("+(graphWidth + 3)+","+ graphY((graphDataStateNest[0]).values[20][selectedCategory])*.88+")")
-          .style("fill", "#000")
-          .attr("width", "17px")
-          .attr("height", "17px")
-          .attr("class", "rect-" + state)
-        stateG.append("text")
-          //.attr("transform", "translate("+(graphWidth + 3)+","+ graphY((graphDataStateNest[0]).values[20][selectedCategory])+")")
-          .text(state)
-          .attr("class", "stateLabel " + state)
-          .attr("transform", function() { 
-            // var usaBottom = ($(".g-usa")[0].getBoundingClientRect().top);
-            // var stateTop = ($(".g-" + state)[0].getBoundingClientRect().bottom);
-            // if ((stateTop-usaBottom <25) && (stateTop-usaBottom > 0))  {
-            //   console.log(stateTop-usaBottom)
-            //   return "translate("+(graphWidth + 3)+","+ graphY((graphDataStateNest[0]).values[20][selectedCategory]*.99)+")"
-            // } 
-            // else {
-              return "translate("+(graphWidth + 3)+","+ graphY((graphDataStateNest[0]).values[20][selectedCategory])+")"
+          stateG = labelG.append("g")
+            .attr("class", "g-" + state)
+          stateG.append("rect")
+            .attr("transform", "translate("+(graphWidth + 3)+","+ graphY((graphDataStateNest[0]).values[20][selectedCategory])*.88+")")
+            .style("fill", "#000")
+            .attr("width", "17px")
+            .attr("height", "17px")
+            .attr("class", "rect-" + state)
+          stateG.append("text")
+            //.attr("transform", "translate("+(graphWidth + 3)+","+ graphY((graphDataStateNest[0]).values[20][selectedCategory])+")")
+            .text(state)
+            .attr("class", "stateLabel " + state)
+            .attr("transform", function() { 
+              // var usaBottom = ($(".g-usa")[0].getBoundingClientRect().top);
+              // var stateTop = ($(".g-" + state)[0].getBoundingClientRect().bottom);
+              // if ((stateTop-usaBottom <25) && (stateTop-usaBottom > 0))  {
+              //   console.log(stateTop-usaBottom)
+              //   return "translate("+(graphWidth + 3)+","+ graphY((graphDataStateNest[0]).values[20][selectedCategory]*.99)+")"
+              // } 
+              // else {
+                return "translate("+(graphWidth + 3)+","+ graphY((graphDataStateNest[0]).values[20][selectedCategory])+")"
 
-         //   }
-          })
-          var usaTop = ($(".g-usa")[0].getBoundingClientRect().top);
-          var stateTop = ($(".g-" + state)[0].getBoundingClientRect().top);
-                      console.log(stateTop-usaTop)
-          //IF STATE IS BELOW USA LINE
-          if ((stateTop-usaTop >0) && (stateTop-usaTop) < 15) {
-              console.log(stateTop-usaTop)
-              d3.select(".g-usa")
-                .attr("transform", "translate("+0+","+ (-7) +")")
-              d3.select(".g-" + state)
-                .attr("transform", "translate("+0+","+ (7) +")")
-            }else if ((stateTop-usaTop <0) && stateTop-usaTop > -15) { //IF STATE  IS ABOVE USA LINE
-              console.log(stateTop - usaTop)
-              d3.select(".g-usa")
-                .attr("transform", "translate("+0+","+ (7) +")")
-              d3.select(".g-" + state)
-                .attr("transform", "translate("+0+","+ (-7) +")")
-            }
-             else {
-              d3.selectAll(".g-usa, .g-" + state)
-                .attr("transform", "translate(0,0)")
-            }
+           //   }
+            })
+          //MOVE LABELS IF OVERLAPPING:
+          //var usaTop = ($(".g-usa")[0].getBoundingClientRect().top);
+          initialUsaTop = ($(".g-usa")[0].getBoundingClientRect().top);
+          initialStateTop = ($(".g-" + state)[0].getBoundingClientRect().top);
+          console.log(initialStateTop)
+          var overlap = (initialStateTop-initialUsaTop)
+          if ((overlap >0) && (overlap) < 15) { //IF STATE IS BELOW USA LINE
+            console.log(overlap);
+            d3.select(".g-usa")
+              .attr("transform", "translate("+0+","+ (-Math.abs(overlap)) +")")
+              .classed("movedUp", true)
+            d3.select(".g-" + state)
+              .attr("transform", "translate("+0+","+ (Math.abs(overlap)) +")")
+              .classed("movedDown", true)
+          }else if ((overlap <0) && overlap > -15) { //IF STATE  IS ABOVE USA LINE
+            console.log(overlap)
+            d3.select(".g-usa")
+              .attr("transform", "translate("+0+","+ (Math.abs(overlap)) +")")
+              .classed("movedDown", true)
+            d3.select(".g-" + state)
+              .attr("transform", "translate("+0+","+ (-Math.abs(overlap)) +")")
+              .classed("movedUp", true)
+          }else { 
+            console.log(overlap)
+            d3.selectAll(".g-usa, .g-" + state)
+              .attr("transform", "translate(0,0)")
+          }
         } 
       } 
-
-
       renderGraph();
       renderMap();
-
     })
   })
 
