@@ -1115,7 +1115,7 @@ var vizContent = function() {
         var scales = updateScales(variable, oldVariable)
         var graphY = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state") || variable.indexOf("revpp_fe") >= 0) ? scales.graphY2 : scales.graphY;
         var graphLine = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state")) ? scales.graphLine2 : scales.graphLine
-        var graphDataNest = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state")) ? scales.akNest : scales.graphDataNest
+        var graphDataNest = ( (state == "AK" && action != "remove") ) ? scales.akNest : scales.graphDataNest
         var trendsDataNestUSA = d3.nest()
           .key(function(d) {return d.State;})
           .entries(trendsDataUSA);
