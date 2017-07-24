@@ -536,29 +536,24 @@ var vizContent = function() {
 
             var newCategory = getCurrentCategory();
             var hoveredState = d3.select(this).attr("class").split(" ")[1]
-                            console.log($(".g-" + hoveredState)[0].getBoundingClientRect().top)
-
             var usaDiff = Math.abs(($(".g-usa")[0].getBoundingClientRect().top)-initialUsaTop);
             var stateDiff = Math.abs(($(".g-" + hoveredState)[0].getBoundingClientRect().top)-initialStateTop);
-            console.log(stateDiff)
-            if ((d3.select(".g-usa").classed("movedUp") == true) || (d3.select(".g-" + hoveredState).classed("movedDown") == true))  { 
-              console.log("state:" + initialStateTop + " us:" + initialUsaTop)
-              d3.select(".g-usa")
-                .classed("movedUp", false)
-                .attr("transform", "translate(0,5)")
-              d3.select(".g-" + hoveredState)
-                .classed("movedDown", false)
-                .attr("transform", "translate("+0+","+ (-stateDiff) +")")
-            }else if ((d3.select(".g-usa").classed("movedDown") == true) ||  (d3.select(".g-" + hoveredState).classed("movedUp") == true)){
-              d3.select(".g-usa")
-                .classed("movedDown", false)
-                .attr("transform", "translate(0,5)")
-              d3.select(".g-" + hoveredState)
-                .classed("movedUp", false)
-                .attr("transform", "translate("+0+","+ (stateDiff) +")")            
-            }else {
-              console.log("state:" + initialStateTop + " us:" + initialUsaTop)
+
+            if (d3.select(".nonblank-rect." + hoveredState).classed("selected-state") == false) {
+              if ((d3.select(".g-usa").classed("movedUp") == true) || (d3.select(".g-" + hoveredState).classed("movedDown") == true))  { 
+                d3.select(".g-usa")
+                  .attr("transform", "translate(0,5)")
+                d3.select(".g-" + hoveredState)
+                  .attr("transform", "translate("+0+","+ (-stateDiff) +")")
+              }else if ((d3.select(".g-usa").classed("movedDown") == true) ||  (d3.select(".g-" + hoveredState).classed("movedUp") == true)){
+                d3.select(".g-usa")
+                  .attr("transform", "translate(0,5)")
+                d3.select(".g-" + hoveredState)
+                  .attr("transform", "translate("+0+","+ (stateDiff) +")")            
+              }else {
+              }
             }
+
             d3.select(".nonblank-rect." + hoveredState)
               .classed("hovered-state", false)
             d3.select(".nonblank-rect." + hoveredState)
@@ -1579,7 +1574,7 @@ var vizContent = function() {
           .entries(graphDataState);
 
         //IF LINE HASN'T BEEN ADDED YET TO THE GRAPH:
-        if ($(".line-" + state).length == 0) { console.log('hi')
+        if ($(".line-" + state).length == 0) {
           // console.log('push')
           stateLinesArray.push(state); // ADD NEW STATE TO ARRAY 
           graphSvg.append("path")
@@ -1617,30 +1612,76 @@ var vizContent = function() {
             })
           //MOVE LABELS IF OVERLAPPING:
           //var usaTop = ($(".g-usa")[0].getBoundingClientRect().top);
-          initialUsaTop = ($(".g-usa")[0].getBoundingClientRect().top);
-          initialStateTop = ($(".g-" + state)[0].getBoundingClientRect().top);
-          var overlap = (initialStateTop-initialUsaTop)
-          var multiplier = (Math.abs(overlap) > 4) ? 1 : 4
-          if ((overlap >0) && (overlap) < 15) { //IF STATE IS BELOW USA LINE
-            console.log(overlap);
-            d3.select(".g-usa")
-              .attr("transform", "translate("+0+","+ (-Math.abs(overlap*multiplier)) +")")
-              .classed("movedUp", true)
-            d3.select(".g-" + state)
-              .attr("transform", "translate("+0+","+ (Math.abs(overlap*multiplier)) +")")
-              .classed("movedDown", true)
-          }else if ((overlap <0) && overlap > -15) { //IF STATE  IS ABOVE USA LINE
-            console.log(overlap)
-            d3.select(".g-usa")
-              .attr("transform", "translate("+0+","+ (Math.abs(overlap*multiplier)) +")")
-              .classed("movedDown", true)
-            d3.select(".g-" + state)
-              .attr("transform", "translate("+0+","+ (-Math.abs(overlap*multiplier)) +")")
-              .classed("movedUp", true)
-          }else { 
-            console.log(overlap)
-            d3.selectAll(".g-usa, .g-" + state)
-              .attr("transform", "translate(0,5)")
+          for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
+            console.log(stateLinesArray[i]);// removeStateList(stateLinesArray[i])
+            initialUsaTop = ($(".g-usa")[0].getBoundingClientRect().top);
+            initialStateTop = ($(".g-" + state)[0].getBoundingClientRect().top);
+            selectedStateTop = ($(".g-" + stateLinesArray[i])[0].getBoundingClientRect().top);
+            console.log(selectedStateTop + stateLinesArray[i] )
+            var overlapUsa = (initialStateTop-initialUsaTop) //STATE IS ABOVE USA IF VALUE IS BELOW 0
+            var overlapState = (initialStateTop-selectedStateTop) //NEW STATE IS ABOVE EXISTING STATE LABEL IF VALUE IS BELOW 0
+console.log(overlapState)
+            var multiplierUsa = function() {
+              if (Math.abs(overlapUsa)<1) {
+                return 50
+              }else if ((Math.abs(overlapUsa) < 4)){ 
+                return 4
+              }else {
+                return 1;
+              }
+            }
+            var multiplierState = function() {
+              if (Math.abs(overlapState)<1) {
+                return 50
+              }else if ((Math.abs(overlapState) < 4)){ 
+                return 4
+              }else {
+                return 1;
+              }
+            }
+            var multiplierUsa = multiplierUsa();
+            var multiplierState = multiplierState();
+            console.log(multiplierUsa);
+            //CHECK IF STATE OVERLAPS WITH USA
+            if ((overlapUsa >0) && (overlapUsa) < 15) { //IF STATE IS BELOW USA LINE
+              d3.select(".g-usa")
+                .attr("transform", "translate("+0+","+ (-Math.abs(overlapUsa*multiplierUsa)) +")")
+                .classed("movedUp", true)
+              d3.select(".g-" + state)
+                .attr("transform", "translate("+0+","+ (Math.abs(overlapUsa*multiplierUsa)) +")")
+                .classed("movedDown", true)
+            }else if ((overlapUsa <0) && overlapUsa > -15) { //IF STATE  IS ABOVE USA LINE
+              d3.select(".g-usa")
+                .attr("transform", "translate("+0+","+ (Math.abs(overlapUsa*multiplierUsa)) +")")
+                .classed("movedDown", true)
+              d3.select(".g-" + state)
+                .attr("transform", "translate("+0+","+ (-Math.abs(overlapUsa*multiplierUsa)) +")")
+                .classed("movedUp", true)
+            }else { 
+              d3.selectAll(".g-usa")
+                .attr("transform", "translate(0,5)")
+            }
+            //CHECK IF STATE OVERLAPS WITH ANOTHER STATE
+            if (stateLinesArray.length > 1) { console.log(stateLinesArray.length)
+              if ((overlapState >0) && (overlapState) < 15) { console.log('1')//IF STATE IS BELOW EXISTING STATE
+                d3.select(".g-" + stateLinesArray[i])
+                  .attr("transform", "translate("+0+","+ (-Math.abs(overlapState*multiplierState)) +")")
+                  .classed("movedUp", true)
+                d3.select(".g-" + state)
+                  .attr("transform", "translate("+0+","+ (Math.abs(overlapState*multiplierState)) +")")
+                  .classed("movedDown", true)
+              }else if ((overlapState <0) && overlapUsa > -15) {console.log('2') //IF STATE  IS ABOVE EXISTING STATE
+                d3.select(".g-" + stateLinesArray[i])
+                  .attr("transform", "translate("+0+","+ (Math.abs(overlapState*multiplierState)) +")")
+                  .classed("movedDown", true)
+                d3.select(".g-" + state)
+                  .attr("transform", "translate("+0+","+ (-Math.abs(overlapState*multiplierState)) +")")
+                  .classed("movedUp", true)
+              }else { console.log('nothing')
+                // d3.selectAll(".g-usa")
+                //   .attr("transform", "translate(0,5)")
+              }
+            }
           }
         } 
       } 
