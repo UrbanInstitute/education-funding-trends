@@ -41,6 +41,10 @@ ul.state-list{
   float: left;
 }
 
+.moveBack {
+  opacity: .3;
+}
+
 .help-button-hover {
   margin-top: 9.5px;
   margin-right: 11px;
