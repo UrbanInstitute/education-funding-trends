@@ -9,9 +9,8 @@ var vizContent = function() {
   var IS_PHONE_500 = d3.select("#isPhone500").style("display") == "block";
   var IS_PHONE_320 = d3.select("#isPhone320").style("display") == "block";
   var IS_VERTICAL_LAYOUT = d3.select("#isVerticalLayout").style("display") == "block";
-  var initialUsaTop;
+  var usaTop;
   var stateTop;
-  var usaTranslate;
 
   (IS_VERTICAL_LAYOUT) ? $('#vis').insertBefore('.lineChart-div'): $('#vis').insertAfter('.lineChart-div');
   /*MAP VARIABLES*/
@@ -537,32 +536,12 @@ var vizContent = function() {
 
             var newCategory = getCurrentCategory();
             var hoveredState = d3.select(this).attr("class").split(" ")[1]
-            var usaDiff = Math.abs(($(".g-usa")[0].getBoundingClientRect().top)-initialUsaTop);
-            var stateDiff = Math.abs(($(".g-" + hoveredState)[0].getBoundingClientRect().top)-initialStateTop);
 
-            if(d3.selectAll(".selected-state").node() == null){ console.log('none')
+            if(d3.selectAll(".selected-state").node() == null || d3.selectAll(".moveBackState").node() == null){ console.log('none')
               d3.select(".g-usa")
                     .classed("moveBack", false)
-                    .attr("transform", "translate(0,5)")
-                    .classed("movedUp", false)
-                    .classed("movedDown", false)
-              d3.select(".g-" + hoveredState)
-                .attr("transform", "translate("+0+","+ (-stateDiff) +")")
             }else {
-              if (d3.select(".nonblank-rect." + hoveredState).classed("selected-state") == false) {
-                if ((d3.select(".g-usa").classed("movedUp") == true) || (d3.select(".g-" + hoveredState).classed("movedDown") == true))  { 
-                  d3.select(".g-usa")
-                    .attr("transform", "translate(0,"+ usaTranslate+")")
-                  d3.select(".g-" + hoveredState)
-                    .attr("transform", "translate("+0+","+ (-stateDiff) +")")
-                }else if ((d3.select(".g-usa").classed("movedDown") == true) ||  (d3.select(".g-" + hoveredState).classed("movedUp") == true)){
-                  d3.select(".g-usa")
-                    .attr("transform", "translate(0,"+ usaTranslate +")")
-                  d3.select(".g-" + hoveredState)
-                    .attr("transform", "translate("+0+","+ (stateDiff) +")")            
-                }else {
-                }
-              }
+
             }
 
 
@@ -997,7 +976,9 @@ var vizContent = function() {
 
         d3.selectAll(".item-" + state)
           .remove();
-        d3.select(".line-state.line-" + state)
+        d3.selectAll(".line-state.line-" + state)
+          .remove()
+        d3.select(".g-" + state)
           .remove()
         d3.selectAll("g.state." + state + " .selected-state")
           .classed("selected-state", false)
@@ -1603,133 +1584,69 @@ var vizContent = function() {
           stateG.append("rect")
             .attr("transform", "translate("+(graphWidth + 3)+","+ graphY((graphDataStateNest[0]).values[20][selectedCategory])*.88+")")
             .style("fill", "#fff")
-            .attr("width", "17px")
-            .attr("height", "17px")
+            .attr("width", "20px")
+            .attr("height", "15px")
             .attr("class", "rect-" + state)
           stateG.append("text")
             //.attr("transform", "translate("+(graphWidth + 3)+","+ graphY((graphDataStateNest[0]).values[20][selectedCategory])+")")
             .text(state)
             .attr("class", "stateLabel " + state)
             .attr("transform", function() { 
-              // var usaBottom = ($(".g-usa")[0].getBoundingClientRect().top);
-              // var stateTop = ($(".g-" + state)[0].getBoundingClientRect().bottom);
-              // if ((stateTop-usaBottom <25) && (stateTop-usaBottom > 0))  {
-              //   console.log(stateTop-usaBottom)
-              //   return "translate("+(graphWidth + 3)+","+ graphY((graphDataStateNest[0]).values[20][selectedCategory]*.99)+")"
-              // } 
-              // else {
                 return "translate("+(graphWidth + 3)+","+ graphY((graphDataStateNest[0]).values[20][selectedCategory])+")"
-
-           //   }
             })
-          //MOVE LABELS IF OVERLAPPING:
+
+
+          //CHANGE OPACITY IF OVERLAPPING:
           //var usaTop = ($(".g-usa")[0].getBoundingClientRect().top);
+          
           for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
-            initialUsaTop = ($(".g-usa")[0].getBoundingClientRect().top);
-            initialStateTop = ($(".g-" + state)[0].getBoundingClientRect().top);
-            selectedStateTop = ($(".g-" + stateLinesArray[i])[0].getBoundingClientRect().top);
-            var overlapUsa = (initialStateTop-initialUsaTop) //STATE IS ABOVE USA IF VALUE IS BELOW 0
-            var overlapState = (initialStateTop-selectedStateTop) //NEW STATE IS ABOVE EXISTING STATE LABEL IF VALUE IS BELOW 0
-            var multiplierUsa = function() {
-              if (Math.abs(overlapUsa)<1) {
-                return 50
-              }else if ((Math.abs(overlapUsa) < 5)){ 
-                return 4
-              }else {
-                return 1;
-              }
-            }
-            var multiplierState = function() {
-              if (Math.abs(overlapState)<1) {
-                return 50
-              }else if ((Math.abs(overlapState) < 5)){ 
-                return 4
-              }else {
-                return 1;
-              }
-            }
-            var multiplierUsa = multiplierUsa();
-            var multiplierState = multiplierState();
-            //CHECK IF USA ALREADY MOVED 
+            console.log(stateLinesArray)
+            usaTop = ($(".g-usa")[0].getBoundingClientRect().top);
+            var selectedState = $(".g-" + stateLinesArray[i] + ":not(." + state + ")")
+            stateTop = ($(".g-" + state)[0].getBoundingClientRect().top);
+            selectedStateTop = (selectedState[0].getBoundingClientRect().top);
+            var overlapUsa = (stateTop-usaTop) //STATE IS ABOVE USA IF VALUE IS BELOW 0
+            var overlapState = (stateTop-selectedStateTop) //NEW STATE IS ABOVE EXISTING STATE LABEL IF VALUE IS BELOW 0
 
             //CHECK IF STATE OVERLAPS WITH USA
-            if ((overlapUsa >0) && (overlapUsa) < 15) { console.log('hi')//IF STATE IS BELOW USA LINE 
-              if (d3.select(".g-usa").classed("movedUp") == true || d3.select(".g-usa").classed("movedDown") == true) {
-                console.log('change opacity')
+            if (Math.abs(overlapUsa) <12.5) { 
                 d3.select(".g-usa")
                   .classed("moveBack", true)
                 d3.select(".g-" + state)
-                  .style("opacity", .8)
-              }else {
-                d3.select(".g-usa")
-                  .attr("transform", "translate("+0+","+ (-Math.abs(overlapUsa*multiplierUsa)) +")")
-                  .classed("movedUp", true)
-                d3.select(".g-" + state)
-                  .attr("transform", "translate("+0+","+ (2) +")")
-                  .classed("movedDown", true)
-                usaTranslate = -Math.abs(overlapUsa*multiplierUsa);
-              }
-            }else if ((overlapUsa <0) && overlapUsa > -15) { //IF STATE  IS ABOVE USA LINE
-                            console.log('change')
+                  .classed("moveForward", true)
 
-              if (d3.select(".g-usa").classed("movedUp") == true || d3.select(".g-usa").classed("movedDown") == true) {
-                console.log('change opacity')
-                d3.select(".g-usa")
-                  .classed("moveBack", true)
-                d3.select(".g-" + state)
-                  .style("opacity", .8)
-              }else{
-              d3.select(".g-usa")
-                .attr("transform", "translate("+0+","+ (Math.abs(overlapUsa*multiplierUsa)) +")")
-                .classed("movedDown", true)
-              d3.select(".g-" + state)
-                .attr("transform", "translate("+0+","+ (-2) +")")
-                .classed("movedUp", true)
-              usaTranslate = Math.abs(overlapUsa*multiplierUsa);
-              }
             }else {
-              // usaTranslate = 5
-              // d3.selectAll(".g-usa")
-              //   .attr("transform", "translate(0,"+ usaTranslate +")")
+                d3.select(".g-usa")
+                  .classed("moveBack", false)
+              
             }
             //CHECK IF STATE OVERLAPS WITH ANOTHER STATE
-            if (stateLinesArray.length > 1) {
-              if ((overlapState >0) && (overlapState) < 15) { //IF STATE IS BELOW EXISTING STATE
-                if (d3.select(".g-" + stateLinesArray[i]).classed("movedUp") == true || d3.select(".g-"+ stateLinesArray[i]).classed("movedDown") == true) {
-                  console.log('change opacity')
-                  d3.select(".g-" + stateLinesArray[i])
-                    .classed("moveBack")
-                  d3.select(".g-" + state)
-                    .style("opacity", .8)
+            if (stateLinesArray[i] == state) {
+              console.log('do nothing')
+            }else {
+              if (stateLinesArray.length > 1) {
+                if (Math.abs(overlapState) <12.5) { console.log(stateLinesArray[i])
+                    console.log('change opacity')
+                    d3.select(".g-" + stateLinesArray[i])
+                      .classed("moveBackState", true)
+                    d3.select(".g-" + state)
+                      .classed("moveForward", true)
                 }else {
-                  d3.select(".g-" + stateLinesArray[i])
-                    .attr("transform", "translate("+0+","+ (-Math.abs(overlapState*multiplierState)) +")")
-                    .classed("movedUp", true)
-                  d3.select(".g-" + state)
-                    .attr("transform", "translate("+0+","+ (Math.abs(overlapState*multiplierState)) +")")
-                    .classed("movedDown", true)
+                    d3.select(".g-" + stateLinesArray[i])
+                      .classed("moveBackState", false)
+                    d3.select(".g-" + state)
+                      .classed("moveForward", false)
+                    // d3.select(".g-" + stateLinesArray[i])
+                    //   .attr("transform", "translate("+0+","+ (Math.abs(overlapState*multiplierState)) +")")
+                    //   .classed("movedDown", true)
+                    // d3.select(".g-" + state)
+                    //   .attr("transform", "translate("+0+","+ (-Math.abs(overlapState*multiplierState)) +")")
+                    //   .classed("movedUp", true)
                 }
-              }else if ((overlapState <0) && overlapState > -15) { console.log('overlap');//IF STATE  IS ABOVE EXISTING STATE
-                if (d3.select(".g-" + stateLinesArray[i]).classed("movedUp") == true || d3.select(".g-"+ stateLinesArray[i]).classed("movedDown") == true) {
-                  console.log('change opacity')
-                  d3.select(".g-" + stateLinesArray[i])
-                    .classed("moveBack")
-                  d3.select(".g-" + state)
-                    .style("opacity", .8)
-                }else{
-                  d3.select(".g-" + stateLinesArray[i])
-                    .attr("transform", "translate("+0+","+ (Math.abs(overlapState*multiplierState)) +")")
-                    .classed("movedDown", true)
-                  d3.select(".g-" + state)
-                    .attr("transform", "translate("+0+","+ (-Math.abs(overlapState*multiplierState)) +")")
-                    .classed("movedUp", true)
-                }
-              }else {
-                d3.selectAll(".g-usa")
-                  .attr("transform", "translate(0,"+ usaTranslate +")")
-              }
+            }
             }
           }
+        
         } 
       } 
       renderGraph();
