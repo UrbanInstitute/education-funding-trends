@@ -2,8 +2,8 @@
 //Prob easiest to have a few set sizes for the map, which change at broswer size breakpoints. So `pageSize` will be determined by some function which tests browser size (e.g. IS_MOBILE() functions in past projects). I don't think it's as straightforward to have a continuously resizing graphic. Note that these values are just placeholders, they'll need to be tested/updated, and potentially more or fewer sizes are needed
 var vizContent = function() {
   var stateLinesArray = [];
-  var blankNote_1 = "<strong>*Note:</strong> Washington, DC, and Hawaii are included in the national average calculations, however, we cannot calculate progressivity at the state level for either because both are single districts. National averages exclude charter-only districts and other districts not tied to geography.";
-  var blankNote_2= "<strong>*Note:</strong> National averages exclude charter-only districts and other districts not tied to geography.";
+  var blankNote_1 = "<strong>Note:</strong> Washington, DC, and Hawaii are included in the national average calculations, however, we cannot calculate progressivity at the state level for either because both are single districts. National averages exclude charter-only districts and other districts not tied to geography.";
+  var blankNote_2= "<strong>Note:</strong> National averages exclude charter-only districts and other districts not tied to geography.";
   var IS_MOBILE_900 = d3.select("#isMobile900").style("display") == "block";
   var IS_MOBILE_768 = d3.select("#isMobile768").style("display") == "block";
   var IS_PHONE_500 = d3.select("#isPhone500").style("display") == "block";
@@ -33,7 +33,7 @@ var vizContent = function() {
   var vizWidth = $(".viz-content").width();
   var mapMargin = {top: 30, right: 20, bottom: 30, left: 50};
   var mapSizes = {
-    /*screen width 1200*/"large": { "width": vizWidth/1.68, "height": vizWidth/2.1, "scale": vizWidth*2.625, "translate": [vizWidth/3.9,vizWidth/6.67], "chartWidth": vizWidth*.06166, "chartMargin": vizWidth*.01083, "mapTranslateX": 0, "mapTranslateY": 5},
+    /*screen width 1200*/"large": { "width": vizWidth/1.68, "height": vizWidth/2.3, "scale": vizWidth*2.625, "translate": [vizWidth/3.9,vizWidth/6.67], "chartWidth": vizWidth*.06966, "chartMargin": vizWidth*.0153, "mapTranslateX": 0, "mapTranslateY": 5},
      /*screen width 900*/"full": { "width": vizWidth*.92, "height": vizWidth/1.4, "scale":vizWidth*4.055, "translate": [vizWidth/2.5,vizWidth/5], "chartWidth": vizWidth*.091, "chartMargin": vizWidth*.0144,  "mapTranslateX": 0, "mapTranslateY": mapMargin.top *2.5},
     /*screen width 768*/"medium": { "width": vizWidth*.92, "height": vizWidth/1.28, "scale":vizWidth*4.15, "translate": [vizWidth/2.5,vizWidth/4.2], "chartWidth": vizWidth*.104, "chartMargin": vizWidth*.022,  "mapTranslateX": 0, "mapTranslateY": mapMargin.top *2},
     /*screen width 502*/"small": { "width": vizWidth*.92, "height": vizWidth/1.2, "scale":vizWidth*3.9, "translate": [vizWidth/2.6,vizWidth/4.2], "chartWidth": vizWidth*.104, "chartMargin": vizWidth*.027,  "mapTranslateX": 0, "mapTranslateY": mapMargin.top *2},
@@ -264,6 +264,16 @@ var vizContent = function() {
         graphX.domain(d3.extent(trendsDataFiltered, function(d) { return d.Year; }));
 
         graphY.domain([ getMinY(selectedCategory, trendsDataFiltered), getMaxY(selectedCategory, trendsDataFiltered)]);
+        // Add the Y Axis
+        graphSvg.append("g")
+          .attr("class", "y graphAxis")
+          .call(d3.axisLeft(graphY)
+          //  .ticks(6)
+            .tickSize(-graphWidth)
+            .tickFormat((d3.select("#revpp_").classed("current") == true) ? d3.format('.2s') : d3.format('.2f'))
+            .tickValues(getTickValues(graphY, selectedCategory))
+          )
+        //Add the X axis
         graphSvg.append("g")
           .attr("transform", "translate(0," + graphHeight + ")")
           .attr("class", "x graphAxis")
@@ -281,15 +291,6 @@ var vizContent = function() {
             d3.select(this).classed('minor', (i % 5 !== 0));
         });
 
-        // Add the Y Axis
-        graphSvg.append("g")
-          .attr("class", "y graphAxis")
-          .call(d3.axisLeft(graphY)
-          //  .ticks(6)
-            .tickSize(-graphWidth)
-            .tickFormat((d3.select("#revpp_").classed("current") == true) ? d3.format('.2s') : d3.format('.2f'))
-            .tickValues(getTickValues(graphY, selectedCategory))
-          )
 
         graphSvg.append("text")
           .text("PROGRESSIVE")
@@ -628,7 +629,7 @@ var vizContent = function() {
             else if (IS_MOBILE_768) {
               return chartWidth+chartMargin - chartWidth/2.4
             }else {
-              return chartWidth+chartMargin - chartWidth/2.9              
+              return chartWidth+chartMargin - chartWidth/2.4              
             }
           })
           .attr("y", function() {
@@ -637,7 +638,7 @@ var vizContent = function() {
             }else if (IS_MOBILE_768) {
               return chartWidth+chartMargin - chartWidth/2.4
             }else {
-              return chartWidth+chartMargin - chartWidth/2.9            
+              return chartWidth+chartMargin - chartWidth/2.4           
             }
           })
 
@@ -759,7 +760,7 @@ var vizContent = function() {
             }else if (IS_MOBILE_768) {
               return chartWidth+chartMargin - chartWidth/2.4
             }else {
-              return chartWidth+chartMargin - chartWidth/2.9              
+              return chartWidth+chartMargin - chartWidth/2.4              
             }
           })
           .attr("y", function() {
@@ -768,7 +769,7 @@ var vizContent = function() {
             }else if (IS_MOBILE_768) {
               return chartWidth+chartMargin - chartWidth/2.4
             }else {
-              return chartWidth+chartMargin - chartWidth/2.9             
+              return chartWidth+chartMargin - chartWidth/2.4             
             }
           })
           .style("fill", function(){
@@ -779,16 +780,16 @@ var vizContent = function() {
             }
           })
         //add the X axis 
-        map.append("g")
-          .attr("class", "x axis")
-          .attr("transform", "translate(0," + (chartWidth-chartMargin) + ")")
-          .call(mapXAxis);
 
         //add the Y Axis
         map.append("g")
           .attr("class", function(d){ return "y axis " + d.key})
           .attr("transform", "translate(" + chartMargin + ",0)")
           .call(mapYAxis);
+        map.append("g")
+          .attr("class", "x axis")
+          .attr("transform", "translate(0," + (chartWidth-chartMargin) + ")")
+          .call(mapXAxis);
 
         d3.select("#vis")
           .append("div")
@@ -1106,6 +1107,10 @@ var vizContent = function() {
         var graphY = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state") || variable.indexOf("revpp_fe") >= 0) ? scales.graphY2 : scales.graphY;
         var graphLine = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state")) ? scales.graphLine2 : scales.graphLine
         var graphDataNest = ( (state == "AK" && action != "remove") ) ? scales.akNest : scales.graphDataNest
+        var stateDataNest = graphDataNest.filter(function(d) { 
+          return d.key == state 
+        })
+        console.log(stateDataNest)
         var trendsDataNestUSA = d3.nest()
           .key(function(d) {return d.State;})
           .entries(trendsDataUSA);
@@ -1115,6 +1120,7 @@ var vizContent = function() {
           d3.selectAll(".usaLabel, .stateLabel").attr("opacity", 1)
          }
         graphSvg.select(".progressiveLabel")
+          .transition().duration(1200)
           .attr("transform", function() {
             if (IS_PHONE_500) {
               return "translate("+ graphWidth/10 +", "+ graphY(1.05)+")"
@@ -1172,10 +1178,10 @@ var vizContent = function() {
           .attr("transform", "translate("+(graphWidth + 3)+","+ graphY((trendsDataNestUSA[0]).values[20][selectedCategory])+")")
         //   .attr("dy", ".35em")
         //   .attr("text-anchor", "start")
-        labelG.selectAll(".g-" + state)
-          // .transition()
-          // .duration(duration)
-          // .attr("transform", "translate("+(graphWidth + 3)+","+ graphY((graphDataStateNest[0]).values[20][selectedCategory])+")")
+        // labelG.selectAll(".g-" + state)
+        //   .transition()
+        //   .duration(duration)
+        //   .attr("transform", "translate("+(graphWidth + 3)+","+ graphY((stateDataNest[0]).values[20][selectedCategory])+")")
 
         var threshold = d3.select(".threshold")
           .transition()

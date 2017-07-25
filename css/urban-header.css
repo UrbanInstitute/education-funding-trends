@@ -92,6 +92,7 @@ body{
     position: absolute;
     right: 0;
     display: block;
+    cursor: pointer;
 }
 #header-pinned .share-icons.spanish {
     /*display: none;*/

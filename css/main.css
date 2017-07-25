@@ -25,6 +25,7 @@ ul.state-list{
 .help-button {
   margin-top: 9.5px;
   margin-right: 11px;
+  margin-left: 3px;
   background: url(../img/help-button.png);
   width: 15px;
   height: 15px;
@@ -78,7 +79,7 @@ div.tooltip {
   height: 80px;
   padding-left: 14px;
   padding-right: 14px;
-  padding-top: 24px;
+  padding-top: 18px;
   padding-bottom: 24px;
   font: 14px Lato;
   border: 0px;
@@ -253,7 +254,6 @@ path.domain {
   font-size: 16px;
   color: #353535;
   pointer-events: all;
-  cursor: pointer;
 }
 .checkbox-custom {
   opacity: 0;
@@ -265,7 +265,7 @@ path.domain {
   float: left;
 }
 .checkbox-image {
-  margin-left: 15px;
+  margin-left: 5px;
   width: 17.04px;
   height: 15.36px;
   display: none;
@@ -276,7 +276,7 @@ path.domain {
 }
 
 .empty-checkbox-image {
-  margin-left: 15px;
+  margin-left: 5px;
   width: 17.04px;
   height: 15.36px;
   display: none;
@@ -495,7 +495,7 @@ div.close-sign {
   float: left;
   position: relative;
   margin-left: 50px;
-  width: 29.2%;
+  width: 29.5%;
   display: block;
 }
 
@@ -541,7 +541,7 @@ div.close-sign {
 
 .line-USA {
   fill: none;
-  stroke: #11719f;
+  stroke: #0a4c6a;
   stroke-width: 4;
   pointer-events: all;
   cursor: pointer;
@@ -686,7 +686,7 @@ div.close-sign {
 
 
 .positive-area {
-  fill: #1696d2;
+  fill: #12719e;
 }
 
 .state path.line { 
@@ -743,8 +743,7 @@ text.mapLabel.blank{
 }
 
 #note-blank{
-  margin-top: 15px;
-  font-size: 14px;  
+  font-size: 13px;  
   width: 500px;
 }
 
@@ -984,6 +983,11 @@ form {
   font-size: 14px;  
   width: 180px;  
   }
+
+  #vis {
+    margin-left: 30px;
+  }
+
 }
 
 
@@ -995,6 +999,12 @@ form {
   #ak-disclaimer {
     top: 35px;
     left: 75px;
+  }
+  .lineChart-notes-under, .lineChart-notes-above {
+    font-size: 12px;
+  }
+  #note-blank {
+    font-size: 12px;
   }
   div.close-sign {
     margin-left: 82%;
@@ -1056,6 +1066,15 @@ form {
     top: 55px;
     left: 60px;
   }
+
+  #bottom-content {
+    margin-top: 85px;
+  }
+
+  .credit-text, .bottom-header.project, .credit-list {
+    padding-left: 0px;
+  }
+
   .about-text {
     margin-right: 0px;
   }
@@ -1124,9 +1143,14 @@ form {
   .bottom-header {
     font-size: 28px;
   }
-
+  .bottom-text p {
+    margin-bottom: 20px;
+  }
   #credits {
-    margin-top: 60px;
+    margin-top: 40px;
+  }
+  .viz-content {
+    margin-top: 40px;
   }
 
   .lineChart-div {
@@ -1209,7 +1233,7 @@ form {
 
   }
   #note-blank {
-    font-size: 10px;
+    font-size: 12px;
   }
   .ratioOneLine {
     stroke-dasharray: 2;
