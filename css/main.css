@@ -1232,6 +1232,16 @@ form {
     margin: none;
   }
 
+  .headerimage {
+    height: 180px;
+    top: 20px;
+  }
+
+  .headline {
+    padding: 20px;
+    margin-bottom: 0;
+  }
+
   text.mapLabel.standard {
     display: none;
   }
@@ -1240,7 +1250,9 @@ form {
     display: block !important;
     color: #fff;
   }
-
+  .main-content {
+    margin-top: -35px;
+  }
   #switch-div {
     height: 280px;
   }
@@ -1328,7 +1340,7 @@ form {
     display: block;
   }
   .main-content {
-    width: 88%;
+    width: calc(88%);
   }
  
   .switch-div-individual {
