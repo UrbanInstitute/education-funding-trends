@@ -776,7 +776,7 @@ var vizContent = function() {
           .attr("text-anchor", "end")
           .attr("x", function() {
             if (IS_PHONE_500) {
-              return chartWidth+chartMargin - chartWidth/2.2
+              return chartWidth+chartMargin - chartWidth/1.8
             }else if (IS_MOBILE_768) {
               return chartWidth+chartMargin - chartWidth/2.4
             }else {
@@ -785,7 +785,7 @@ var vizContent = function() {
           })
           .attr("y", function() {
             if (IS_PHONE_500) {
-              return chartWidth+chartMargin - chartWidth/2.2
+              return chartWidth+chartMargin - chartWidth/1.55
             }else if (IS_MOBILE_768) {
               return chartWidth+chartMargin - chartWidth/2.4
             }else {
@@ -1541,9 +1541,18 @@ var vizContent = function() {
 
 
       function hoverState(state){
+
         if(d3.select(".state." + state).select(".selected-state").node() != null){
           d3.select(".state." + state).select(".selected-state").style("opacity", ".8")
         }
+        d3.select(".mapLabel." + state)
+          .classed("show", function() {
+            if (IS_PHONE_500) {
+              return true;
+            }else {
+              return false;
+            }
+          })
         d3.select(".state-item.item-" + state)
           .style("background-color","#353535")
           .style("color","#ffffff")
@@ -1558,8 +1567,11 @@ var vizContent = function() {
         }else {
           d3.select("text.stateLabel." + state).classed("selected", true)
         }
+        
       }
       function dehoverState(state){
+        d3.select(".mapLabel." + state)
+          .classed("show", false)
         d3.select(".state." + state).selectAll("rect").style("opacity", "1")
         d3.select(".state-item.item-" + state)
           .style("background-color","#ececec")

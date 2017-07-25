@@ -990,6 +990,17 @@ form {
   #isMobile900, #isVerticalLayout {
   display: block;
   }
+  .lineChart-div-phone {
+    display: block;
+    margin: 10px 30px;
+    float: left;
+  }
+  .lineChart-div-mobile > .lineChart-notes-above {
+    display: none !important;
+  }
+  .lineChart-div-mobile > .lineChart-notes-under {
+    display: none !important;
+  }
 
   #ak-disclaimer {
     top: 35px;
@@ -1057,13 +1068,8 @@ form {
   #isMobile768, #isVerticalLayout {
     display: block;
   }
-  .lineChart-div-phone {
-    display: block;
-    margin: 10px 30px;
-    float: left;
-  }
 	.lineChart-div-mobile {
-		width: calc(90% - 30px);
+		width: calc(93% - 30px);
 	}
   .lineChart-div-mobile > .lineChart-notes-above, .lineChart-div-mobile > .lineChart-notes-under{
   	display: none !important;
@@ -1226,6 +1232,15 @@ form {
     margin: none;
   }
 
+  text.mapLabel.standard {
+    display: none;
+  }
+
+  text.mapLabel.standard.show {
+    display: block !important;
+    color: #fff;
+  }
+
   #switch-div {
     height: 280px;
   }
@@ -1270,12 +1285,7 @@ form {
     width: calc(39% - 30px);
     margin-right: -20px;
   }
-  .lineChart-div-mobile > .lineChart-notes-above {
-    display: none !important;
-  }
-  .lineChart-div-mobile > .lineChart-notes-under {
-    display: none !important;
-  }
+
   .lineChart-div-phone * {
     float: left;
   }
