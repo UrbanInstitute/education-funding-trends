@@ -36,7 +36,7 @@ var vizContent = function() {
     /*screen width 1200*/"large": { "width": vizWidth/1.68, "height": vizWidth/2.3, "scale": vizWidth*2.625, "translate": [vizWidth/3.9,vizWidth/6.67], "chartWidth": vizWidth*.06966, "chartMargin": vizWidth*.0153, "mapTranslateX": 0, "mapTranslateY": 5},
      /*screen width 900*/"full": { "width": vizWidth*.92, "height": vizWidth/1.4, "scale":vizWidth*4.055, "translate": [vizWidth/2.5,vizWidth/5], "chartWidth": vizWidth*.091, "chartMargin": vizWidth*.0144,  "mapTranslateX": 0, "mapTranslateY": mapMargin.top *2.5},
     /*screen width 768*/"medium": { "width": vizWidth*.92, "height": vizWidth/1.28, "scale":vizWidth*4.15, "translate": [vizWidth/2.5,vizWidth/4.2], "chartWidth": vizWidth*.104, "chartMargin": vizWidth*.022,  "mapTranslateX": 0, "mapTranslateY": mapMargin.top *2},
-    /*screen width 502*/"small": { "width": vizWidth*.92, "height": vizWidth/1.2, "scale":vizWidth*3.9, "translate": [vizWidth/2.6,vizWidth/4.2], "chartWidth": vizWidth*.104, "chartMargin": vizWidth*.027,  "mapTranslateX": 0, "mapTranslateY": mapMargin.top *2},
+    /*screen width 502*/"small": { "width": vizWidth*.88, "height": vizWidth/1.2, "scale":vizWidth*3.9, "translate": [vizWidth/2.6,vizWidth/4.2], "chartWidth": vizWidth*.104, "chartMargin": vizWidth*.027,  "mapTranslateX": 0, "mapTranslateY": mapMargin.top *2},
     /*screen width 320*/"extraSmall": { "width": vizWidth*.92, "height": vizWidth/1.15, "scale":vizWidth*3.9, "translate": [vizWidth/2.6,vizWidth/4.2], "chartWidth": vizWidth*.095, "chartMargin": vizWidth*.027,  "mapTranslateX": 0, "mapTranslateY": mapMargin.top *2}
   }
 

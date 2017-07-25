@@ -334,11 +334,11 @@ ul{
     #header-pinned .title{
         font-size: 15px !important;
 		width:70%;
-	 line-height: 20px;
+/*	 line-height: 20px;
     white-space: normal;
     overflow:visible;
 	margin-top:3px;
-	margin-bottom:3px;
+	margin-bottom:3px;*/
     }
     #header-pinned .share-icons .shareThisP {
         height: 39px;
@@ -350,11 +350,11 @@ ul{
         font-size: 15px !important;
         margin-left: 55px !important;
 		width:65%;
-	 line-height: 20px;
+/*	 line-height: 20px;
     white-space: normal;
     overflow:visible;
 	margin-top:3px;
-	margin-bottom:3px;
+	margin-bottom:3px;*/
     }
 
 }
@@ -365,11 +365,11 @@ ul{
         font-size: 12px !important;
         margin-left: 55px !important;
 		width:60%;
-	 line-height: 20px;
+/*	 line-height: 20px;
     white-space: normal;
     overflow:visible;
 	margin-top:3px;
-	margin-bottom:3px;
+	margin-bottom:3px;*/
     }
 }
 
