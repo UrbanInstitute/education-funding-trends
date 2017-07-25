@@ -537,7 +537,7 @@ var vizContent = function() {
             var newCategory = getCurrentCategory();
             var hoveredState = d3.select(this).attr("class").split(" ")[1]
 
-            if(d3.selectAll(".selected-state").node() == null || d3.selectAll(".moveBackState").node() == null){ console.log('none')
+            if(d3.selectAll(".selected-state").node() == null || d3.selectAll(".moveBackState").node() == null){ 
               d3.select(".g-usa")
                 .classed("moveBack", false)
             }else {
@@ -1535,7 +1535,7 @@ var vizContent = function() {
         }
       }
       //ADDS NEW STATE LINE AND UPDATES STATE ARRAY
-      function updateStateLine(state) { console.log('hi')
+      function updateStateLine(state) { 
         d3.select(".nonblank-rect." + state)
           .style("fill", function(){
             if (d3.select("#revratio_").classed("current") == true){
@@ -1615,7 +1615,6 @@ var vizContent = function() {
           //var usaTop = ($(".g-usa")[0].getBoundingClientRect().top);
           
           for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
-            console.log(stateLinesArray)
             usaTop = ($(".g-usa")[0].getBoundingClientRect().top);
             var selectedState = $(".g-" + stateLinesArray[i] + ":not(." + state + ")")
             stateTop = ($(".g-" + state)[0].getBoundingClientRect().top);
@@ -1637,16 +1636,15 @@ var vizContent = function() {
             }
             //CHECK IF STATE OVERLAPS WITH ANOTHER STATE
             if (stateLinesArray[i] == state) {
-              console.log('do nothing')
             }else {
               if (stateLinesArray.length > 1) {
-                if (Math.abs(overlapState) <12.5) { console.log(stateLinesArray[i])
+                if (Math.abs(overlapState) <12.5) { 
                     console.log('change opacity')
                     d3.select(".g-" + stateLinesArray[i])
                       .classed("moveBackState", true)
                     d3.select(".g-" + state)
                       .classed("moveForward", true)
-                }else { console.log(stateLinesArray[i])
+                }else { 
                     d3.select(".g-" + stateLinesArray[i])
                       .classed("moveBackState", false)
                     d3.select(".g-" + state)
