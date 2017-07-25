@@ -4,6 +4,7 @@ var vizContent = function() {
   var stateLinesArray = [];
   var blankNote_1 = "<strong>Note:</strong> Washington, DC, and Hawaii are included in the national average calculations, however, we cannot calculate progressivity at the state level for either because both are single districts. National averages exclude charter-only districts and other districts not tied to geography.";
   var blankNote_2= "<strong>Note:</strong> National averages exclude charter-only districts and other districts not tied to geography.";
+  var IS_1400 = d3.select("#is1400").style("display") == "block";
   var IS_MOBILE_900 = d3.select("#isMobile900").style("display") == "block";
   var IS_MOBILE_768 = d3.select("#isMobile768").style("display") == "block";
   var IS_PHONE_500 = d3.select("#isPhone500").style("display") == "block";
@@ -24,15 +25,19 @@ var vizContent = function() {
         return "medium"
     }else if (IS_MOBILE_900) {
         return "full"
-    }else {
-        return "large"
+    }else if (IS_1400) {
+        return "extraLarge"
       }
+    else {
+        return "large"
+    }
   }
 
   var pageSize = pageSizeFunction();
   var vizWidth = $(".viz-content").width();
   var mapMargin = {top: 30, right: 20, bottom: 30, left: 50};
   var mapSizes = {
+    /*screen width 1300*/"extraLarge": { "width": vizWidth/1.6, "height": vizWidth/2.3, "scale": vizWidth*2.625, "translate": [vizWidth/3.9,vizWidth/6.67], "chartWidth": vizWidth*.07266, "chartMargin": vizWidth*.0163, "mapTranslateX": 10, "mapTranslateY": 5},
     /*screen width 1200*/"large": { "width": vizWidth/1.68, "height": vizWidth/2.3, "scale": vizWidth*2.625, "translate": [vizWidth/3.9,vizWidth/6.67], "chartWidth": vizWidth*.06966, "chartMargin": vizWidth*.0153, "mapTranslateX": 0, "mapTranslateY": 5},
      /*screen width 900*/"full": { "width": vizWidth*.92, "height": vizWidth/1.4, "scale":vizWidth*4.055, "translate": [vizWidth/2.5,vizWidth/5], "chartWidth": vizWidth*.091, "chartMargin": vizWidth*.0144,  "mapTranslateX": 0, "mapTranslateY": mapMargin.top *2.5},
     /*screen width 768*/"medium": { "width": vizWidth*.92, "height": vizWidth/1.28, "scale":vizWidth*4.15, "translate": [vizWidth/2.5,vizWidth/4.2], "chartWidth": vizWidth*.104, "chartMargin": vizWidth*.022,  "mapTranslateX": 0, "mapTranslateY": mapMargin.top *2},
@@ -51,6 +56,7 @@ var vizContent = function() {
   var graphSize =  (IS_MOBILE_768) || (IS_MOBILE_900) ? "full" : "large";
 
   var graphSizes = {
+   /*screen width 1200*/ "extraLarge": { "width": vizWidth/3.32, "height": vizWidth/3.8, "translate": [720,180]},
    /*screen width 1200*/ "large": { "width": vizWidth/3.32, "height": vizWidth/3.8, "translate": [720,180]},
    /*screen width 900*/ "full": { "width": vizWidth/2.4, "height": vizWidth/2.4, "translate": [300,200]},
   /*screen width 768*/"medium": { "width": vizWidth/2.3, "height": vizWidth/2.4, "translate": [300,200]},
@@ -555,11 +561,15 @@ var vizContent = function() {
                 if (d3.select("#revratio_").classed("current") == true){
                   if (d3.select(".nonblank-rect." + hoveredState).classed("selected-state") == true)  {
                     return "#353535"
-                  } return "#a2d3eb"
+                  }else {
+                    return "#a2d3eb"
+                  }
                 }else if (d3.select("#revpp_").classed("current") == true){
                   if (d3.select(".nonblank-rect." + hoveredState).classed("selected-state") == true)  {
                    return "#fbbe15"
-                  } return "#094c6a"
+                  }else {
+                    return "#094c6a"
+                  }
                 }
               })
             d3.select(".mapLabel.standard." + hoveredState)
@@ -567,11 +577,15 @@ var vizContent = function() {
                 if (d3.select("#revratio_").classed("current") == true){
                   if (d3.select(".mapLabel.standard." + hoveredState).classed("selected-text") == true)  {
                     return "#ffffff"
-                  } return "#353535"
+                  }else {
+                    return "#353535"
+                  }
                 }else if (d3.select("#revpp_").classed("current") == true){ 
                   if (d3.select(".mapLabel.standard." + hoveredState).classed("selected-text") == true)  {
                    return "#353535"
-                  } return "#ffffff"
+                  }else {
+                    return "#ffffff"
+                  }
                 }
               })
             // d3.selectAll(".state-name")
@@ -725,10 +739,16 @@ var vizContent = function() {
         d3.selectAll(".state:not(.AK)").append("path")
           .attr("class", function(d){ return "standard line " + d.key })
           .attr("d", function(d){  return mapline(d.values)})
+          .classed("progressivity", function() {
+            return (d3.select("#revpp_").classed("current") == true) ?  false : true;
+          })
         //DRAWING THE GRAPH LINE FOR AK
         d3.select(".state.AK").append("path")
           .attr("class", function(d){ return "standard line " + d.key })
           .attr("d", function(d){  return mapline2(d.values)})
+          .classed("progressivity", function() {
+            return (d3.select("#revpp_").classed("current") == true) ?  false : true;
+          })
         //NEED TO HIDE THE GRAPH LINE FOR DC AND HI FOR THE RATIO TAB
         map.selectAll(".standard.line.DC, .standard.line.HI")
           .style("opacity", function() {
@@ -881,7 +901,7 @@ var vizContent = function() {
               return toggleText[0][getCurrentCategory()];
             })
           checkAdjusted();
-          drawBackMapCurtain(0, currentTab)
+          drawBackMapCurtain(300, currentTab)
         })
 
       /*TOGGLE BUTTONS*/
@@ -1142,13 +1162,15 @@ var vizContent = function() {
             }
           })           
           .style("opacity", function() { 
-           var domain = graphY.domain() 
-           if (d3.select("#revratio_").classed("current")==true) {
-            if (domain[0] >= .9) {
-              return 0
-            } return 1
-           } if (d3.select("#revpp_").classed("current") ==true) {
-           } return 0
+            var domain = graphY.domain() 
+            if (d3.select("#revratio_").classed("current")==true) {
+              if (domain[0] >= .9) {
+                return 0
+              }else {
+                return 1
+              }
+            }else if (d3.select("#revpp_").classed("current") ==true) {
+              } return 0
           })
 
         graphSvg.selectAll(".largeChartLabel")
@@ -1343,12 +1365,18 @@ var vizContent = function() {
           .attr("d", function(d){ 
             return mapline(d.values)
           })
+        map.selectAll("path.standard.line")
+          .classed("progressivity", function() {
+            return (d3.select("#revpp_").classed("current") == true) ?  false : true;
+          })
+
         d3.select(".line.AK")
           .transition()
           .duration(1200)
           .attr("d", function(d){
             return mapline2(d.values)
           })
+
 
         //move y=1 line. Note this will need to be hidden (or whatever comparable elements exist will be hidden) for the levels graphs
         d3.selectAll(".ratioOneLine")
@@ -1569,7 +1597,9 @@ var vizContent = function() {
             }else if (d3.select("#revpp_").classed("current") == true){
               if (d3.select(".mapLabel.standard." + state).classed("selected-text") == true || d3.select(".mapLabel.standard." + state).classed("hovered-text") == true)  {
                return "#353535"
-              } return "#ffffff"
+              }else {
+                return "#ffffff"
+              }
             }
           })
         var newCategory = getCurrentCategory();
