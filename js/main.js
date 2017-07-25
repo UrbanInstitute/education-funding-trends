@@ -347,15 +347,15 @@ var vizContent = function() {
 
         var usaG = labelG.append("g")
           .attr("class", "g-usa")
-          .attr("transform", "translate(0,5)")
+          .attr("transform", "translate("+(graphWidth + 3)+","+ graphY((trendsDataNest[0]).values[20][selectedCategory])+")")
 
         usaG.append("rect")
-          .attr("transform", "translate("+(graphWidth + 3)+","+ graphY((trendsDataNest[0]).values[20][selectedCategory])*.88+")")
+          .attr("transform", "translate(0,"+ (-10)+")")
           .style("fill", "#fff")
-          .attr("width", "17px")
-          .attr("height", "17px")
+          .attr("width", "22px")
+          .attr("height", "15px")
         usaG.append("text")
-          .attr("transform", "translate("+(graphWidth + 3)+","+ graphY((trendsDataNest[0]).values[20][selectedCategory])+")")
+          .attr("transform", "translate(0,"+ 3+")")
           .text("US")
           .attr("class", "usaLabel")
 
@@ -539,8 +539,10 @@ var vizContent = function() {
 
             if(d3.selectAll(".selected-state").node() == null || d3.selectAll(".moveBackState").node() == null){ console.log('none')
               d3.select(".g-usa")
-                    .classed("moveBack", false)
+                .classed("moveBack", false)
             }else {
+              d3.selectAll(".g-state")
+                .classed("moveBackState", false)
 
             }
 
@@ -1157,10 +1159,10 @@ var vizContent = function() {
           // console.log(graphLine(d[0].values))
             return (graphLine(d[0].values));
           });
-        // graphSvg.selectAll("text.usaLabel")
-        //   .transition()
-        //   .duration(duration)
-        //   .attr("transform", "translate("+(graphWidth+3)+","+graphY((trendsDataNestUSA[0]).values[20][selectedCategory])+")")
+        labelG.selectAll(".g-usa")
+          .transition()
+          .duration(duration)
+          .attr("transform", "translate("+(graphWidth + 3)+","+ graphY((trendsDataNestUSA[0]).values[20][selectedCategory])+")")
         //   .attr("dy", ".35em")
         //   .attr("text-anchor", "start")
 
@@ -1522,7 +1524,7 @@ var vizContent = function() {
         }
       }
       //ADDS NEW STATE LINE AND UPDATES STATE ARRAY
-      function updateStateLine(state) { 
+      function updateStateLine(state) { console.log('hi')
         d3.select(".nonblank-rect." + state)
           .style("fill", function(){
             if (d3.select("#revratio_").classed("current") == true){
@@ -1581,19 +1583,21 @@ var vizContent = function() {
 
           stateG = labelG.append("g")
             .attr("class", "g-state g-" + state)
+            .attr("transform", "translate("+(graphWidth + 3)+","+ graphY((graphDataStateNest[0]).values[20][selectedCategory])+")")
+
           stateG.append("rect")
-            .attr("transform", "translate("+(graphWidth + 3)+","+ graphY((graphDataStateNest[0]).values[20][selectedCategory])*.88+")")
+            .attr("transform", "translate(0,"+ (-12) +")")
             .style("fill", "#fff")
-            .attr("width", "20px")
+            .attr("width", "22px")
             .attr("height", "15px")
             .attr("class", "rect-" + state)
           stateG.append("text")
             //.attr("transform", "translate("+(graphWidth + 3)+","+ graphY((graphDataStateNest[0]).values[20][selectedCategory])+")")
             .text(state)
             .attr("class", "stateLabel " + state)
-            .attr("transform", function() { 
-                return "translate("+(graphWidth + 3)+","+ graphY((graphDataStateNest[0]).values[20][selectedCategory])+")"
-            })
+            // .attr("transform", function() { 
+            //     return "translate("+(graphWidth + 3)+","+ graphY((graphDataStateNest[0]).values[20][selectedCategory])+")"
+            // })
 
 
           //CHANGE OPACITY IF OVERLAPPING:
@@ -1631,17 +1635,11 @@ var vizContent = function() {
                       .classed("moveBackState", true)
                     d3.select(".g-" + state)
                       .classed("moveForward", true)
-                }else {
+                }else { console.log(stateLinesArray[i])
                     d3.select(".g-" + stateLinesArray[i])
                       .classed("moveBackState", false)
                     d3.select(".g-" + state)
                       .classed("moveForward", false)
-                    // d3.select(".g-" + stateLinesArray[i])
-                    //   .attr("transform", "translate("+0+","+ (Math.abs(overlapState*multiplierState)) +")")
-                    //   .classed("movedDown", true)
-                    // d3.select(".g-" + state)
-                    //   .attr("transform", "translate("+0+","+ (-Math.abs(overlapState*multiplierState)) +")")
-                    //   .classed("movedUp", true)
                 }
             }
             }
