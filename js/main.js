@@ -1095,6 +1095,13 @@ var vizContent = function() {
         }else {
           d3.selectAll(".lineChart-notes-above, .lineChart-notes-under").classed("show", false)
         }
+
+        // var graphDataState = trendsDataFull.filter(function(d) { 
+        //   return d.State == state
+        // })
+        // var graphDataStateNest = d3.nest()
+        //   .key(function(d) {return d.State;})
+        //   .entries(graphDataState);
         var scales = updateScales(variable, oldVariable)
         var graphY = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state") || variable.indexOf("revpp_fe") >= 0) ? scales.graphY2 : scales.graphY;
         var graphLine = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state")) ? scales.graphLine2 : scales.graphLine
@@ -1165,6 +1172,10 @@ var vizContent = function() {
           .attr("transform", "translate("+(graphWidth + 3)+","+ graphY((trendsDataNestUSA[0]).values[20][selectedCategory])+")")
         //   .attr("dy", ".35em")
         //   .attr("text-anchor", "start")
+        labelG.selectAll(".g-" + state)
+          // .transition()
+          // .duration(duration)
+          // .attr("transform", "translate("+(graphWidth + 3)+","+ graphY((graphDataStateNest[0]).values[20][selectedCategory])+")")
 
         var threshold = d3.select(".threshold")
           .transition()
@@ -1563,10 +1574,10 @@ var vizContent = function() {
         var graphDataState = trendsDataFull.filter(function(d) { 
           return d.State == state
         })
-
         var graphDataStateNest = d3.nest()
           .key(function(d) {return d.State;})
           .entries(graphDataState);
+
 
         //IF LINE HASN'T BEEN ADDED YET TO THE GRAPH:
         if ($(".line-" + state).length == 0) {
@@ -1641,11 +1652,11 @@ var vizContent = function() {
                     d3.select(".g-" + state)
                       .classed("moveForward", false)
                 }
-            }
+              }
             }
           }
         
-        } 
+        }
       } 
       renderGraph();
       renderMap();
