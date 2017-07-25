@@ -1264,11 +1264,16 @@ form {
   	margin: 0 20px;
   }
   #ak-disclaimer {
+    display: none;
     font-size: 11px;
     width: 40%;
     top: 62px;
     left: 45px;
     width: 200px;
+  }
+
+  #ak-disclaimer.show {
+    display: block !important;
   }
   .checkbox-image {
     margin-left: 0px;

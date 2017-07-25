@@ -498,18 +498,28 @@ var vizContent = function() {
             var newCategory = getCurrentCategory();
             var stateName = d.values[0]["state_full"]
             var clickedState = d3.select(this).attr("class").split(" ")[1]
+            if (clickedState == "AK") {
+              d3.select("#ak-disclaimer")
+                .classed("show", true)
+            } 
             d3.select(".nonblank-rect." + clickedState)
               .classed("selected-state", function(){
                 if (d3.select(".nonblank-rect." + clickedState).classed("selected-state") == true) { 
-                  labelG.select(".g-" + clickedState)
-                    .remove();
-                  // console.log('hi')
-                  removeStateList(clickedState);
-                  return false
+                  if (clickedState == "AK") {
+                    d3.select("#ak-disclaimer")
+                      .classed("show", false)
+                  }else {
+                    labelG.select(".g-" + clickedState)
+                      .remove();
+                    // console.log('hi')
+                    removeStateList(clickedState);
+                    return false
+                  }
                 }else { 
                   addStateList(clickedState, stateName);
                   return true;            
                 }
+
               })
             // d3.select(".mapLabel.standard." + clickedState)
             //   .classed("selected-text", function(){
@@ -855,8 +865,8 @@ var vizContent = function() {
             .duration(200)
             .style("opacity", 1);
           div.html("Cost-adjusted numbers account for cost differences among districts.")
-            .style("left", (d3.event.pageX) + "px")
-            .style("top", (d3.event.pageY) + 10 + "px")
+            .style("left", "680px")
+            .style("top", "1300px")
         })
         .on("mouseout", function(d) {
           d3.select(".help-button")
