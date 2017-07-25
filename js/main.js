@@ -59,7 +59,7 @@ var vizContent = function() {
    /*screen width 1200*/ "extraLarge": { "width": vizWidth/3.32, "height": vizWidth/3.8, "translate": [720,180]},
    /*screen width 1200*/ "large": { "width": vizWidth/3.32, "height": vizWidth/3.8, "translate": [720,180]},
    /*screen width 900*/ "full": { "width": vizWidth/2.4, "height": vizWidth/2.4, "translate": [300,200]},
-  /*screen width 768*/"medium": { "width": vizWidth/2.3, "height": vizWidth/2.4, "translate": [300,200]},
+  /*screen width 768*/"medium": { "width": vizWidth/1.1, "height": vizWidth/1.4, "translate": [300,200]},
   /*screen width 502*/"small": { "width": vizWidth/2.1, "height": vizWidth/1.95, "translate": [300,200]},
   /*screen width 320*/"extraSmall": { "width": vizWidth/1.25, "height": vizWidth/1.4, "translate": [300,200]}
 
@@ -1150,6 +1150,12 @@ var vizContent = function() {
               return "translate("+ graphWidth/3.8 +", "+ graphY(1.05)+")"
             }
           }) 
+          .style("opacity", function() { 
+            if (d3.select("#revratio_").classed("current")==true) {
+               return 1
+            }else if (d3.select("#revpp_").classed("current") ==true) {
+              } return 0
+          })
         graphSvg.select(".regressiveLabel")
           .transition().duration(1200)
           .attr("transform", function() {
@@ -1164,19 +1170,16 @@ var vizContent = function() {
           .style("opacity", function() { 
             var domain = graphY.domain() 
             if (d3.select("#revratio_").classed("current")==true) {
-              if (domain[0] >= .9) {
+              if (domain[0] >= .9) { 
                 return 0
-              }else {
+              }else { 
                 return 1
               }
             }else if (d3.select("#revpp_").classed("current") ==true) {
               } return 0
           })
 
-        graphSvg.selectAll(".largeChartLabel")
-          .style("opacity", function() {
-            return (d3.select("#revpp_").classed("current") == true) ? 0 : 1
-          })
+
         d3.selectAll("#lineChart .y.graphAxis")
           .transition().duration(1200)
           .call(d3.axisLeft(graphY)
