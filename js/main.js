@@ -543,7 +543,7 @@ var vizContent = function() {
             var newCategory = getCurrentCategory();
             var hoveredState = d3.select(this).attr("class").split(" ")[1]
 
-            if(d3.selectAll(".selected-state").node() == null){ console.log('hi')
+            if(d3.selectAll(".selected-state").node() == null){ 
               d3.select(".g-usa")
                 .classed("moveBack", false)
                 .classed("moveBackTemp", false)
@@ -554,7 +554,7 @@ var vizContent = function() {
                     d3.selectAll(".moveBackTemp")
             			.classed("moveBackTemp", false)
                         .classed("moveBack", true)
-            } else { console.log('remove temp')
+            } else { 
             	d3.selectAll(".moveBackStateTemp")
             		.classed("moveBackStateTemp", false)
             	d3.selectAll(".moveBackTemp")
@@ -1694,7 +1694,7 @@ var vizContent = function() {
         }
       } 
 
-      function checkLabels(state) { console.log(state)
+      function checkLabels(state) { 
       	for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
             usaTop = ($(".g-usa")[0].getBoundingClientRect().top);
             var selectedState = $(".g-" + stateLinesArray[i] + ":not(." + state + ")")
