@@ -144,6 +144,7 @@ li.state-nonmobile {
   background-color: #ececec;
   border-bottom: 5px solid #fff;
   text-indent: 10px;
+  cursor: pointer;
 }
 
 li.state-mobile {
@@ -1235,12 +1236,6 @@ form {
     height: 220px;
   }
 
-  .lineChart-div-mobile {
-    width: calc(40%);
-  }
-  div.close-sign {
-    margin-left: calc(77%)
-  }
 }
 
 
@@ -1282,7 +1277,9 @@ form {
   .wrapper2{
   	margin: 0 20px;
   }
-
+  div.close-sign {
+    margin-left: calc(93%);
+  }
   .headerimage {
     height: 180px;
     top: 20px;
@@ -1355,10 +1352,6 @@ form {
   .tab:nth-child(2) {
     margin-left: 4%;
   }
-  .lineChart-div-mobile {
-    width: calc(39% - 30px);
-    margin-right: -20px;
-  }
 
   .lineChart-div-phone * {
     float: left;
@@ -1369,15 +1362,8 @@ form {
   .switch-div-individual.last-switch {
     margin: 0 0 5% 8%;
   }
-  .state-clear {
-    float: left;
-    margin-bottom: 20px;
-  }
 
-  .state-title {
-    margin-bottom: 0;
-    width: 100%;
-  }
+
   .adjusted-div-mobile {
     width: 150px;
     float: left;
@@ -1411,9 +1397,7 @@ form {
   .switch-div-individual.last-switch {
     margin: 0 15px 0 12px;
   }
-  div.close-sign {
-    margin-left: calc(80%);
-  }
+
 
   #bottom-content {
     margin-top: 30px;
