@@ -1,19 +1,55 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="">
-  <link rel="shortcut icon" href="img/favicon.ico" type="img/x-icon">
-  <title>How has education funding changed over time?</title>
-  <link rel="stylesheet" type="text/css" href="css/main.css"/>
-  <link rel="stylesheet" type="text/css" href="css/jquery-ui.css"/>
+	 <meta charset="utf-8">
+	 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	 <meta name="description" content="">
+	 <link rel="shortcut icon" href="img/favicon.ico" type="img/x-icon">
+	 <title>How has education funding changed over time?</title>
+	 <link rel="stylesheet" type="text/css" href="css/main.css"/>
+	 <link rel="stylesheet" type="text/css" href="css/jquery-ui.css"/>
 <!--   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
- -->  <link rel="stylesheet" type="text/css" href="css/urban-header.css">
-      <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic,900" rel="stylesheet" type="text/css">
+ -->
+  	<link rel="stylesheet" type="text/css" href="css/urban-header.css">
+	<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic,900" rel="stylesheet" type="text/css">
+    <meta name="twitter:card" content="summary">
+	<meta name="twitter:site" content="@urbaninstitute">
+	<meta name="twitter:creator" content="@urbaninstitute">
+	<meta name="twitter:title" content="How has education funding changed over time?">
+	<meta name="twitter:description" content="A new Urban Institute tool examines where education funding has changed the most and where it has stagnated.">
+	<meta name="twitter:image" content="http://apps.urban.org/features/education-funding-trends/img/social.jpg">
+	<meta property="og:title" content="How has education funding changed over time?" />
+	<meta property="og:description" content="A new Urban Institute tool examines where education funding has changed the most and where it has stagnated." />
+	<meta property="og:image" content="http://apps.urban.org/features/education-funding-trends/img/social.jpg" />
+	<meta property="og:image:type" content="image/jpeg">
+	<meta property="og:url" content="http://urbn.is/fundingtrends">
+
+	<script type="application/ld+json">
+	{
+		"@context": "http://schema.org",
+		"@type": "NewsArticle",
+		"headline": "How has education funding changed over time?",
+		"url": "http://apps.urban.org/features/education-funding-trends/",
+		"thumbnailUrl": "http://apps.urban.org/features/education-funding-trends/img/social.jpg",
+		"dateCreated": "2017-08-02T04:00:00.000Z",
+		"articleSection": "Interactive Feature",
+		"creator": ["Matthew Chingos","Kristin Blagg","Christina Baird","Vivian Hou","Benjamin Chartoff","Alexandra Tilsley","Elizabeth Forney","John Wehmann"],
+		"keywords": ["Education and Training"]
+	}
+	</script>
 
 </head>
 <body>
+	<!-- Google Tag Manager -->
+	<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-MKBD2W"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+	new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+	j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+	'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+	})(window,document,'script','dataLayer','GTM-MKBD2W');</script>
+	<!-- End Google Tag Manager -->
+
   <div id="isMobile768"></div>
   <div id="isMobile900"></div>
   <div id="isPhone500"></div>
@@ -254,10 +290,35 @@
   <script src="data/stateData.js"></script>
   <script src = "js/main.js"></script>
   <script>
-  //All this code is just needed for the file uploader/preview page
-
-
-  </script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () { 
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),  m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m) 
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga'); 
+    ga('create', 'UA-57529944-1', 'auto'); 
+    ga('send', 'pageview');
+	</script>
+	<!-- START Parse.ly Include: Standard -->
+	<div id="parsely-root" style="display: none">
+	  <span id="parsely-cfg" data-parsely-site="urban.org"></span>
+	</div>
+	<script>
+	    (function(s, p, d) {
+	      var h=d.location.protocol, i=p+"-"+s,
+	          e=d.getElementById(i), r=d.getElementById(p+"-root"),
+	          u=h==="https:"?"d1z2jf7jlzjs58.cloudfront.net"
+	          :"static."+p+".com";
+	      if (e) return;
+	      e = d.createElement(s); e.id = i; e.async = true;
+	      e.src = h+"//"+u+"/p.js"; r.appendChild(e);
+	    })("script", "parsely", document);
+	</script>
+	<!-- END Parse.ly Include: Standard -->
 </body>
 
 </html>
