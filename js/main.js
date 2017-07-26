@@ -1138,6 +1138,7 @@ var vizContent = function() {
         var graphY = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state") || variable.indexOf("revpp_fe") >= 0) ? scales.graphY2 : scales.graphY;
         var graphLine = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state")) ? scales.graphLine2 : scales.graphLine
         var graphDataNest = ( (state == "AK" && action != "remove") ) ? scales.akNest : scales.graphDataNest
+        var graphDataNest2 = scales.graphDataNest
 
         var trendsDataNestUSA = d3.nest()
           .key(function(d) {return d.State;})
@@ -1210,7 +1211,7 @@ var vizContent = function() {
           .attr("transform", function() { 
             var className = d3.select(this).attr("class").split(' ')[1];
             var stateName = className.split('-')[1];
-            var stateDataNest = graphDataNest.filter(function(d) {
+            var stateDataNest = graphDataNest2.filter(function(d) {
               return d.key == stateName
             });
 //            console.log(graphDataNest)
@@ -1568,10 +1569,12 @@ var vizContent = function() {
           .style("color","#ffffff")
         d3.select(".line-" + state)
           .classed("line-hover", true)
+
+        //MAKE ALL EXISTING LABELS MOVE BACK
         d3.selectAll(".g-state.moveForward, .g-usa.moveForward")
           .classed("moveForward", false)
           .classed("moveBack", true)
-
+        //IF HOVERED STATE IS NOT USA, MAKE STATE MOVE FORWARD
         if( d3.select(".line-" + state).node() != null && (state != "USA")){ 
             d3.select(".g-"+state)
               .classed("moveForward", true)
@@ -1579,6 +1582,7 @@ var vizContent = function() {
         	d3.select(".line-" + state).node().parentNode.appendChild(d3.select(".line-" + state).node())
         	d3.select("text.stateLabel." + state)
           	.classed("selected", true)
+        //IF USA IS HOVERED, MOVE FORWARD
         }else if(state == "USA"){
               d3.select(".g-usa")
                 .classed("moveBack", false)
