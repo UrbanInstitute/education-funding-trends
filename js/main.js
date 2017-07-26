@@ -226,6 +226,7 @@ var vizContent = function() {
       var trendsData = trendsDataFull.filter(function(d) { 
         return d.State !== "USA"
       })
+
       var trendsDataUSA = trendsDataFull.filter(function(d) { 
         return d.State == "USA"
       })
@@ -924,8 +925,8 @@ var vizContent = function() {
       // WHEN CLICKING ON EACH TOGGLE:
       d3.selectAll(".button_toggle")
         .on('click', function() {
-          // checkAdjusted();
           if(d3.select(this).classed("on")){ 
+            checkAdjusted();
             d3.select(this).classed("on", false)
             d3.select(this).classed("off", true)
             d3.select(".switch-main-text")
@@ -941,7 +942,7 @@ var vizContent = function() {
                 return toggleText[0][getCurrentCategory()];
               })
           }
-          checkAdjusted();
+         // checkAdjusted();
 
         }) 
 
@@ -953,6 +954,7 @@ var vizContent = function() {
             removeStateList(stateLinesArray[i])
           }
         })
+
       //WHEN CLICKING ON STATE, ADD TAG TO BOTTOM OF LINE GRAPH
       function addStateList(state, stateName) { 
         d3.selectAll(".lineChart-notes-under")
@@ -1057,10 +1059,12 @@ var vizContent = function() {
         }
 
         var graphDataSelected = trendsDataFull.filter(function(d) {           
-          if ((stateLinesArray.indexOf(d.State) >= 0) || (d.State == "USA")) {         
+          if ((stateLinesArray.indexOf(d.State) >= 0) || (d.State == "USA")) {        
             return d;              
           }         
         })
+
+
 
         var graphDataNest = d3.nest()
           .key(function(d) {return d.State;})
@@ -1137,10 +1141,7 @@ var vizContent = function() {
         var graphY = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state") || variable.indexOf("revpp_fe") >= 0) ? scales.graphY2 : scales.graphY;
         var graphLine = ( (state == "AK" && action != "remove") || d3.select("rect.AK").classed("selected-state")) ? scales.graphLine2 : scales.graphLine
         var graphDataNest = ( (state == "AK" && action != "remove") ) ? scales.akNest : scales.graphDataNest
-        var stateDataNest = graphDataNest.filter(function(d) { 
-          return d.key == state 
-        })
-        console.log(stateDataNest)
+
         var trendsDataNestUSA = d3.nest()
           .key(function(d) {return d.State;})
           .entries(trendsDataUSA);
@@ -1207,16 +1208,27 @@ var vizContent = function() {
           // console.log(graphLine(d[0].values))
             return (graphLine(d[0].values));
           });
+
         labelG.selectAll(".g-usa")
           .transition()
           .duration(duration)
           .attr("transform", "translate("+(graphWidth + 3)+","+ graphY((trendsDataNestUSA[0]).values[20][selectedCategory])+")")
         //   .attr("dy", ".35em")
         //   .attr("text-anchor", "start")
-        // labelG.selectAll(".g-" + state)
-        //   .transition()
-        //   .duration(duration)
-        //   .attr("transform", "translate("+(graphWidth + 3)+","+ graphY((stateDataNest[0]).values[20][selectedCategory])+")")
+
+        labelG.selectAll(".g-state").each(function(d,i) {
+          d3.select(this)
+          .transition()
+          .duration(duration)
+          .attr("transform", function() { 
+            var className = d3.select(this).attr("class").split(' ')[1];
+            var stateName = className.split('-')[1];
+            var stateDataNest = graphDataNest.filter(function(d) {
+              return d.key == stateName
+            });
+            return "translate("+(graphWidth + 3)+","+ graphY((stateDataNest[0]).values[20][selectedCategory])+")"
+          })
+        })
 
         var threshold = d3.select(".threshold")
           .transition()
@@ -1670,7 +1682,6 @@ var vizContent = function() {
             // .attr("transform", function() { 
             //     return "translate("+(graphWidth + 3)+","+ graphY((graphDataStateNest[0]).values[20][selectedCategory])+")"
             // })
-
 
           //CHANGE OPACITY IF OVERLAPPING:
           //var usaTop = ($(".g-usa")[0].getBoundingClientRect().top);

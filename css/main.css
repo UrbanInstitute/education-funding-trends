@@ -810,7 +810,7 @@ text.mapLabel.standard.selected-text {
   width: 667px;
   margin-left: auto;
   margin-right: auto;
-  height: 180px;
+  height: 200px;
 }
 .urban-switch.large {
     font-size: 13px;
@@ -1185,7 +1185,7 @@ form {
   }
 
   #switch-div {
-    height: 200px;
+    height: 220px;
   }
 
   .lineChart-div-mobile {
@@ -1202,7 +1202,7 @@ form {
     margin: 6% 0 0 0 ;
   }
   #switch-div {
-    height: 220px;
+    height: 240px;
   }
   .adjusted-div {
     margin-right: 0;
@@ -1254,7 +1254,7 @@ form {
     margin-top: -35px;
   }
   #switch-div {
-    height: 280px;
+    height: 300px;
   }
   .lineChart-div {
     margin-top: 25px;
@@ -1423,7 +1423,7 @@ form {
 @media (max-width: 391px) {
 
 	#switch-div {
-		height: 450px;
+		height: 470px;
 	}
 
   .lineChart-div-mobile {
