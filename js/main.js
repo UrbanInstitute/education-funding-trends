@@ -543,17 +543,23 @@ var vizContent = function() {
             var newCategory = getCurrentCategory();
             var hoveredState = d3.select(this).attr("class").split(" ")[1]
 
-            if(d3.selectAll(".selected-state").node() == null && d3.selectAll(".moveBackStateTemp, .moveBackState").node() == null){ console.log('hi')
+            if(d3.selectAll(".selected-state").node() == null){ console.log('hi')
               d3.select(".g-usa")
                 .classed("moveBack", false)
+                .classed("moveBackTemp", false)
             }else if (d3.select(".nonblank-rect." + hoveredState).classed("selected-state") == true) { console.log('change temp')
             		d3.selectAll(".moveBackStateTemp")
             			.classed("moveBackStateTemp", false)
-                        .classed("moveBackState", true)
-
+                        .classed("moveBack", true)
+                    d3.selectAll(".moveBackTemp")
+            			.classed("moveBackTemp", false)
+                        .classed("moveBack", true)
             } else { console.log('remove temp')
             	d3.selectAll(".moveBackStateTemp")
             		.classed("moveBackStateTemp", false)
+            	d3.selectAll(".moveBackTemp")
+            		.classed("moveBackTemp", false)
+
             }
 
 
@@ -1562,28 +1568,26 @@ var vizContent = function() {
           .style("color","#ffffff")
         d3.select(".line-" + state)
           .classed("line-hover", true)
-        if( d3.select(".line-" + state).node() != null){
-          d3.select(".line-" + state).node().parentNode.appendChild(d3.select(".line-" + state).node())
-          d3.select(".threshold").node().parentNode.appendChild(d3.select(".threshold").node())
-        }
-        if(state == "USA"){
-          d3.select("text.usaLabel").classed("selected", true)
-        }else {
-          d3.select("text.stateLabel." + state)
-          	.classed("selected", true)
-        }
-      	if(d3.select(".g-" + state + ".moveBackState").node() != null) {
-		d3.select(".g-state.moveForwardState")
-			.classed("moveForwardState", false)
-			.classed("moveBackState", true)
-		d3.select(".g-" + state)
-			.classed("moveBackState", false)
-			.classed("moveForwardState", true)
-		d3.select(".g-" + state).node().parentNode.appendChild(d3.select(".g-" + state).node())
-		}else {
-		//d3.select(".g-" + state).node().parentNode.appendChild(d3.select(".g-" + state).node())
+        d3.selectAll(".g-state.moveForward, .g-usa.moveForward")
+          .classed("moveForward", false)
+          .classed("moveBack", true)
 
-		}
+        if( d3.select(".line-" + state).node() != null && (state != "USA")){ 
+            d3.select(".g-"+state)
+              .classed("moveForward", true)
+            d3.select(".g-" + state).node().parentNode.appendChild(d3.select(".g-" + state).node())
+        	d3.select(".line-" + state).node().parentNode.appendChild(d3.select(".line-" + state).node())
+        	d3.select("text.stateLabel." + state)
+          	.classed("selected", true)
+        }else if(state == "USA"){
+              d3.select(".g-usa")
+                .classed("moveBack", false)
+                .classed("moveForward", true)
+              d3.select(".g-usa").node().parentNode.appendChild(d3.select(".g-usa").node())
+          d3.select("text.usaLabel").classed("selected", true)
+		      d3.select(".line-USA").node().parentNode.appendChild(d3.select(".line-USA").node())
+        }
+      
 
 
       }
@@ -1698,13 +1702,13 @@ var vizContent = function() {
             //CHECK IF STATE OVERLAPS WITH USA
             if (Math.abs(overlapUsa) <12.5) { 
                 d3.select(".g-usa")
-                  .classed("moveBack", true)
+                  .classed("moveBackTemp", true)
                 d3.select(".g-" + state)
-                  .classed("moveForwardState", true)
+                  .classed("moveForward", true)
 
             }else {
                 d3.select(".g-usa")
-                  .classed("moveBack", false)
+                  .classed("moveBackTemp", false)
               
             }
             //CHECK IF STATE OVERLAPS WITH ANOTHER STATE
@@ -1714,13 +1718,13 @@ var vizContent = function() {
                 if (Math.abs(overlapState) <12.5) { 
                     d3.select(".g-" + stateLinesArray[i])
                       .classed("moveBackStateTemp", true)
-                      .classed("moveForwardState", false)
+                      .classed("moveForward", false)
                     d3.select(".g-" + state)
-                      .classed("moveForwardState", true)
+                      .classed("moveForward", true)
                 }else { 
-                	if (d3.select(".g-" + stateLinesArray[i] + ".moveBackState").node() != null) {
+                	if (d3.select(".g-" + stateLinesArray[i] + ".moveBack").node() != null) {
                 		d3.select(".g-" + stateLinesArray[i])
-                      		.classed("moveBackState", true)
+                      		.classed("moveBack", true)
                 	} else {
 
                 	}
