@@ -572,7 +572,7 @@ var vizContent = function() {
               .style("fill", function(){
                 if (d3.select("#revratio_").classed("current") == true){
                   if (d3.select(".nonblank-rect." + hoveredState).classed("selected-state") == true)  {
-                    return "#353535"
+                    return "#000"
                   }else {
                     return "#a2d3eb"
                   }
@@ -590,11 +590,11 @@ var vizContent = function() {
                   if (d3.select(".mapLabel.standard." + hoveredState).classed("selected-text") == true)  {
                     return "#ffffff"
                   }else {
-                    return "#353535"
+                    return "#000"
                   }
                 }else if (d3.select("#revpp_").classed("current") == true){ 
                   if (d3.select(".mapLabel.standard." + hoveredState).classed("selected-text") == true)  {
-                   return "#353535"
+                   return "#000"
                   }else {
                     return "#ffffff"
                   }
@@ -1481,7 +1481,7 @@ var vizContent = function() {
             if (tab == "revpp_") {
               return "#fbbe15" 
             } else {
-              return "#353535"
+              return "#000"
             }
           })
 
@@ -1517,7 +1517,7 @@ var vizContent = function() {
               }
             }else {
               if(d3.select(".nonblank-rect." + d.key).classed("selected-state")){
-                return "#353535"
+                return "#000"
               }else{
                 return "#a2d3eb"
               }
@@ -1576,7 +1576,7 @@ var vizContent = function() {
             }
           })
         d3.select(".state-item.item-" + state)
-          .style("background-color","#353535")
+          .style("background-color","#000")
           .style("color","#ffffff")
         d3.select(".line-" + state)
           .classed("line-hover", true)
@@ -1611,7 +1611,7 @@ var vizContent = function() {
           .style("fill", function(){
             if (d3.select("#revratio_").classed("current") == true){
               if (d3.select(".nonblank-rect." + state).classed("selected-state") == true || d3.select(".nonblank-rect." + state).classed("hovered-state") == true )  {
-                return "#353535"
+                return "#000"
               }else{
                 return "#a2d3eb"
               }
