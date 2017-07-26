@@ -295,7 +295,6 @@ var vizContent = function() {
         });
         d3.selectAll('.x.graphAxis .tick.minor text').each(function(d, i) {  
            // every 4th is 'major' without .minor class
-           console.log(d)
             d3.select(this).classed('minor', (i % 5 !== 0));
         });
 
@@ -304,25 +303,15 @@ var vizContent = function() {
           .text("PROGRESSIVE")
           .attr("class", "largeChartLabel progressiveLabel")
           .attr("transform", function() {
-            if (IS_PHONE_500) {
-              return "translate("+ graphWidth/10 +", "+ graphY(1.05)+")"
-            }else if (IS_MOBILE_768) {
-              return "translate("+ graphWidth/4.1 +", "+ graphY(1.05)+")"
-            }else {
-              return "translate("+ graphWidth/3.8 +", "+ graphY(1.05)+")"
-            }
+          	var textWidth = (this.getBBox().width)
+              return "translate("+ (graphWidth-textWidth)/2 +", "+ graphY(1.05)+")"
           }) 
         graphSvg.append("text")
           .text("REGRESSIVE")
           .attr("class", "largeChartLabel regressiveLabel")
           .attr("transform", function() {
-            if (IS_PHONE_500) {
-              return "translate("+ graphWidth/10 +", "+ graphY(.95)+")"
-            }else if (IS_MOBILE_768) {
-              return "translate("+ graphWidth/4.1 +", "+ graphY(.95)+")"
-            }else {
-              return "translate("+ graphWidth/3.8 +", "+ graphY(.95)+")"
-            }
+          	var textWidth = (this.getBBox().width)
+              return "translate("+ (graphWidth-textWidth)/2 +", "+ graphY(.95)+")"
           }) 
         graphSvg.append("text")
           .attr("text-anchor", "middle") 
@@ -1153,13 +1142,8 @@ var vizContent = function() {
         graphSvg.select(".progressiveLabel")
           .transition().duration(1200)
           .attr("transform", function() {
-            if (IS_PHONE_500) {
-              return "translate("+ graphWidth/10 +", "+ graphY(1.05)+")"
-            }else if (IS_MOBILE_768) {
-              return "translate("+ graphWidth/4.1 +", "+ graphY(1.05)+")"
-            }else {
-              return "translate("+ graphWidth/3.8 +", "+ graphY(1.05)+")"
-            }
+          	var textWidth = (this.getBBox().width)
+              return "translate("+ (graphWidth-textWidth)/2 +", "+ graphY(1.05)+")"
           }) 
           .style("opacity", function() { 
             if (d3.select("#revratio_").classed("current")==true) {
@@ -1170,14 +1154,9 @@ var vizContent = function() {
         graphSvg.select(".regressiveLabel")
           .transition().duration(1200)
           .attr("transform", function() {
-            if (IS_PHONE_500) {
-              return "translate("+ graphWidth/10 +", "+ graphY(.95)+")"
-            }else if (IS_MOBILE_768) {
-              return "translate("+ graphWidth/4.1 +", "+ graphY(.95)+")"
-            }else {
-              return "translate("+ graphWidth/3.8 +", "+ graphY(.95)+")"
-            }
-          })           
+          	var textWidth = (this.getBBox().width)
+              return "translate("+ (graphWidth-textWidth)/2 +", "+ graphY(.95)+")"
+          })          
           .style("opacity", function() { 
             var domain = graphY.domain() 
             if (d3.select("#revratio_").classed("current")==true) {

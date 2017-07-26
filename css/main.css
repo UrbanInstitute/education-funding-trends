@@ -993,7 +993,7 @@ form {
   }
   .lineChart-div-phone {
     display: block;
-    margin: 10px 30px;
+    margin: 10px 50px;
     float: left;
   }
   .lineChart-div-mobile > .lineChart-notes-above {
@@ -1032,7 +1032,7 @@ form {
     margin-bottom: 160px;
   }
   #vis {
-    margin: 0 35px;    
+    margin: 0 50px;    
   }
 
   .lineChart-div {
@@ -1069,8 +1069,14 @@ form {
   #isMobile768, #isVerticalLayout {
     display: block;
   }
+
+  #vis {
+  	margin: 0 35px;
+  }
+	
 	.lineChart-div-mobile {
-		width: calc(93% - 30px);
+	width: calc(93% - 30px);
+	margin-top: 0px;
 	}
   .lineChart-div-mobile > .lineChart-notes-above, .lineChart-div-mobile > .lineChart-notes-under{
   	display: none !important;
@@ -1084,6 +1090,9 @@ form {
   }
   #bottom-content {
     margin-top: 85px;
+  }
+  .lineChart-div-phone {
+  	margin: 10px 35px;
   }
 
   .credit-text, .bottom-header.project, .credit-list {
@@ -1230,7 +1239,11 @@ form {
 }
 @media (max-width: 502px) {
   #switch-div-mobile {
-    margin: none;
+    margin: 0 30px;
+  }
+
+  .wrapper2{
+  	margin: 0 20px;
   }
 
   .headerimage {
@@ -1251,14 +1264,20 @@ form {
     display: block !important;
     color: #fff;
   }
+
   .main-content {
     margin-top: -35px;
   }
   #switch-div {
-    height: 300px;
+    height: 330px;
   }
   .lineChart-div {
     margin-top: 25px;
+    margin-left: 20px;
+  }
+
+  .lineChart-div-phone {
+  	margin: 0px 20px;
   }
 
   .switch-div-full {
@@ -1410,22 +1429,35 @@ form {
   .tab:nth-child(1) {
     margin-left: 15%;
   }
+  #switch-div {
+  	height: 480px;
+  }
+  #switch-div-mobile {
+  	margin: 0 90px;
+  }
+
+  .switch-div-individual.first-switch {
+  	margin-top: 25px;
+  }
   .switch-div-individual {
-    margin: 30px 5px 0 17px;
+    margin: 10px 5px 0 17px;
   }
+
   .switch-div-individual.last-switch {
-    margin: 0 15px 0 0;
+    margin: 10px 5px 0 0px;
   }
+
   .largeChartLabel {
     font-size: 10px;
+  }
+
+  .adjusted-div-mobile {
+  	width: 170px;
   }
 
 }
 @media (max-width: 391px) {
 
-	#switch-div {
-		height: 470px;
-	}
 
   .lineChart-div-mobile {
     width: 34%;
@@ -1441,15 +1473,13 @@ form {
   }
 
   .switch-div-individual.last-switch {
-    margin-left:8px;
+    margin-left:15px;
   }
 
   .switch-div-individual {
-    margin-left: 23px;
+    margin-left: 30px;
   }
-  .adjusted-div-mobile {
-    margin-left: -55px;
-  }
+
 
   .switch-div-individual {
     margin-top: 0px;
@@ -1470,6 +1500,10 @@ form {
 
   .switch-div-individual.last-switch {
     margin-left:-16px;
+  }
+
+  #switch-div {
+  	height: 500px;
   }
 
   .switch-div-individual {
