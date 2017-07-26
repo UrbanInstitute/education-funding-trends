@@ -543,13 +543,17 @@ var vizContent = function() {
             var newCategory = getCurrentCategory();
             var hoveredState = d3.select(this).attr("class").split(" ")[1]
 
-            if(d3.selectAll(".selected-state").node() == null || d3.selectAll(".moveBackState").node() == null){ 
+            if(d3.selectAll(".selected-state").node() == null && d3.selectAll(".moveBackStateTemp, .moveBackState").node() == null){ console.log('hi')
               d3.select(".g-usa")
                 .classed("moveBack", false)
-            }else {
- //             d3.selectAll(".g-state")
- //               .classed("moveBackState", false)
+            }else if (d3.select(".nonblank-rect." + hoveredState).classed("selected-state") == true) { console.log('change temp')
+            		d3.selectAll(".moveBackStateTemp")
+            			.classed("moveBackStateTemp", false)
+                        .classed("moveBackState", true)
 
+            } else { console.log('remove temp')
+            	d3.selectAll(".moveBackStateTemp")
+            		.classed("moveBackStateTemp", false)
             }
 
 
@@ -1677,8 +1681,13 @@ var vizContent = function() {
 
           //CHANGE OPACITY IF OVERLAPPING:
           //var usaTop = ($(".g-usa")[0].getBoundingClientRect().top);
-          
-          for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
+        checkLabels(state)
+        
+        }
+      } 
+
+      function checkLabels(state) { console.log(state)
+      	for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
             usaTop = ($(".g-usa")[0].getBoundingClientRect().top);
             var selectedState = $(".g-" + stateLinesArray[i] + ":not(." + state + ")")
             stateTop = ($(".g-" + state)[0].getBoundingClientRect().top);
@@ -1704,7 +1713,7 @@ var vizContent = function() {
               if (stateLinesArray.length > 1) {
                 if (Math.abs(overlapState) <12.5) { 
                     d3.select(".g-" + stateLinesArray[i])
-                      .classed("moveBackStateTemporary", true)
+                      .classed("moveBackStateTemp", true)
                       .classed("moveForwardState", false)
                     d3.select(".g-" + state)
                       .classed("moveForwardState", true)
@@ -1723,9 +1732,7 @@ var vizContent = function() {
               }
             }
           }
-        
-        }
-      } 
+      }
       renderGraph();
       renderMap();
     })

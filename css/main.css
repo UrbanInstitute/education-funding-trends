@@ -45,7 +45,7 @@ ul.state-list{
   cursor: pointer;
 }
 
-.moveBack, .moveBackState {
+.moveBack, .moveBackState, .moveBackStateTemp {
   opacity: .45;
 }
 
