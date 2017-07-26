@@ -926,7 +926,7 @@ var vizContent = function() {
       d3.selectAll(".button_toggle")
         .on('click', function() {
           if(d3.select(this).classed("on")){ 
-            checkAdjusted();
+            // checkAdjusted();
             d3.select(this).classed("on", false)
             d3.select(this).classed("off", true)
             d3.select(".switch-main-text")
@@ -942,7 +942,7 @@ var vizContent = function() {
                 return toggleText[0][getCurrentCategory()];
               })
           }
-         // checkAdjusted();
+         checkAdjusted();
 
         }) 
 
