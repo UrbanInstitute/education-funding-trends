@@ -41,6 +41,8 @@ ul.state-list{
 
 .help-div {
   float: left;
+  position: relative;
+  cursor: pointer;
 }
 
 .moveBack, .moveBackState {

@@ -840,7 +840,7 @@ var vizContent = function() {
             checkAdjusted();
           }
         })
-      var div = d3.select("body").append("div")
+      var div = d3.select(".help-div").append("div")
       .attr("class", "tooltip")
       .style("opacity", 0);
 
@@ -854,8 +854,8 @@ var vizContent = function() {
             .duration(200)
             .style("opacity", 1);
           div.html("Cost-adjusted numbers account for cost differences among districts.")
-            .style("left", "883px")
-            .style("top", "1210px")
+            .style("left", "-54px")
+            .style("top", "40px")
         })
         .on("mouseout", function(d) {
           d3.select(".help-button")
@@ -1704,7 +1704,7 @@ var vizContent = function() {
               if (stateLinesArray.length > 1) {
                 if (Math.abs(overlapState) <12.5) { 
                     d3.select(".g-" + stateLinesArray[i])
-                      .classed("moveBackState", true)
+                      .classed("moveBackStateTemporary", true)
                       .classed("moveForwardState", false)
                     d3.select(".g-" + state)
                       .classed("moveForwardState", true)
