@@ -940,7 +940,7 @@ form {
   }
     
 }
-@media(min-width: 1201px) {
+/*@media(min-width: 1201px) {
 
   #header-pinned .share-icons {
     float: left;
@@ -966,7 +966,7 @@ form {
     top: 0px;
   }
 }
-
+*/
 @media (max-width: 1000px){
 
   .tab:nth-child(1) {

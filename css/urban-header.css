@@ -3,6 +3,8 @@ body{
     margin:0px;
 }
 #header-pinned {
+    position: fixed;
+    top: 0px;
     font: 16px Lato;
     color: #333;
     font-weight: 400;
@@ -13,7 +15,7 @@ body{
     width: 100%;
     background: #fff;
     border-bottom: 2px solid #eee;
-    z-index: 999;
+    z-index: 999999;
     -webkit-transition: top 0.25s linear;
     -moz-transition: top 0.25s linear;
     -o-transition: top 0.25s linear;
@@ -79,6 +81,8 @@ body{
 /*#header-pinned .title a:hover{
      color:#1696d2;
 }
+
+
 .subnav a {
    color:#1696d2;    
 }*/
@@ -89,20 +93,15 @@ body{
     margin: 0;
     padding: 0;
     top: 0;
+    width: 60px;
     position: absolute;
     right: 0;
-    display: block;
-    cursor: pointer;
-}
-#header-pinned .share-icons.spanish {
-    /*display: none;*/
-    display: none; 
 }
 
 #header-pinned .share-icons .shareThisP {
     border-top: 0;
     border-left: 1px solid #e6e5e5;
-    height: 42px;
+    height: 41px;
     padding: 9px 0 0;
 }
 
@@ -119,6 +118,7 @@ body{
     width: 32px;
     float: none;
     margin: 0 auto;
+    cursor: pointer;
 }
 
 #header-pinned .share-icons .shareThisB:hover {
@@ -281,9 +281,10 @@ display: inline-block;
 }
 
 ul{
-     
+        list-style: outside none none;
     width: 100%;
     margin: 0 auto;
+    text-align: center;
 }
 
 #subhead ul li{
@@ -317,63 +318,22 @@ ul{
 
 
 @media(max-width:767px) {
+.header-links ul li {
+        width:28%;
+        font:400 13px/24px Lato, sans-serif
+    }
    
     .tt-name, .tt-title {
        font-size: 16px !important;
     }
-/*    .feature-link{
+    .feature-link{
         display: none !important;
-    }*/
+    }
     #header-pinned .title{
         font-size: 15px !important;
         margin-left: 55px !important;
     }
 }
-
-@media(max-width:480px) {
-    #header-pinned .title{
-        font-size: 15px !important;
-		width:70%;
-/*	 line-height: 20px;
-    white-space: normal;
-    overflow:visible;
-	margin-top:3px;
-	margin-bottom:3px;*/
-    }
-    #header-pinned .share-icons .shareThisP {
-        height: 39px;
-    }
-}
-
-@media(max-width:400px) {
-    #header-pinned .title{
-        font-size: 15px !important;
-        margin-left: 55px !important;
-		width:65%;
-/*	 line-height: 20px;
-    white-space: normal;
-    overflow:visible;
-	margin-top:3px;
-	margin-bottom:3px;*/
-    }
-
-}
-
-
-@media(max-width:320px) {
-    #header-pinned .title{
-        font-size: 12px !important;
-        margin-left: 55px !important;
-		width:60%;
-/*	 line-height: 20px;
-    white-space: normal;
-    overflow:visible;
-	margin-top:3px;
-	margin-bottom:3px;*/
-    }
-}
-
-
 
 .header-links a {
     color: #fff;
@@ -385,3 +345,5 @@ ul{
 }
 
 /*end css for header*/
+
+ 

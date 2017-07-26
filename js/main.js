@@ -295,6 +295,7 @@ var vizContent = function() {
         });
         d3.selectAll('.x.graphAxis .tick.minor text').each(function(d, i) {  
            // every 4th is 'major' without .minor class
+           console.log(d)
             d3.select(this).classed('minor', (i % 5 !== 0));
         });
 
@@ -926,7 +927,6 @@ var vizContent = function() {
       d3.selectAll(".button_toggle")
         .on('click', function() {
           if(d3.select(this).classed("on")){ 
-            // checkAdjusted();
             d3.select(this).classed("on", false)
             d3.select(this).classed("off", true)
             d3.select(".switch-main-text")
