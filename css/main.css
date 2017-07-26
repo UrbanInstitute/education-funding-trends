@@ -1554,8 +1554,11 @@ form {
     left: 32px;
   }
   .lineChart-div-mobile {
-    width: calc(80%);
+    width: calc(100% - 40px);
+    float: left;
+    margin-left: 20px;
     margin-top: 0px;
+    padding: 0px;
   }
   .state-title {
     font-size: 18px;
