@@ -357,8 +357,6 @@ var vizContent = function() {
           .text("US")
           .attr("class", "usaLabel")
 
-          console.log(trendsDataNest[0])
-
         drawVoronoi(trendsDataNest, selectedCategory, graphY);
 
         var threshold = graphSvg.append("line")
@@ -549,8 +547,8 @@ var vizContent = function() {
               d3.select(".g-usa")
                 .classed("moveBack", false)
             }else {
-              d3.selectAll(".g-state")
-                .classed("moveBackState", false)
+ //             d3.selectAll(".g-state")
+ //               .classed("moveBackState", false)
 
             }
 
@@ -1205,6 +1203,7 @@ var vizContent = function() {
             var stateDataNest = graphDataNest.filter(function(d) {
               return d.key == stateName
             });
+//            console.log(graphDataNest)
             return "translate("+(graphWidth + 3)+","+ graphY((stateDataNest[0]).values[20][selectedCategory])+")"
           })
         })
@@ -1566,9 +1565,23 @@ var vizContent = function() {
         if(state == "USA"){
           d3.select("text.usaLabel").classed("selected", true)
         }else {
-          d3.select("text.stateLabel." + state).classed("selected", true)
+          d3.select("text.stateLabel." + state)
+          	.classed("selected", true)
         }
-        
+      	if(d3.select(".g-" + state + ".moveBackState").node() != null) {
+		d3.select(".g-state.moveForwardState")
+			.classed("moveForwardState", false)
+			.classed("moveBackState", true)
+		d3.select(".g-" + state)
+			.classed("moveBackState", false)
+			.classed("moveForwardState", true)
+		d3.select(".g-" + state).node().parentNode.appendChild(d3.select(".g-" + state).node())
+		}else {
+		//d3.select(".g-" + state).node().parentNode.appendChild(d3.select(".g-" + state).node())
+
+		}
+
+
       }
       function dehoverState(state){
         d3.select(".mapLabel." + state)
@@ -1678,7 +1691,7 @@ var vizContent = function() {
                 d3.select(".g-usa")
                   .classed("moveBack", true)
                 d3.select(".g-" + state)
-                  .classed("moveForward", true)
+                  .classed("moveForwardState", true)
 
             }else {
                 d3.select(".g-usa")
@@ -1690,16 +1703,22 @@ var vizContent = function() {
             }else {
               if (stateLinesArray.length > 1) {
                 if (Math.abs(overlapState) <12.5) { 
-                    console.log('change opacity')
                     d3.select(".g-" + stateLinesArray[i])
                       .classed("moveBackState", true)
+                      .classed("moveForwardState", false)
                     d3.select(".g-" + state)
-                      .classed("moveForward", true)
+                      .classed("moveForwardState", true)
                 }else { 
-                    d3.select(".g-" + stateLinesArray[i])
-                      .classed("moveBackState", false)
-                    d3.select(".g-" + state)
-                      .classed("moveForward", false)
+                	if (d3.select(".g-" + stateLinesArray[i] + ".moveBackState").node() != null) {
+                		d3.select(".g-" + stateLinesArray[i])
+                      		.classed("moveBackState", true)
+                	} else {
+
+                	}
+                    //d3.select(".g-" + stateLinesArray[i])
+                     // .classed("moveBackState", false)
+                    //d3.select(".g-" + state)
+                    //  .classed("moveForwardState", false)
                 }
               }
             }
