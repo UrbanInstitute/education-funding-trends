@@ -55,6 +55,7 @@ ul.state-list{
 .help-button-hover {
   margin-top: 9.5px;
   margin-right: 11px;
+  margin-left: 3px;
   background: url(../img/help-button_hover.png);
   width: 15px;
   height: 15px;
@@ -73,7 +74,7 @@ ul.state-list{
 }
 
 
-div.tooltip {
+/*div.tooltip {
   position: absolute;
   text-align: left;
   width: 100px;
@@ -85,10 +86,40 @@ div.tooltip {
   font: 14px Lato;
   border: 0px;
   pointer-events: none;
-  background-color: #333;
+  background: #333;
   color: #fff;
   font-weight: 300;
   font-style: italic;
+}*/
+
+div.tooltip {
+	position: absolute;
+	clear: both;
+	background: #333;
+	color: #fff;
+	width: 100px;
+  	height: 80px;
+  	font: 14px Lato;
+  	font-weight: 300;
+  	font-style: italic;
+  	padding-left: 14px;
+  	padding-right: 14px;
+  	padding-top: 18px;
+  	padding-bottom: 24px;
+}
+div.tooltip:after {
+	bottom: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+	border-color: rgba(0, 0, 0, 0);
+	border-bottom-color: #000;
+	border-width: 10px;
+	margin-left: -10px;
 }
 
 

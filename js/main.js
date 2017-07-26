@@ -854,8 +854,8 @@ var vizContent = function() {
             .duration(200)
             .style("opacity", 1);
           div.html("Cost-adjusted numbers account for cost differences among districts.")
-            .style("left", "680px")
-            .style("top", "1300px")
+            .style("left", "883px")
+            .style("top", "1210px")
         })
         .on("mouseout", function(d) {
           d3.select(".help-button")
