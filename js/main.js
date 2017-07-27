@@ -803,7 +803,7 @@ var vizContent = function() {
         d3.select("#vis")
           .append("div")
           .attr("id", "ak-disclaimer")
-          .html("Alaska data are displayed on a separate y axis scale (from <span id =\"ak-min\">" + RATIO_FORMAT(min2)+ "</span> to <span id =\"ak-max\">" + RATIO_FORMAT(max2) + "</span>) from the other 49 states.")
+          .html("Alaska data are displayed on a separate y-axis scale (from <span id =\"ak-min\">" + RATIO_FORMAT(min2)+ "</span> to <span id =\"ak-max\">" + RATIO_FORMAT(max2) + "</span>) from the other 49 states.")
 
 
        d3.select("#vis")
@@ -1262,7 +1262,7 @@ var vizContent = function() {
         graphSvg.select(".y-label")
           .text(function() {
             if (d3.select("#revpp_").classed("current") == true) {
-            return "Funding Levels per student"
+            return "Funding levels per student"
             } else {
               return "Progressivity"
             }

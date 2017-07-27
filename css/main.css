@@ -535,7 +535,7 @@ div.close-sign {
   float: left;
   position: relative;
   margin-left: 50px;
-  width: calc(30%);
+  width: calc(33% - 50px);
   display: block;
 }
 
@@ -552,16 +552,8 @@ div.close-sign {
   left: 497px;
   font-size: 28px
 }
-#sampleArrow{
-  position: fixed;
-  top: calc(50% - 266px);
-  left: 648px;
-  font-size: 28px;
-  z-index: 999;
-}
-#sampleArrow img{
-  width: 223px;
-}
+
+
 #visTitle span{
   color: #ca5800;
   margin-left: 10px;
@@ -1092,7 +1084,7 @@ form {
   .lineChart-div-mobile {
     display: block;
     float: right;
-    width: calc(50% - 50px);
+    width: calc(55% - 100px);
     margin-right: 50px;
     margin-top: 45px;
   }
@@ -1572,7 +1564,8 @@ form {
     float: right;
   }
   div.close-sign {
-    margin-left: calc(88%);
+    margin-left: calc(100% - 30px);
+
   }
   .lineChart-div-mobile > .lineChart-details > .header-row > .state-clear {
     margin-right: 0;
