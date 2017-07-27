@@ -1542,7 +1542,7 @@ var vizContent = function() {
       function hoverState(state){
         var chartWidth = mapSizes[pageSize]["chartWidth"]
         var chartMargin = mapSizes[pageSize]["chartMargin"]
-        var tileWidth = chartWidth-2*chartMargin + 8
+        var tileWidth = chartWidth-2*chartMargin+8
         if(d3.select(".state." + state).select(".selected-state").node() != null){
           d3.select(".state." + state).select(".selected-state").style("opacity", ".8")
         }
@@ -1558,7 +1558,7 @@ var vizContent = function() {
             if (IS_PHONE_500) {
             var textWidth = (this.getBBox().width)
             //return "translate("+ (tileWidth - textWidth)/2 +", "+ 0 +")"
-              return "translate("+ (tileWidth)*1.2 +", "+ 0 +")"
+              return "translate("+ (tileWidth - textWidth)*2  +", "+ 0 +")"
             }
 
           }) 

@@ -45,6 +45,10 @@ ul.state-list{
   cursor: pointer;
 }
 
+.credit-text.bottom-text {
+  margin-bottom: 25px;
+}
+
 .moveBack, .moveBackStateTemp, .moveBackTemp {
   opacity: .45;
 }
@@ -398,9 +402,6 @@ div.close-sign {
 #about {
 }
 
-.bottom-text p {
-  margin-bottom: 25px;
-}
 .about-text {
   font-size: 14px;
   color: #231f20;
@@ -985,7 +986,7 @@ form {
   }
 
   #switch-div {
-    height: 240px;
+    height: 220px;
   }
   #note-blank {
     margin-left: 20px;
@@ -994,7 +995,7 @@ form {
 
 @media(max-width: 1299px) {
   #ak-disclaimer {
-    left: 75px;
+    left: 85px;
   }
     
 }
@@ -1025,6 +1026,12 @@ form {
   }
 }
 */
+
+@media (max-width: 1200px) {
+  #ak-disclaimer {
+    left: 80px;
+  }
+}
 @media (max-width: 1000px){
 
   .tab:nth-child(1) {
@@ -1237,9 +1244,6 @@ form {
 
   .bottom-header {
     font-size: 28px;
-  }
-  .bottom-text p {
-    margin-bottom: 20px;
   }
   #credits {
     margin-top: 40px;
