@@ -519,7 +519,6 @@ div.close-sign {
 }
 .viz-content {
   max-width: 1300px;
-  width: 100%;
   margin-top: 78px;
 }
 #extra-space {
@@ -969,6 +968,15 @@ form {
     top: 5px;
   }
 
+
+  .viz-content {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  #note-blank {
+    margin-left: 20px;
+  }
     
 }
 
