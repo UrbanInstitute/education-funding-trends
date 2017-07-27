@@ -931,20 +931,7 @@ form {
     width: 100%;
   }
 
-  #sections{
-    display: inherit;
-    width: 400px;
-    margin: 0 auto;
-    pointer-events: none;
-  }
-  .step {
-    margin-bottom: 1000px;
-    opacity: 1;
-    background: rgba(255, 255, 255, 0.9);
-    box-shadow: rgb(136, 136, 136) 4px 4px 16px;
-    padding: 30px;
-    z-index: 2;
-  }
+
 }
 
 @media(min-width: 1400px) {
@@ -976,6 +963,18 @@ form {
 @media(min-width: 1300px) {
     #is1400 {
     display: block;
+  }
+  #ak-disclaimer {
+    left: 90px;
+    top: 5px;
+  }
+
+    
+}
+
+@media(max-width: 1299px) {
+  #ak-disclaimer {
+    left: 75px;
   }
     
 }

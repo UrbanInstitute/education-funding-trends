@@ -543,29 +543,6 @@ var vizContent = function() {
             var newCategory = getCurrentCategory();
             var hoveredState = d3.select(this).attr("class").split(" ")[1]
 
-            //if(d3.selectAll(".selected-state").node() == null){ 
-              //d3.select(".g-usa")
-                //.classed("moveBack", false)
-                //.classed("moveBackTemp", false)
-            //}else if (d3.select(".nonblank-rect." + hoveredState).classed("selected-state") == true) { console.log('change temp')
-            		//d3.selectAll(".moveBackStateTemp")
-            			//.classed("moveBackStateTemp", false)
-                        //.classed("moveBack", true)
-                    //d3.selectAll(".moveBackTemp")
-            			//.classed("moveBackTemp", false)
-                        //.classed("moveBack", true)
-            //} else { 
-            	//d3.selectAll(".moveBackStateTemp")
-            		//.classed("moveBackStateTemp", false)
-            	//d3.selectAll(".moveBackTemp")
-            		//.classed("moveBackTemp", false)
-//
-            //}
-            console.log(d3.select(".g-rect-"+hoveredState).attr("class"))
-            //if(d3.select("g-rect-" + hoveredState + ".makeTransparent").node() != null) {
-            //}
-
-
             d3.select(".nonblank-rect." + hoveredState)
               .classed("hovered-state", false)
             d3.select(".nonblank-rect." + hoveredState)
@@ -788,7 +765,7 @@ var vizContent = function() {
           .attr("text-anchor", "end")
           .attr("x", function() {
             if (IS_PHONE_500) {
-              return chartWidth+chartMargin - chartWidth/1.8
+            return 0
             }else if (IS_MOBILE_768) {
               return chartWidth+chartMargin - chartWidth/2.4
             }else {
@@ -1555,7 +1532,9 @@ var vizContent = function() {
 
 
       function hoverState(state){
-
+        var chartWidth = mapSizes[pageSize]["chartWidth"]
+        var chartMargin = mapSizes[pageSize]["chartMargin"]
+        var tileWidth = chartWidth-2*chartMargin + 8
         if(d3.select(".state." + state).select(".selected-state").node() != null){
           d3.select(".state." + state).select(".selected-state").style("opacity", ".8")
         }
@@ -1567,6 +1546,14 @@ var vizContent = function() {
               return false;
             }
           })
+          .attr("transform", function() {
+            if (IS_PHONE_500) {
+            var textWidth = (this.getBBox().width)
+            //return "translate("+ (tileWidth - textWidth)/2 +", "+ 0 +")"
+              return "translate("+ (tileWidth) +", "+ 0 +")"
+            }
+
+          }) 
         d3.select(".state-item.item-" + state)
           .style("background-color","#000")
           .style("color","#ffffff")
