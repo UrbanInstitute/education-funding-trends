@@ -1641,6 +1641,7 @@ var vizContent = function() {
           graphSvg.append("path")
             .data([graphDataStateNest])
             .attr("class", "line-state line-" + state)
+            .classed("line-hover", true)
             .attr("d", function(d) { 
           d.graphLine = this;               
             return (graphLine(d[0].values));
