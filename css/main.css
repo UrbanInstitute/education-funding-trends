@@ -159,13 +159,13 @@ li.state-mobile {
   width: 100%;
 }
 #double li {
-  width: 47.1%;
-  margin-right: 1.6%;
+  width: 48.5%;
+  margin-right: 1.5%;
   float:left;
 }
 
 .lineChart-div-mobile > .lineChart-details > .header-row > .state-clear {
-  margin-right: 15px;
+  margin-right: 5px;
 }
 
 .lineChart-div-phone {
@@ -931,52 +931,65 @@ form {
 @media(min-width: 1400px) {
 
   text.mapLabel.standard {
-    font-size: 14.25px;
+    font-size: 14.25px !important;
   }
 
   .about-text {
-    padding-right: 65px;
+    padding-right: 65px !important;
   }
   .bottom-header.project {
-    padding-left: 65px;
+    padding-left: 65px !important;
   }
   .credit-text {
-    padding-left: 65px;
+    padding-left: 65px !important;
   }
   .credit-list {
-    padding-left: 65px;
+    padding-left: 65px !important;
   }
   .usaLabel {
-    font-size: 16.63px;
+    font-size: 16.63px !important;
   }
   .state-title {
-    font-size: 18px;
+    font-size: 18px !important;
   }
+    #switch-div {
+    height: 350px !important;
+  }
+
+
 }
 
 @media(min-width: 1300px) {
-    #is1400 {
-    display: block;
+    .viz-content {
+    margin-left: auto;
+    margin-right: auto;
+  }
+    #note-blank {
+    margin-left: 10px;
   }
   #ak-disclaimer {
     left: 90px;
     top: 5px;
   }
-
   .tab:nth-child(1) {
     margin-left: 34%;
   }
+    #switch-div {
+    height: 280px;
+  }
+}
 
-
-  .viz-content {
-    margin-left: auto;
-    margin-right: auto;
+@media(max-width: 1300px) {
+    #is1400 {
+    display: block;
   }
 
+  #switch-div {
+    height: 240px;
+  }
   #note-blank {
     margin-left: 20px;
-  }
-    
+  }    
 }
 
 @media(max-width: 1299px) {
@@ -1019,7 +1032,7 @@ form {
   }
   #ak-disclaimer {
   top: -3px;
-  left: 57px;
+  left: 70px;
   font-size: 14px;  
   width: 180px;  
   }
@@ -1115,6 +1128,9 @@ form {
   #isMobile768, #isVerticalLayout {
     display: block;
   }
+  .lineChart-div-mobile > .lineChart-details > .header-row > .state-clear {
+    margin-right: 0px;
+  }
   .about-text {
     padding-right: 0px;
   }
@@ -1124,10 +1140,10 @@ form {
   }
 	
 	.lineChart-div-mobile {
-	width: calc(100% - 70px);
-	margin-top: 0px;
-  margin-left: 35px;
-  margin-right: 35px;
+  	width: calc(100% - 70px);
+  	margin-top: 0px;
+    margin-left: 35px;
+    margin-right: 35px;
 	}
   .lineChart-div-mobile > .lineChart-notes-above, .lineChart-div-mobile > .lineChart-notes-under{
   	display: none !important;
