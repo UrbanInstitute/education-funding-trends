@@ -2,8 +2,8 @@
 //Prob easiest to have a few set sizes for the map, which change at broswer size breakpoints. So `pageSize` will be determined by some function which tests browser size (e.g. IS_MOBILE() functions in past projects). I don't think it's as straightforward to have a continuously resizing graphic. Note that these values are just placeholders, they'll need to be tested/updated, and potentially more or fewer sizes are needed
 var vizContent = function() {
   var stateLinesArray = [];
-  var blankNote_1 = "<strong>Note:</strong> Washington, DC, and Hawaii are included in the national average calculations, however, we cannot calculate progressivity at the state level for either because both are single districts. National averages exclude charter-only districts and other districts not tied to geography.";
-  var blankNote_2= "<strong>Note:</strong> National averages exclude charter-only districts and other districts not tied to geography.";
+  var blankNote_1 = "<strong>Note:</strong> Washington, DC, and Hawaii are included in the national average calculations, however, we cannot calculate progressivity at the state level for either because both are single districts. All statistics exclude charter-only districts and other districts not tied to geography.";
+  var blankNote_2= "<strong>Note:</strong> All statistics exclude charter-only districts and other districts not tied to geography.";
   var IS_1400 = d3.select("#is1400").style("display") == "block";
   var IS_MOBILE_900 = d3.select("#isMobile900").style("display") == "block";
   var IS_MOBILE_768 = d3.select("#isMobile768").style("display") == "block";
