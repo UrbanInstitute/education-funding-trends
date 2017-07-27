@@ -497,7 +497,13 @@ var vizContent = function() {
                   if (clickedState == "AK") {
                     d3.select("#ak-disclaimer")
                       .classed("show", false)
+                    //AT WIDTHS < 500PX, REMOVE STATE LABEL WHEN UNCLICKING STATE
+                    d3.select(".mapLabel." + clickedState)
+                      .classed("show", false)
                   }else {
+                    //AT WIDTHS < 500PX, REMOVE STATE LABEL WHEN UNCLICKING STATE
+                    d3.select(".mapLabel." + clickedState)
+                      .classed("show", false)
                     labelG.select(".g-" + clickedState)
                       .remove();
                     // console.log('hi')
@@ -815,7 +821,7 @@ var vizContent = function() {
       }
 
       d3.select(".checkbox-div")
-        .on("click", function() {
+        .on("click", function() { console.log('hi')
           if (d3.select(".checkbox-image").classed('checked') == true){
           d3.select(".checkbox-image")
             .classed("checked", false)
@@ -1576,8 +1582,13 @@ var vizContent = function() {
 
       }
       function dehoverState(state){
-        d3.select(".mapLabel." + state)
-          .classed("show", false)
+        if (d3.select(".nonblank-rect.selected-state." + state).node() != null) { console.log('hi')
+          d3.select(".mapLabel.selected-state" + state)
+            .classed("show", true)
+        }else {
+          d3.select(".mapLabel." + state)
+            .classed("show", false)
+        }
         d3.select(".state." + state).selectAll("rect").style("opacity", "1")
         d3.select(".state-item.item-" + state)
           .style("background-color","#ececec")
@@ -1679,7 +1690,7 @@ var vizContent = function() {
             var overlapState = (stateTop-selectedStateTop) //NEW STATE IS ABOVE EXISTING STATE LABEL IF VALUE IS BELOW 0
 
             //CHECK IF STATE OVERLAPS WITH USA
-            if (Math.abs(overlapUsa) <12.5) { 
+            if (Math.abs(overlapUsa) <12.5) {  console.log('overlap us')
                 d3.select(".g-rect-usa")
                   .classed("makeTransparent", true)
                 d3.select(".g-rect-" + state)
@@ -1691,8 +1702,8 @@ var vizContent = function() {
             //CHECK IF STATE OVERLAPS WITH ANOTHER STATE
             if (stateLinesArray[i] == state) {
             }else {
-              if (stateLinesArray.length > 1) {
-                if (Math.abs(overlapState) <12.5) { 
+              if (stateLinesArray.length > 1) { 
+                if (Math.abs(overlapState) <12.5) { console.log('hello')
                   d3.selectAll(".g-rect-" + state + ", .g-rect-" + stateLinesArray[i])
                     .classed("makeTransparent", true)
                 }else { 
