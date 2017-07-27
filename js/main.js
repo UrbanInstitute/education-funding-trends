@@ -59,7 +59,7 @@ var vizContent = function() {
    /*screen width 1200*/ "large": { "width": vizWidth/3.32, "height": vizWidth/3.8, "translate": [720,180]},
    /*screen width 900*/ "full": { "width": vizWidth/2.4, "height": vizWidth/2.4, "translate": [300,200]},
   /*screen width 768*/"medium": { "width": vizWidth/1.1, "height": vizWidth/1.4, "translate": [300,200]},
-  /*screen width 502*/"small": { "width": vizWidth/1.1, "height": vizWidth/1.4, "translate": [300,200]},
+  /*screen width 502*/"small": { "width": vizWidth/1.08, "height": vizWidth/1.4, "translate": [300,200]},
   /*screen width 320*/"extraSmall": { "width": vizWidth/1.25, "height": vizWidth/1.4, "translate": [300,200]}
 
   }

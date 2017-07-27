@@ -543,9 +543,8 @@ div.close-sign {
   float: right;
   position: relative;
   margin-top: 146px;
-  padding: 0 50px;
+ /* padding: 0 50px;*/
   display: none;
-  width: calc(44%);
 }
 #visTitle{
   position: fixed;
@@ -1093,6 +1092,8 @@ form {
   .lineChart-div-mobile {
     display: block;
     float: right;
+    width: calc(50% - 50px);
+    margin-right: 50px;
     margin-top: 45px;
   }
 
@@ -1120,8 +1121,10 @@ form {
   }
 	
 	.lineChart-div-mobile {
-	width: calc(93% - 30px);
+	width: calc(100% - 70px);
 	margin-top: 0px;
+  margin-left: 35px;
+  margin-right: 35px;
 	}
   .lineChart-div-mobile > .lineChart-notes-above, .lineChart-div-mobile > .lineChart-notes-under{
   	display: none !important;
@@ -1280,7 +1283,11 @@ form {
   #switch-div-mobile {
     margin: 0 30px;
   }
-
+  .lineChart-div-mobile {
+    width: calc(100% - 40px);
+    margin-left: 20px;
+    margin-right: 20px;
+  }
   .wrapper2{
   	margin: 0 20px;
   }
@@ -1487,9 +1494,6 @@ form {
 @media (max-width: 391px) {
 
 
-  .lineChart-div-mobile {
-    width: 34%;
-  }
   .tab:nth-child(1) {
     margin-left: 10%;
   }
