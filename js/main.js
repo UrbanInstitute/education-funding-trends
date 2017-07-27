@@ -1558,7 +1558,7 @@ var vizContent = function() {
             if (IS_PHONE_500) {
             var textWidth = (this.getBBox().width)
             //return "translate("+ (tileWidth - textWidth)/2 +", "+ 0 +")"
-              return "translate("+ (tileWidth) +", "+ 0 +")"
+              return "translate("+ (tileWidth)*1.2 +", "+ 0 +")"
             }
 
           }) 

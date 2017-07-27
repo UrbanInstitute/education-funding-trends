@@ -1367,6 +1367,9 @@ form {
   .checkbox-image {
     margin-left: 0px;
   }
+  .empty-checkbox-image {
+    margin-left: 0px;
+  }
   .tick.minor > line {
       opacity: 0;
   }
