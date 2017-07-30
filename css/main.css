@@ -931,6 +931,13 @@ form {
 
 @media(min-width: 1400px) {
 
+  .switch-row {
+    margin-top: 140px;
+  }
+  .viz-content {
+    margin-top: 10px;
+  }
+
   text.mapLabel.standard {
     font-size: 14.25px !important;
   }
@@ -954,7 +961,7 @@ form {
     font-size: 18px !important;
   }
     #switch-div {
-    height: 350px !important;
+    height: 290px !important;
   }
 
 
@@ -1419,7 +1426,7 @@ form {
     margin-right: auto;
   }*/
 
-  .adjusted-div {
+  .adjust ed-div {
     margin-left: 0%;
     width: 160px;
   }
@@ -1433,6 +1440,7 @@ form {
   .main-content {
     width: calc(88%);
   }
+
  
   .switch-div-individual {
     margin: 30px 12px 0 28px;
