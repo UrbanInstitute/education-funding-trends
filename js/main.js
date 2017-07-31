@@ -757,7 +757,7 @@ var vizContent = function() {
           .attr("text-anchor", "end")
           .attr("x", function() {
             if (IS_PHONE_500) {
-            return tileWidth;
+            return 0;
             }else if (IS_MOBILE_768) {
               return chartWidth+chartMargin - chartWidth/2.4
             }else {
@@ -1535,7 +1535,7 @@ var vizContent = function() {
             if (IS_PHONE_500) {
             var textWidth = (this.getBBox().width)
             //return "translate("+ (tileWidth - textWidth)/2 +", "+ 0 +")"
-              return "translate("+ (tileWidth - textWidth)/5 +", "+ 0 +")"
+              return "translate("+ (tileWidth + ((textWidth)/3)) +", "+ 0 +")"
             }
 
           }) 
