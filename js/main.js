@@ -324,7 +324,8 @@ var vizContent = function() {
             } else {
               return "translate(10, -18)"
             }
-          })            .attr("class", "y-label axis-label")
+          })            
+          .attr("class", "y-label axis-label")
 
         graphSvg.append("path")
           .data([trendsDataNest])
@@ -995,7 +996,7 @@ var vizContent = function() {
         }
         d3.select(".mapLabel.standard." + state)
           .classed("selected-text", false)
-          
+          .classed("show", false)
         for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
           if (stateLinesArray[i] === state) { 
             stateLinesArray.splice(i, 1);
@@ -1544,8 +1545,7 @@ var vizContent = function() {
         d3.select(".line-" + state)
           .classed("line-hover", true)
 
-
-        if( d3.select(".line-" + state).node() != null && (state != "USA")){ 
+        if( d3.select(".line-" + state).node() != null && (state != "USA")){ console.log('hi')
           d3.select(".g-" + state).node().parentNode.appendChild(d3.select(".g-" + state).node())
         	d3.select(".line-" + state).node().parentNode.appendChild(d3.select(".line-" + state).node())
         	d3.select("text.stateLabel." + state)
@@ -1649,6 +1649,7 @@ var vizContent = function() {
           stateG.append("text")
             .text(state)
             .attr("class", "stateLabel " + state)
+            .classed("selected", true)
 
 
           //CHANGE OPACITY IF OVERLAPPING:
