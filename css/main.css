@@ -929,6 +929,12 @@ form {
 
 }
 
+@media(min-width: 1600px) {
+  .tab:nth-child(1) {
+    margin-left: 38%;
+  }
+}
+
 @media(min-width: 1400px) {
 
   .switch-row {
@@ -979,9 +985,7 @@ form {
     left: 90px;
     top: 5px;
   }
-  .tab:nth-child(1) {
-    margin-left: 34%;
-  }
+
     #switch-div {
     height: 280px;
   }
@@ -1038,6 +1042,7 @@ form {
   #ak-disclaimer {
     left: 80px;
   }
+
 }
 @media (max-width: 1000px){
 

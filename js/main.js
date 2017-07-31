@@ -762,6 +762,10 @@ var vizContent = function() {
           .attr("y",chartMargin)
           .style("fill", "#a2d3eb")
 
+        var chartWidth = mapSizes[pageSize]["chartWidth"]
+        var chartMargin = mapSizes[pageSize]["chartMargin"]
+        var tileWidth = chartWidth-2*chartMargin+8
+
         //draw the state name on the tile
         map.append("text")
           .text(function(d){ return d.key })
@@ -771,7 +775,7 @@ var vizContent = function() {
           .attr("text-anchor", "end")
           .attr("x", function() {
             if (IS_PHONE_500) {
-            return 0
+            return tileWidth;
             }else if (IS_MOBILE_768) {
               return chartWidth+chartMargin - chartWidth/2.4
             }else {
@@ -780,7 +784,7 @@ var vizContent = function() {
           })
           .attr("y", function() {
             if (IS_PHONE_500) {
-              return chartWidth+chartMargin - chartWidth/1.55
+              return chartWidth+chartMargin - chartWidth/1.45
             }else if (IS_MOBILE_768) {
               return chartWidth+chartMargin - chartWidth/2.4
             }else {
@@ -1558,7 +1562,7 @@ var vizContent = function() {
             if (IS_PHONE_500) {
             var textWidth = (this.getBBox().width)
             //return "translate("+ (tileWidth - textWidth)/2 +", "+ 0 +")"
-              return "translate("+ (tileWidth - textWidth)*2  +", "+ 0 +")"
+              return "translate("+ (tileWidth - textWidth)/5 +", "+ 0 +")"
             }
 
           }) 
