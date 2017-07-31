@@ -15,10 +15,10 @@ var vizContent = function() {
   (IS_VERTICAL_LAYOUT) ? $('#vis').insertBefore('.lineChart-div'): $('#vis').insertAfter('.lineChart-div');
   /*MAP VARIABLES*/
   var pageSizeFunction =  function() {
-    if (IS_PHONE_320){ console.log('small')
+    if (IS_PHONE_320){ 
       return "extraSmall"
     } 
-    else if (IS_PHONE_500){ console.log('small')
+    else if (IS_PHONE_500){ 
       return "small"
     }else if (IS_MOBILE_768){
         return "medium"
@@ -64,8 +64,7 @@ var vizContent = function() {
 
   }
 
-  // console.log(selectedCategory)
-  // var selectedCategory = getCurrentCategory();
+
   //INITIAL CATEGORY
   var initialCategory = "adj_revratio_all";
   var selectedCategory = getCurrentCategory();
@@ -117,7 +116,7 @@ var vizContent = function() {
 
   function round(value, step) {
       step || (step = 1.0);
-      var inv = 1.0 / step; console.log(Math.round(value * inv) / inv.toFixed(2))
+      var inv = 1.0 / step; 
       return Math.round(value * inv) / inv.toFixed(2);
   }
 
@@ -191,10 +190,8 @@ var vizContent = function() {
        if (selectedCategory.indexOf("revratio") >= 0) {
        // if (selectedCategory.includes("revratio")) {
           if (d3.select(".standard.line.AK.selected-state").node() !== null) { 
-            // console.log('AK')
             return d.State !== "HI" && d.State !== "DC"
           }else{
-            // console.log('no AK')
             return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
           }
         }else {
@@ -314,18 +311,15 @@ var vizContent = function() {
           }) 
         graphSvg.append("text")
           .attr("text-anchor", "middle") 
-          .text("Progressivity")
+          .text(function() {
+            if (d3.select("#revpp_").classed("current") == true) { 
+            return "Funding levels per student"
+            } else {
+              return "Progressivity"
+            }
+          })          
           .attr("transform", "translate(10, -15)") 
           .attr("class", "y-label axis-label")
-        // graphSvg.append("text")
-        //   .attr("text-anchor", "middle") 
-        //   .text("Fiscal Year")
-        //   .attr("transform", function() {
-        //     var height = $("#lineChart svg").attr("height")
-        //     console.log(height)
-        //     return "translate(140," + height*.88 + ")"
-        //   })           
-        //   .attr("class", "x-label axis-label")
 
         graphSvg.append("path")
           .data([trendsDataNest])
@@ -335,12 +329,6 @@ var vizContent = function() {
           .attr("d", function(d) {d.graphLine = this; 
             return (graphLine(d[0].values));
           });
-        // graphSvg.append("text")
-        //   .attr("transform", "translate("+(graphWidth+3)+","+graphY((trendsDataNest[0]).values[20][selectedCategory])+")")
-        //   .attr("dy", ".35em")
-        //   .attr("text-anchor", "start")
-        //   .text("US")
-        //   .attr("class", "usaLabel")
 
         var usaG = labelG.append("g")
           .attr("class", "g-usa")
@@ -506,7 +494,6 @@ var vizContent = function() {
                       .classed("show", false)
                     labelG.select(".g-" + clickedState)
                       .remove();
-                    // console.log('hi')
                     removeStateList(clickedState);
                     return false
                   }
@@ -516,18 +503,9 @@ var vizContent = function() {
                 }
 
               })
-            // d3.select(".mapLabel.standard." + clickedState)
-            //   .classed("selected-text", function(){
-            //     if (d3.select(this).classed("selected-text") == true) {
-            //       // console.log('hi')
-            //       return false
-            //     }else { 
-            //       return true;            
-            //     }
-            //   })
+
             updateStateLine(clickedState, clickedState)
             updateLineGraph(newCategory, newCategory, "click", clickedState)
-            // console.log(selectedCategory)
           })
           .on("mouseover", function() {
             var newCategory = getCurrentCategory();
@@ -587,7 +565,6 @@ var vizContent = function() {
             //   .html("")
             //IF LINE IS ADDED THEN REMOVE
             if (d3.select(".nonblank-rect." + hoveredState).classed("selected-state") == false) {
-              // console.log('remove')
               for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
                 if (stateLinesArray[i] === hoveredState) { 
                   stateLinesArray.splice(i, 1);
@@ -680,7 +657,6 @@ var vizContent = function() {
         var keys = Object.keys(trendsData[0])
 
         mapX.domain([startYear,endYear]);
-        // console.log(startYear+ endYear)
         //NEED TWO Y-AXES:
         //ALL STATES EXCEPT AK
         mapY.domain([d3.min(trendsDataFiltered, function(d) {return d[selectedCategory]; }), d3.max(trendsDataFiltered, function(d) { return d[selectedCategory]; })]); 
@@ -825,7 +801,7 @@ var vizContent = function() {
       }
 
       d3.select(".checkbox-div")
-        .on("click", function() { console.log('hi')
+        .on("click", function() { 
           if (d3.select(".checkbox-image").classed('checked') == true){
           d3.select(".checkbox-image")
             .classed("checked", false)
@@ -1185,7 +1161,6 @@ var vizContent = function() {
           .duration(duration)
           // .attr("d", graphLine)
           .attr("d", function(d) {
-          // console.log(graphLine(d[0].values))
             return (graphLine(d[0].values));
           });
 
@@ -1206,7 +1181,6 @@ var vizContent = function() {
             var stateDataNest = graphDataNest2.filter(function(d) {
               return d.key == stateName
             });
-//            console.log(graphDataNest)
             return "translate("+(graphWidth + 3)+","+ graphY((stateDataNest[0]).values[20][selectedCategory])+")"
           })
         })
@@ -1273,7 +1247,7 @@ var vizContent = function() {
         //reshape the data
         graphSvg.select(".y-label")
           .text(function() {
-            if (d3.select("#revpp_").classed("current") == true) {
+            if (d3.select("#revpp_").classed("current") == true) { 
             return "Funding levels per student"
             } else {
               return "Progressivity"
@@ -1286,13 +1260,7 @@ var vizContent = function() {
               return "translate(10, -18)"
             }
           })  
-
-        // graphSvg.select(".x-label")
-        //   .attr("transform", function() {
-        //     var height = $("#lineChart svg").attr("height")
-        //     console.log(height)
-        //     return "translate(150," + height*.88 + ")"
-        //   })  
+ 
         var trendsData = d3.select("#vis").datum()
         var trendsDataNest = d3.nest()
           .key(function(d) {return d.State;})
@@ -1300,7 +1268,6 @@ var vizContent = function() {
 
         var chartWidth = mapSizes[pageSize]["chartWidth"]
         var chartMargin = mapSizes[pageSize]["chartMargin"]
-        // console.log(trendsDataNest)
         //update data binding
         map = d3.select("#vis svg")
           .selectAll(".state")
@@ -1588,7 +1555,7 @@ var vizContent = function() {
 
       }
       function dehoverState(state){
-        if (d3.select(".nonblank-rect.selected-state." + state).node() != null) { console.log('hi')
+        if (d3.select(".nonblank-rect.selected-state." + state).node() != null) {
           d3.select(".mapLabel.selected-state" + state)
             .classed("show", true)
         }else {
@@ -1696,7 +1663,7 @@ var vizContent = function() {
             var overlapState = (stateTop-selectedStateTop) //NEW STATE IS ABOVE EXISTING STATE LABEL IF VALUE IS BELOW 0
 
             //CHECK IF STATE OVERLAPS WITH USA
-            if (Math.abs(overlapUsa) <12.5) {  console.log('overlap us')
+            if (Math.abs(overlapUsa) <12.5) {  
                 d3.select(".g-rect-usa")
                   .classed("makeTransparent", true)
                 d3.select(".g-rect-" + state)
@@ -1709,7 +1676,7 @@ var vizContent = function() {
             if (stateLinesArray[i] == state) {
             }else {
               if (stateLinesArray.length > 1) { 
-                if (Math.abs(overlapState) <12.5) { console.log('hello')
+                if (Math.abs(overlapState) <12.5) { 
                   d3.selectAll(".g-rect-" + state + ", .g-rect-" + stateLinesArray[i])
                     .classed("makeTransparent", true)
                 }else { 

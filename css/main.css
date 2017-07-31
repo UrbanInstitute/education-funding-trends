@@ -1364,6 +1364,9 @@ form {
   .lineChart-div-phone {
   	margin: 0px 20px;
   }
+  .adjusted-div {
+    margin-left: 0;
+  }
 
   .switch-div-full {
   	margin: 0 20px;
@@ -1419,7 +1422,7 @@ form {
 
 
   .adjusted-div-mobile {
-    width: 150px;
+    width: 160px;
     float: left;
   }
   .wrapper {
