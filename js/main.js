@@ -194,7 +194,7 @@ var vizContent = function() {
           }else{
             return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
           }
-        }else {
+        }else { console.log(d.State)
           return d.State;
         }
       })
@@ -1010,6 +1010,18 @@ var vizContent = function() {
 
 
       function updateScales(variable, oldVariable){ 
+        var trendsDataMinMax = trendsDataFull.filter(function(d) { 
+         if (selectedCategory.indexOf("revratio") >= 0) {
+         // if (selectedCategory.includes("revratio")) {
+            if (d3.select(".standard.line.AK.selected-state").node() !== null) { 
+              return d.State !== "HI" && d.State !== "DC"
+            }else{
+              return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
+            }
+          }else {
+            return d.State;
+          }
+        })
         var domainController;
         if(variable != "adj_revratio_" && variable != "revratio_" && variable != "revpp_" && variable != "adj_revpp_"){ 
           domainController = variable;
@@ -1066,6 +1078,7 @@ var vizContent = function() {
         var max2 = getMaxY(domainController, trendsDataAK)
         //var max2 = d3.max(trendsDataAK, function(d) { return d[domainController]; })
         var min2 = (domainController.search("ratio") != -1) ? d3.min([1, d3.min(trendsDataAK, function(d) {return d[domainController]; })]) : 0;
+
         if(max > max2){
           max2 = max;
           min2 = min;
@@ -1073,8 +1086,6 @@ var vizContent = function() {
         if(min < min2){
           min2 = min;
         }
-
-
 
         graphY.domain([min, max]);
         graphY2.domain([min2, max2])
@@ -1094,6 +1105,7 @@ var vizContent = function() {
 
       //ADJUSTS LINE GRAPH TO ACCOMMODATE CHANGING Y-AXIS DUE TO ADDITION OR REMOVAL OF STATE LINES
       function updateLineGraph(variable, oldVariable, action, state) {
+
         if (d3.select("#revratio_").classed("current") == true) { 
           if(d3.selectAll(".selected-state").node() != null) { 
             d3.selectAll(".lineChart-notes-under").classed("show", true)
