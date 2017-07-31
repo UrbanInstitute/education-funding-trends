@@ -318,8 +318,13 @@ var vizContent = function() {
               return "Progressivity"
             }
           })          
-          .attr("transform", "translate(10, -15)") 
-          .attr("class", "y-label axis-label")
+          .attr("transform", function() {
+            if (d3.select("#revpp_").classed("current") == true) {
+              return "translate(52,-18)"
+            } else {
+              return "translate(10, -18)"
+            }
+          })            .attr("class", "y-label axis-label")
 
         graphSvg.append("path")
           .data([trendsDataNest])
