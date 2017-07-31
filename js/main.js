@@ -486,6 +486,7 @@ var vizContent = function() {
                 .classed("show", true)
             } 
             d3.select(".nonblank-rect." + clickedState)
+              .classed("hovered-state", false)
               .classed("selected-state", function(){
                 if (d3.select(".nonblank-rect." + clickedState).classed("selected-state") == true) { 
                   if (clickedState == "AK") {
@@ -494,7 +495,8 @@ var vizContent = function() {
                     //AT WIDTHS < 500PX, REMOVE STATE LABEL WHEN UNCLICKING STATE
                     d3.select(".mapLabel." + clickedState)
                       .classed("show", false)
-                  }else {
+
+                  }else { 
                     //AT WIDTHS < 500PX, REMOVE STATE LABEL WHEN UNCLICKING STATE
                     d3.select(".mapLabel." + clickedState)
                       .classed("show", false)
