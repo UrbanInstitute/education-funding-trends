@@ -23,6 +23,29 @@ ul.state-list{
 
 }
 
+.footerButton{
+  float: left;
+  height: 20px;
+  width: 115px;
+  border: 1px solid #333;
+  cursor: pointer;
+  font: 13px Lato;
+  font-weight: bold;
+  text-align: center;
+  padding: 10px;
+  text-decoration: none !important;
+  color: #333 !important;
+  margin: 14px 0;
+}
+
+.appendixButton {
+  margin-left: 15px;
+}
+.footerButton:hover{
+  background: #1696d2;
+  color: #fff !important;
+}
+
 .help-button {
   margin-top: 9.5px;
   margin-right: 11px;
@@ -403,6 +426,7 @@ div.close-sign {
 }
 
 .about-text {
+  clear: both;
   font-size: 14px;
   color: #231f20;
   padding-right: 25px;

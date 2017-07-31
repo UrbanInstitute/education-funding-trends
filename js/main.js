@@ -495,11 +495,13 @@ var vizContent = function() {
                     //AT WIDTHS < 500PX, REMOVE STATE LABEL WHEN UNCLICKING STATE
                     d3.select(".mapLabel." + clickedState)
                       .classed("show", false)
+                      .classed("selected-text", false)
 
                   }else { 
                     //AT WIDTHS < 500PX, REMOVE STATE LABEL WHEN UNCLICKING STATE
                     d3.select(".mapLabel." + clickedState)
                       .classed("show", false)
+                      .classed("selected-text", false)
                     labelG.select(".g-" + clickedState)
                       .remove();
                     removeStateList(clickedState);
@@ -1181,8 +1183,8 @@ var vizContent = function() {
 
         labelG.selectAll(".g-state").each(function(d,i) {
           d3.select(this)
-          .transition()
-          .duration(duration)
+          // .transition()
+          // .duration(duration)
           .attr("transform", function() { 
             var className = d3.select(this).attr("class").split(' ')[1];
             var stateName = className.split('-')[1];
@@ -1535,9 +1537,9 @@ var vizContent = function() {
           })
           .attr("transform", function() {
             if (IS_PHONE_500) {
-            var textWidth = (this.getBBox().width)
+            var textWidth = (this.getBoundingClientRect().width)
             //return "translate("+ (tileWidth - textWidth)/2 +", "+ 0 +")"
-              return "translate("+ (tileWidth + ((textWidth)/3)) +", "+ 0 +")"
+              return "translate("+ (chartMargin-4 + textWidth + (tileWidth-textWidth)*.5) +", "+ 0 +")"
             }
 
           }) 
@@ -1547,7 +1549,7 @@ var vizContent = function() {
         d3.select(".line-" + state)
           .classed("line-hover", true)
 
-        if( d3.select(".line-" + state).node() != null && (state != "USA")){ console.log('hi')
+        if( d3.select(".line-" + state).node() != null && (state != "USA")){ 
           d3.select(".g-" + state).node().parentNode.appendChild(d3.select(".g-" + state).node())
         	d3.select(".line-" + state).node().parentNode.appendChild(d3.select(".line-" + state).node())
         	d3.select("text.stateLabel." + state)
