@@ -528,7 +528,7 @@ var vizContent = function() {
                   return true;            
                 }
               })
-            if ((d3.select(".nonblank-rect." + clickedState).classed("selected-state") == false) && (IS_PHONE_500)) {
+            if ((d3.select(".nonblank-rect." + clickedState).classed("selected-state") == false) && (IS_MOBILE_768)) {
               // for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
               //   if (stateLinesArray[i] === clickedState) { 
               //     stateLinesArray.splice(i, 1);
@@ -549,7 +549,7 @@ var vizContent = function() {
             var hoveredStateName = trendsDataFull.filter(function(d) { 
               return d.State == hoveredState
             })
-            if (IS_PHONE_500){
+            if (IS_MOBILE_768){
             }else {
               d3.select(".nonblank-rect." + hoveredState)
                 .classed("hovered-state", true)
@@ -563,7 +563,7 @@ var vizContent = function() {
           .on("mouseout", function() {
             var newCategory = getCurrentCategory();
             var hoveredState = d3.select(this).attr("class").split(" ")[1]
-            if (IS_PHONE_500){
+            if (IS_MOBILE_768){
             }else{
               d3.select(".nonblank-rect." + hoveredState)
                 .classed("hovered-state", false)
