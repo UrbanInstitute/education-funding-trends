@@ -485,18 +485,6 @@ var vizContent = function() {
               d3.select("#ak-disclaimer")
                 .classed("show", true)
             } 
-            if ((d3.select(".nonblank-rect." + clickedState).classed("selected-state") == true) && (IS_PHONE_500)) {
-              // for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
-              //   if (stateLinesArray[i] === clickedState) { 
-              //     stateLinesArray.splice(i, 1);
-              //   }
-              // }
-              console.log(stateLinesArray)
-              graphSvg.select("path.line-" + clickedState) 
-                .remove()
-              labelG.select(".g-" + clickedState)
-                .remove();
-            }
             d3.select(".nonblank-rect." + clickedState)
               .classed("hovered-state", false)
               .classed("selected-state", function(){
@@ -508,12 +496,17 @@ var vizContent = function() {
                     d3.select(".mapLabel." + clickedState)
                       .classed("show", false)
                       .classed("selected-text", false)
+                      .classed("hovered-text", false)
+                    labelG.select(".g-" + clickedState)
+                      .remove();
+                    removeStateList(clickedState);
                     return false;
                   }else { 
                     //AT WIDTHS < 500PX, REMOVE STATE LABEL WHEN UNCLICKING STATE
                     d3.select(".mapLabel." + clickedState)
                       .classed("show", false)
                       .classed("selected-text", false)
+                      .classed("hovered-text", false)
                     labelG.select(".g-" + clickedState)
                       .remove();
                     removeStateList(clickedState);
@@ -535,9 +528,20 @@ var vizContent = function() {
                   return true;            
                 }
               })
-
-            updateStateLine(clickedState, clickedState)
-            updateLineGraph(newCategory, newCategory, "click", clickedState)
+            if ((d3.select(".nonblank-rect." + clickedState).classed("selected-state") == false) && (IS_PHONE_500)) {
+              // for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
+              //   if (stateLinesArray[i] === clickedState) { 
+              //     stateLinesArray.splice(i, 1);
+              //   }
+              // }
+              graphSvg.select("path.line-" + clickedState) 
+                .remove()
+              labelG.select(".g-" + clickedState)
+                .remove();
+            }else {
+              updateStateLine(clickedState, clickedState)
+              updateLineGraph(newCategory, newCategory, "click", clickedState)
+            }
           })
           .on("mouseover", function() {
             var newCategory = getCurrentCategory();
@@ -991,7 +995,6 @@ var vizContent = function() {
         for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
           if (stateLinesArray[i] === state) { 
             stateLinesArray.splice(i, 1);
-            console.log(stateLinesArray)
           }
         }
         var newCategory = getCurrentCategory();
@@ -1664,7 +1667,7 @@ var vizContent = function() {
 
 
         //IF LINE HASN'T BEEN ADDED YET TO THE GRAPH:
-        if ($(".line-" + state).length == 0) {
+        if ($(".line-" + state).length == 0) { 
           stateLinesArray.push(state); // ADD NEW STATE TO ARRAY 
           graphSvg.append("path")
             .data([graphDataStateNest])
@@ -1693,7 +1696,7 @@ var vizContent = function() {
 
           //CHANGE OPACITY IF OVERLAPPING:
           //var usaTop = ($(".g-usa")[0].getBoundingClientRect().top);
-        checkLabels(state)
+          checkLabels(state)
         
         }
       } 
