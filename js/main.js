@@ -983,7 +983,7 @@ var vizContent = function() {
           .on("mouseout", function(){ dehoverState(state)})
         stateItem.append("div")
           .attr("class", "close-sign close-sign-" + state)
-          .on("click", function(d) {
+          .on("click", function(d) { console.log('click')
             removeStateList(d)
           })
         d3.select(".mapLabel.standard." + state)
@@ -1220,7 +1220,7 @@ var vizContent = function() {
           .attr("transform", "translate("+(graphWidth + 3)+","+ graphY((trendsDataNestUSA[0]).values[20][selectedCategory])+")")
         //   .attr("dy", ".35em")
         //   .attr("text-anchor", "start")
-          labelG.selectAll(".g-state").each(function(d,i) {
+          labelG.selectAll(".g-state:not(.g-"+state + ")").each(function(d,i) {
             d3.select(this)
             // .transition()
             // .duration(duration)
