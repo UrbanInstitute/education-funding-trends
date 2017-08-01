@@ -194,7 +194,7 @@ var vizContent = function() {
           }else{
             return d.State !== "AK" && d.State !== "HI" && d.State !== "DC"
           }
-        }else { console.log(d.State)
+        }else { 
           return d.State;
         }
       })
@@ -477,7 +477,7 @@ var vizContent = function() {
             return "translate(" + geoPath.centroid(tmp[0]) + ")"
           })
         map
-          .on("click", function(d) { console.log('click')
+          .on("click", function(d) { 
             var newCategory = getCurrentCategory();
             var stateName = d.values[0]["state_full"]
             var clickedState = d3.select(this).attr("class").split(" ")[1]
@@ -519,7 +519,7 @@ var vizContent = function() {
                     removeStateList(clickedState);
                     return false
                   }
-                }else { console.log('phone2') //IF NOT SELECTED THEN SELECT STATE
+                }else {  //IF NOT SELECTED THEN SELECT STATE
                   var chartWidth = mapSizes[pageSize]["chartWidth"]
                   var chartMargin = mapSizes[pageSize]["chartMargin"]
                   var tileWidth = chartWidth-2*chartMargin+8
@@ -546,7 +546,6 @@ var vizContent = function() {
               return d.State == hoveredState
             })
             if (IS_PHONE_500){
-              console.log('phone')
             }else {
               d3.select(".nonblank-rect." + hoveredState)
                 .classed("hovered-state", true)
@@ -561,7 +560,6 @@ var vizContent = function() {
             var newCategory = getCurrentCategory();
             var hoveredState = d3.select(this).attr("class").split(" ")[1]
             if (IS_PHONE_500){
-              console.log('phone')
             }else{
               d3.select(".nonblank-rect." + hoveredState)
                 .classed("hovered-state", false)
@@ -991,12 +989,11 @@ var vizContent = function() {
 
       function removeStateList(state) {         
         for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
-          if (stateLinesArray[i] === state) { console.log(state)
-            stateLinesArray = stateLinesArray.splice(i, 1);
+          if (stateLinesArray[i] === state) { 
+            stateLinesArray.splice(i, 1);
             console.log(stateLinesArray)
           }
         }
-        console.log(stateLinesArray)
         var newCategory = getCurrentCategory();
         updateLineGraph(newCategory, newCategory, "remove", state)
         d3.select(".nonblank-rect." + state)
@@ -1220,7 +1217,6 @@ var vizContent = function() {
           .attr("transform", "translate("+(graphWidth + 3)+","+ graphY((trendsDataNestUSA[0]).values[20][selectedCategory])+")")
         //   .attr("dy", ".35em")
         //   .attr("text-anchor", "start")
-        if (labelG.selectAll(".g-state").node() != null){
           labelG.selectAll(".g-state").each(function(d,i) {
             d3.select(this)
             // .transition()
@@ -1234,7 +1230,7 @@ var vizContent = function() {
               return "translate("+(graphWidth + 3)+","+ graphY((stateDataNest[0]).values[20][selectedCategory])+")"
             })
           })
-        }
+        
 
         var threshold = d3.select(".threshold")
           .transition()
