@@ -477,7 +477,7 @@ var vizContent = function() {
             return "translate(" + geoPath.centroid(tmp[0]) + ")"
           })
         map
-          .on("click", function(d) { 
+          .on("click", function(d) { console.log('click')
             var newCategory = getCurrentCategory();
             var stateName = d.values[0]["state_full"]
             var clickedState = d3.select(this).attr("class").split(" ")[1]
@@ -485,6 +485,18 @@ var vizContent = function() {
               d3.select("#ak-disclaimer")
                 .classed("show", true)
             } 
+            if ((d3.select(".nonblank-rect." + clickedState).classed("selected-state") == true) && (IS_PHONE_500)) {
+              // for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
+              //   if (stateLinesArray[i] === clickedState) { 
+              //     stateLinesArray.splice(i, 1);
+              //   }
+              // }
+              console.log(stateLinesArray)
+              graphSvg.select("path.line-" + clickedState) 
+                .remove()
+              labelG.select(".g-" + clickedState)
+                .remove();
+            }
             d3.select(".nonblank-rect." + clickedState)
               .classed("hovered-state", false)
               .classed("selected-state", function(){
@@ -496,7 +508,7 @@ var vizContent = function() {
                     d3.select(".mapLabel." + clickedState)
                       .classed("show", false)
                       .classed("selected-text", false)
-
+                    return false;
                   }else { 
                     //AT WIDTHS < 500PX, REMOVE STATE LABEL WHEN UNCLICKING STATE
                     d3.select(".mapLabel." + clickedState)
@@ -507,11 +519,21 @@ var vizContent = function() {
                     removeStateList(clickedState);
                     return false
                   }
-                }else { 
+                }else { console.log('phone2') //IF NOT SELECTED THEN SELECT STATE
+                  var chartWidth = mapSizes[pageSize]["chartWidth"]
+                  var chartMargin = mapSizes[pageSize]["chartMargin"]
+                  var tileWidth = chartWidth-2*chartMargin+8
+                  if (IS_PHONE_500){
+                  d3.select(".mapLabel." + clickedState)
+                    .classed("show", true)
+                    .attr("transform", function() {
+                      var textWidth = (this.getBoundingClientRect().width)
+                        return "translate("+ (chartMargin-4 + textWidth + (tileWidth-textWidth)*.5) +", "+ 0 +")"
+                    }) 
+                  }
                   addStateList(clickedState, stateName);
                   return true;            
                 }
-
               })
 
             updateStateLine(clickedState, clickedState)
@@ -523,74 +545,79 @@ var vizContent = function() {
             var hoveredStateName = trendsDataFull.filter(function(d) { 
               return d.State == hoveredState
             })
-            d3.select(".nonblank-rect." + hoveredState)
-              .classed("hovered-state", true)
-            d3.select(".mapLabel.standard." + hoveredState)
-              .classed("hovered-text", true)
-            hoverState(hoveredState)
-            updateStateLine(hoveredState)
-            updateLineGraph(newCategory, newCategory, "hover", hoveredState)
-
+            if (IS_PHONE_500){
+              console.log('phone')
+            }else {
+              d3.select(".nonblank-rect." + hoveredState)
+                .classed("hovered-state", true)
+              d3.select(".mapLabel.standard." + hoveredState)
+                .classed("hovered-text", true)
+              hoverState(hoveredState)
+              updateStateLine(hoveredState)
+              updateLineGraph(newCategory, newCategory, "hover", hoveredState)
+            }
           })
           .on("mouseout", function() {
-
             var newCategory = getCurrentCategory();
             var hoveredState = d3.select(this).attr("class").split(" ")[1]
-
-            d3.select(".nonblank-rect." + hoveredState)
-              .classed("hovered-state", false)
-            d3.select(".nonblank-rect." + hoveredState)
-              .style("fill", function(){
-                if (d3.select("#revratio_").classed("current") == true){
-                  if (d3.select(".nonblank-rect." + hoveredState).classed("selected-state") == true)  {
-                    return "#000"
-                  }else {
-                    return "#a2d3eb"
+            if (IS_PHONE_500){
+              console.log('phone')
+            }else{
+              d3.select(".nonblank-rect." + hoveredState)
+                .classed("hovered-state", false)
+              d3.select(".nonblank-rect." + hoveredState)
+                .style("fill", function(){
+                  if (d3.select("#revratio_").classed("current") == true){
+                    if (d3.select(".nonblank-rect." + hoveredState).classed("selected-state") == true)  {
+                      return "#000"
+                    }else {
+                      return "#a2d3eb"
+                    }
+                  }else if (d3.select("#revpp_").classed("current") == true){
+                    if (d3.select(".nonblank-rect." + hoveredState).classed("selected-state") == true)  {
+                     return "#fbbe15"
+                    }else {
+                      return "#094c6a"
+                    }
                   }
-                }else if (d3.select("#revpp_").classed("current") == true){
-                  if (d3.select(".nonblank-rect." + hoveredState).classed("selected-state") == true)  {
-                   return "#fbbe15"
-                  }else {
-                    return "#094c6a"
+                })
+              d3.select(".mapLabel.standard." + hoveredState)
+                .style("fill", function(){
+                  if (d3.select("#revratio_").classed("current") == true){
+                    if (d3.select(".mapLabel.standard." + hoveredState).classed("selected-text") == true)  {
+                      return "#ffffff"
+                    }else {
+                      return "#000"
+                    }
+                  }else if (d3.select("#revpp_").classed("current") == true){ 
+                    if (d3.select(".mapLabel.standard." + hoveredState).classed("selected-text") == true)  {
+                     return "#000"
+                    }else {
+                      return "#ffffff"
+                    }
                   }
+                })
+              // d3.selectAll(".state-name")
+              //   .html("")
+              //IF LINE IS ADDED THEN REMOVE
+              if (d3.select(".nonblank-rect." + hoveredState).classed("selected-state") == false) {
+                for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
+                  if (stateLinesArray[i] === hoveredState) { 
+                    stateLinesArray.splice(i, 1);
+                  } 
                 }
-              })
-            d3.select(".mapLabel.standard." + hoveredState)
-              .style("fill", function(){
-                if (d3.select("#revratio_").classed("current") == true){
-                  if (d3.select(".mapLabel.standard." + hoveredState).classed("selected-text") == true)  {
-                    return "#ffffff"
-                  }else {
-                    return "#000"
-                  }
-                }else if (d3.select("#revpp_").classed("current") == true){ 
-                  if (d3.select(".mapLabel.standard." + hoveredState).classed("selected-text") == true)  {
-                   return "#000"
-                  }else {
-                    return "#ffffff"
-                  }
-                }
-              })
-            // d3.selectAll(".state-name")
-            //   .html("")
-            //IF LINE IS ADDED THEN REMOVE
-            if (d3.select(".nonblank-rect." + hoveredState).classed("selected-state") == false) {
-              for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
-                if (stateLinesArray[i] === hoveredState) { 
-                  stateLinesArray.splice(i, 1);
-                }
+                graphSvg.select("path.line-" + hoveredState) 
+                  .remove()
+                labelG.select(".g-" + hoveredState)
+                  .remove();
               }
-              graphSvg.select("path.line-" + hoveredState) 
-                .remove()
-              labelG.select(".g-" + hoveredState)
-                .remove();
+              d3.select(".mapLabel.standard." + hoveredState)
+                .classed("hovered-text", false)
+              if(d3.select(".nonblank-rect." + hoveredState).classed("selected-state") == false){
+                updateLineGraph(newCategory, newCategory, "remove", hoveredState)
+              }
+              dehoverState(hoveredState)
             }
-            d3.select(".mapLabel.standard." + hoveredState)
-              .classed("hovered-text", false)
-            if(d3.select(".nonblank-rect." + hoveredState).classed("selected-state") == false){
-              updateLineGraph(newCategory, newCategory, "remove", hoveredState)
-            }
-            dehoverState(hoveredState)
           })
         // //draw greyed out blank states for HI and DC
         var blank = mapSvg
@@ -962,7 +989,14 @@ var vizContent = function() {
 
       }
 
-      function removeStateList(state) {
+      function removeStateList(state) {         
+        for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
+          if (stateLinesArray[i] === state) { console.log(state)
+            stateLinesArray = stateLinesArray.splice(i, 1);
+            console.log(stateLinesArray)
+          }
+        }
+        console.log(stateLinesArray)
         var newCategory = getCurrentCategory();
         updateLineGraph(newCategory, newCategory, "remove", state)
         d3.select(".nonblank-rect." + state)
@@ -982,11 +1016,9 @@ var vizContent = function() {
               return "#ffffff"
             }
           })
-
-
         d3.selectAll(".item-" + state)
           .remove();
-        d3.selectAll(".line-state.line-" + state)
+        d3.selectAll("path.line-state.line-" + state)
           .remove()
         d3.select(".g-" + state)
           .remove()
@@ -1001,11 +1033,7 @@ var vizContent = function() {
         d3.select(".mapLabel.standard." + state)
           .classed("selected-text", false)
           .classed("show", false)
-        for (var i= stateLinesArray.length-1; i>=0; i--) { //DELETE EXISTING STATE IN ARRAY
-          if (stateLinesArray[i] === state) { 
-            stateLinesArray.splice(i, 1);
-          }
-        }
+
       }
 
 
@@ -1192,20 +1220,21 @@ var vizContent = function() {
           .attr("transform", "translate("+(graphWidth + 3)+","+ graphY((trendsDataNestUSA[0]).values[20][selectedCategory])+")")
         //   .attr("dy", ".35em")
         //   .attr("text-anchor", "start")
-
-        labelG.selectAll(".g-state").each(function(d,i) {
-          d3.select(this)
-          // .transition()
-          // .duration(duration)
-          .attr("transform", function() { 
-            var className = d3.select(this).attr("class").split(' ')[1];
-            var stateName = className.split('-')[1];
-            var stateDataNest = graphDataNest2.filter(function(d) {
-              return d.key == stateName
-            });
-            return "translate("+(graphWidth + 3)+","+ graphY((stateDataNest[0]).values[20][selectedCategory])+")"
+        if (labelG.selectAll(".g-state").node() != null){
+          labelG.selectAll(".g-state").each(function(d,i) {
+            d3.select(this)
+            // .transition()
+            // .duration(duration)
+            .attr("transform", function() { 
+              var className = d3.select(this).attr("class").split(' ')[1];
+              var stateName = className.split('-')[1];
+              var stateDataNest = graphDataNest2.filter(function(d) {
+                return d.key == stateName
+              });
+              return "translate("+(graphWidth + 3)+","+ graphY((stateDataNest[0]).values[20][selectedCategory])+")"
+            })
           })
-        })
+        }
 
         var threshold = d3.select(".threshold")
           .transition()
@@ -1533,28 +1562,26 @@ var vizContent = function() {
 
 
       function hoverState(state){
-        var chartWidth = mapSizes[pageSize]["chartWidth"]
-        var chartMargin = mapSizes[pageSize]["chartMargin"]
-        var tileWidth = chartWidth-2*chartMargin+8
         if(d3.select(".state." + state).select(".selected-state").node() != null){
           d3.select(".state." + state).select(".selected-state").style("opacity", ".8")
         }
-        d3.select(".mapLabel." + state)
-          .classed("show", function() {
-            if (IS_PHONE_500) {
-              return true;
-            }else {
-              return false;
-            }
-          })
-          .attr("transform", function() {
-            if (IS_PHONE_500) {
-            var textWidth = (this.getBoundingClientRect().width)
-            //return "translate("+ (tileWidth - textWidth)/2 +", "+ 0 +")"
-              return "translate("+ (chartMargin-4 + textWidth + (tileWidth-textWidth)*.5) +", "+ 0 +")"
-            }
+        // d3.select(".mapLabel." + state)
+        //   .classed("show", function() {
+        //     if (IS_PHONE_500) {
+        //       return true;
+        //     }else {
+        //       return false;
+        //     }
+        //   })
+        //   .attr("transform", function() {
+        //     if (IS_PHONE_500) {
+        //     var textWidth = (this.getBoundingClientRect().width)
+        //     console.log(textWidth)
+        //     //return "translate("+ (tileWidth - textWidth)/2 +", "+ 0 +")"
+        //       return "translate("+ (chartMargin-4 + textWidth + (tileWidth-textWidth)*.5) +", "+ 0 +")"
+        //     }
 
-          }) 
+        //   }) 
         d3.select(".state-item.item-" + state)
           .style("background-color","#000")
           .style("color","#ffffff")
