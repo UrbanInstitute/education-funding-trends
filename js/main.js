@@ -1025,10 +1025,17 @@ var vizContent = function() {
         d3.selectAll("g.state." + state + " .selected-state")
           .classed("selected-state", false)
         if (d3.select(".state-item").size() == 0) {
-          d3.selectAll(".lineChart-details, .lineChart-notes-under")
-            .classed("show", false)
-          d3.selectAll(".lineChart-notes-above")
-            .classed("show", true)
+          if (d3.select("#revratio_").classed("current") == true){
+            d3.selectAll(".lineChart-details, .lineChart-notes-under")
+              .classed("show", false)
+            d3.selectAll(".lineChart-notes-above")
+              .classed("show", true)
+          }else {
+            d3.selectAll(".lineChart-details, .lineChart-notes-under")
+              .classed("show", false)
+            d3.selectAll(".lineChart-notes-above")
+              .classed("show", false)
+          }
         }
         d3.select(".mapLabel.standard." + state)
           .classed("selected-text", false)
